@@ -1,0 +1,690 @@
+.navbar {
+  background-color: skyblue;
+  padding: 10px;
+}
+
+.nav-ul li {
+  display: inline-block;
+  padding: 10px;
+}
+
+.nav-ul {
+  list-style-type: none;
+  margin: 0;
+  padding-left: 0px;
+  background-color: skyblue;
+  overflow: hidden;
+}
+
+.nav-ul li a {
+  text-decoration: none;
+  color: #000;
+  padding: 5px;
+}
+
+.footer {
+  background-color: skyblue;
+  text-align: center;
+  padding: 10px;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+}
+
+.product-card {
+  transition: all 0.3s ease;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.product-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+}
+
+.product-img-wrapper {
+  height: 300px;
+  overflow: hidden;
+  background: #f8f9fa;
+}
+
+.product-img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.product-card:hover .product-img {
+  transform: scale(1.08);
+}
+
+/* Background */
+.signup-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #f8f9fc;
+  padding: 20px;
+}
+
+/* Card */
+.signup-card {
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+  transition: 0.3s ease;
+}
+
+/* Subtle hover effect */
+.signup-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Heading */
+.signup-card h2 {
+  font-weight: 700;
+  color: #222;
+}
+
+/* Floating Inputs */
+.floating-group {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.floating-group input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  outline: none;
+  font-size: 15px;
+  transition: 0.3s ease;
+  background: #fff;
+}
+
+.floating-group input:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.floating-group label {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  color: #999;
+  font-size: 14px;
+  transition: 0.3s ease;
+  pointer-events: none;
+  background: #fff;
+  padding: 0 5px;
+}
+
+.floating-group input:focus + label,
+.floating-group input:not(:placeholder-shown) + label {
+  top: -8px;
+  font-size: 12px;
+  color: #4a90e2;
+}
+
+/* Button */
+.btn-modern {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: #4a90e2;
+  color: white;
+  font-weight: 600;
+  transition: 0.3s ease;
+}
+
+.btn-modern:hover {
+  background: #357abd;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(74, 144, 226, 0.3);
+}
+
+/* Upload */
+.upload-label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #333;
+}
+
+/* Image Preview */
+.image-preview {
+  margin-top: 10px;
+  width: 90px;
+  height: 90px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #f0f0f0;
+  animation: fadeIn 0.4s ease;
+}
+
+/* Animation */
+.animate-slide {
+  animation: slideUp 0.6s ease forwards;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(25px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Background */
+.profile-wrapper {
+  min-height: 100vh;
+  background: #f8f9fc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+}
+
+/* Card */
+.profile-card {
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 40px;
+  width: 100%;
+  max-width: 900px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.07);
+  transition: 0.3s ease;
+}
+
+.profile-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Header */
+.profile-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.profile-header h3 {
+  font-weight: 700;
+  color: #222;
+}
+
+.profile-header p {
+  color: #777;
+}
+
+/* Layout */
+.profile-content {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.profile-left {
+  flex: 1;
+  text-align: center;
+}
+
+.profile-right {
+  flex: 2;
+}
+
+/* Profile Image */
+.image-container {
+  width: 160px;
+  height: 160px;
+  margin: auto;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid #e9ecef;
+  transition: 0.4s ease;
+}
+
+.image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.image-container:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+}
+
+/* Floating Input */
+.floating-group {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.floating-group input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  outline: none;
+  font-size: 15px;
+  transition: 0.3s ease;
+}
+
+.floating-group input:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.floating-group label {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  color: #999;
+  background: #fff;
+  padding: 0 5px;
+  transition: 0.3s ease;
+  pointer-events: none;
+}
+
+.floating-group input:focus + label,
+.floating-group input:not(:placeholder-shown) + label {
+  top: -8px;
+  font-size: 12px;
+  color: #4a90e2;
+}
+
+/* Button */
+.btn-update {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: #4a90e2;
+  color: white;
+  font-weight: 600;
+  transition: 0.3s ease;
+}
+
+.btn-update:hover {
+  background: #357abd;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(74, 144, 226, 0.3);
+}
+
+/* Animation */
+.animate-fade {
+  animation: fadeUp 0.6s ease forwards;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Background */
+.product-wrapper {
+  min-height: 100vh;
+  background: #f8f9fc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+}
+
+/* Card */
+.product-card {
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.07);
+  transition: 0.3s ease;
+}
+
+.product-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Floating Input */
+.floating-group {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.floating-group input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  outline: none;
+  font-size: 15px;
+  transition: 0.3s ease;
+  background: #fff;
+}
+
+.floating-group input:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.floating-group label {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  color: #999;
+  background: #fff;
+  padding: 0 5px;
+  transition: 0.3s ease;
+  pointer-events: none;
+}
+
+.floating-group input:focus + label,
+.floating-group input:not(:placeholder-shown) + label {
+  top: -8px;
+  font-size: 12px;
+  color: #4a90e2;
+}
+
+/* Button */
+.btn-submit {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: #4a90e2;
+  color: white;
+  font-weight: 600;
+  transition: 0.3s ease;
+}
+
+.btn-submit:hover {
+  background: #357abd;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(74, 144, 226, 0.3);
+}
+
+/* Image Preview */
+.product-preview {
+  margin-top: 15px;
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 3px solid #eee;
+  animation: fadeIn 0.4s ease;
+}
+
+/* Animation */
+.animate-fade {
+  animation: fadeUp 0.6s ease forwards;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Background */
+.update-wrapper {
+  min-height: 100vh;
+  background: #f8f9fc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+}
+
+/* Card */
+.update-card {
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 520px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.07);
+  transition: 0.3s ease;
+}
+
+.update-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Floating Inputs */
+.floating-group {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.floating-group input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  outline: none;
+  font-size: 15px;
+  transition: 0.3s ease;
+  background: #fff;
+}
+
+.floating-group input:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.floating-group label {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  color: #999;
+  background: #fff;
+  padding: 0 5px;
+  transition: 0.3s ease;
+  pointer-events: none;
+}
+
+.floating-group input:focus + label,
+.floating-group input:not(:placeholder-shown) + label {
+  top: -8px;
+  font-size: 12px;
+  color: #4a90e2;
+}
+
+/* Button */
+.btn-update-product {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: #4a90e2;
+  color: white;
+  font-weight: 600;
+  transition: 0.3s ease;
+}
+
+.btn-update-product:hover {
+  background: #357abd;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(74, 144, 226, 0.3);
+}
+
+/* Image Preview */
+.update-preview {
+  margin-top: 15px;
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 3px solid #eee;
+  animation: fadeIn 0.4s ease;
+}
+
+/* Animation */
+.animate-fade {
+  animation: fadeUp 0.6s ease forwards;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Background */
+.login-wrapper {
+  min-height: 100vh;
+  background: #f8f9fc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+}
+
+/* Card */
+.login-card {
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.07);
+  transition: 0.3s ease;
+}
+
+.login-card:hover {
+  transform: translateY(-5px);
+}
+
+/* Floating Inputs */
+.floating-group {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.floating-group input {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+  outline: none;
+  font-size: 15px;
+  transition: 0.3s ease;
+  background: #fff;
+}
+
+.floating-group input:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.floating-group label {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  color: #999;
+  background: #fff;
+  padding: 0 5px;
+  transition: 0.3s ease;
+  pointer-events: none;
+}
+
+.floating-group input:focus + label,
+.floating-group input:not(:placeholder-shown) + label {
+  top: -8px;
+  font-size: 12px;
+  color: #4a90e2;
+}
+
+/* Button */
+.btn-login {
+  width: 100%;
+  padding: 14px;
+  border-radius: 12px;
+  border: none;
+  background: #4a90e2;
+  color: white;
+  font-weight: 600;
+  transition: 0.3s ease;
+}
+
+.btn-login:hover {
+  background: #357abd;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(74, 144, 226, 0.3);
+}
+
+/* Animation */
+.animate-fade {
+  animation: fadeUp 0.6s ease forwards;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
