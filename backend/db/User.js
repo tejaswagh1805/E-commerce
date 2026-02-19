@@ -1,15 +1,16 @@
-const mangoose = require('mongoose');
+const mongoose = require("mongoose");
 
-const UserSchema = new mangoose.Schema({
+const userSchema = new mongoose.Schema({
     name: String,
-    email: String,
+    email: { type: String, unique: true },
     password: String,
-    image: String,
     mobile: String,
-    isAdmin: {
-        type: Boolean,
-        default: false
+    image: String,
+    role: {
+        type: String,
+        enum: ["admin", "customer"],
+        default: "customer"
     }
-});
+}, { timestamps: true });
 
-module.exports = mangoose.model('users', UserSchema);
+module.exports = mongoose.model("users", userSchema);

@@ -5,7 +5,7 @@ const productSchema = new mangoose.Schema({
     price: String,
     category: String,
     company: String,
-    image: String,
+    images: [String],
     userId: String
 
 });

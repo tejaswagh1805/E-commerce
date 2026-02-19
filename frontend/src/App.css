@@ -1,98 +1,94 @@
-.navbar {
-  background-color: skyblue;
-  padding: 10px;
-}
-
-.nav-ul li {
-  display: inline-block;
-  padding: 10px;
-}
-
-.nav-ul {
-  list-style-type: none;
+/* ========================================
+   GLOBAL RESET
+======================================== */
+body {
   margin: 0;
-  padding-left: 0px;
-  background-color: skyblue;
-  overflow: hidden;
+  font-family: 'Segoe UI', sans-serif;
+  background: #f4f7fb;
 }
 
-.nav-ul li a {
+a {
   text-decoration: none;
-  color: #000;
-  padding: 5px;
 }
 
-.footer {
-  background-color: skyblue;
-  text-align: center;
-  padding: 10px;
-  position: fixed;
+/* ========================================
+   NAVBAR (WHITE THEME)
+======================================== */
+.navbar-custom {
+  background: #ffffff;
+  border-bottom: 1px solid #f1f1f1;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+.nav-link {
+  color: #333 !important;
+  font-weight: 500;
+  position: relative;
+  padding: 8px 12px;
+  transition: 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #4a90e2 !important;
+}
+
+.nav-animated::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 2px;
+  background: #4a90e2;
   left: 0;
   bottom: 0;
+  transition: width 0.3s ease;
+}
+
+.nav-animated:hover::after {
   width: 100%;
 }
 
-.product-card {
-  transition: all 0.3s ease;
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.product-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
-}
-
-.product-img-wrapper {
-  height: 300px;
-  overflow: hidden;
+.profile-btn {
   background: #f8f9fa;
+  border-radius: 50px;
+  padding: 6px 15px;
+  border: 1px solid #e9ecef;
+  transition: 0.3s ease;
 }
 
-.product-img {
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-  transition: transform 0.4s ease;
+.profile-btn:hover {
+  background: #ffffff;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
 }
 
-.product-card:hover .product-img {
-  transform: scale(1.08);
+/* ========================================
+   GLOBAL CARD STYLE
+======================================== */
+.card-modern {
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.06);
+  transition: 0.3s ease;
 }
 
-/* Background */
-.signup-wrapper {
+.card-modern:hover {
+  transform: translateY(-5px);
+}
+
+/* ========================================
+   GLOBAL WRAPPER
+======================================== */
+.page-wrapper {
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #f8f9fc;
-  padding: 20px;
+  padding: 40px 20px;
 }
 
-/* Card */
-.signup-card {
-  background: #ffffff;
-  padding: 40px;
-  border-radius: 20px;
-  width: 100%;
-  max-width: 420px;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
-  transition: 0.3s ease;
-}
-
-/* Subtle hover effect */
-.signup-card:hover {
-  transform: translateY(-5px);
-}
-
-/* Heading */
-.signup-card h2 {
-  font-weight: 700;
-  color: #222;
-}
-
-/* Floating Inputs */
+/* ========================================
+   FLOATING INPUT (GLOBAL)
+======================================== */
 .floating-group {
   position: relative;
   margin-bottom: 25px;
@@ -101,8 +97,8 @@
 .floating-group input {
   width: 100%;
   padding: 14px;
-  border-radius: 12px;
-  border: 1px solid #e0e0e0;
+  border-radius: 14px;
+  border: 1px solid #ddd;
   outline: none;
   font-size: 15px;
   transition: 0.3s ease;
@@ -111,7 +107,7 @@
 
 .floating-group input:focus {
   border-color: #4a90e2;
-  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+  box-shadow: 0 0 0 3px rgba(74,144,226,0.1);
 }
 
 .floating-group label {
@@ -119,11 +115,10 @@
   top: 14px;
   left: 14px;
   color: #999;
-  font-size: 14px;
-  transition: 0.3s ease;
-  pointer-events: none;
   background: #fff;
   padding: 0 5px;
+  transition: 0.3s ease;
+  pointer-events: none;
 }
 
 .floating-group input:focus + label,
@@ -133,111 +128,64 @@
   color: #4a90e2;
 }
 
-/* Button */
-.btn-modern {
+/* ========================================
+   BUTTONS
+======================================== */
+.btn-primary-modern {
   width: 100%;
-  padding: 14px;
-  border-radius: 12px;
+  padding: 15px;
+  border-radius: 14px;
   border: none;
-  background: #4a90e2;
+  background: linear-gradient(90deg, #4a90e2, #357abd);
   color: white;
   font-weight: 600;
   transition: 0.3s ease;
 }
 
-.btn-modern:hover {
-  background: #357abd;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(74, 144, 226, 0.3);
+.btn-primary-modern:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 25px rgba(74,144,226,0.25);
 }
 
-/* Upload */
-.upload-label {
-  display: block;
-  margin-bottom: 6px;
-  font-weight: 500;
-  color: #333;
-}
-
-/* Image Preview */
-.image-preview {
-  margin-top: 10px;
-  width: 90px;
-  height: 90px;
-  object-fit: cover;
-  border-radius: 50%;
-  border: 3px solid #f0f0f0;
-  animation: fadeIn 0.4s ease;
-}
-
-/* Animation */
-.animate-slide {
-  animation: slideUp 0.6s ease forwards;
-}
-
-@keyframes slideUp {
-  from {
-    transform: translateY(25px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* Background */
-.profile-wrapper {
+/* ========================================
+   LOGIN / SIGNUP
+======================================== */
+.auth-wrapper {
   min-height: 100vh;
-  background: #f8f9fc;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 30px;
 }
 
-/* Card */
+.auth-card {
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 24px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.07);
+}
+
+/* ========================================
+   PROFILE PAGE
+======================================== */
+.profile-wrapper {
+  min-height: 100vh;
+  padding: 40px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .profile-card {
   background: #ffffff;
-  border-radius: 20px;
+  border-radius: 24px;
   padding: 40px;
   width: 100%;
   max-width: 900px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.07);
-  transition: 0.3s ease;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.06);
 }
 
-.profile-card:hover {
-  transform: translateY(-5px);
-}
-
-/* Header */
-.profile-header {
-  text-align: center;
-  margin-bottom: 40px;
-}
-
-.profile-header h3 {
-  font-weight: 700;
-  color: #222;
-}
-
-.profile-header p {
-  color: #777;
-}
-
-/* Layout */
 .profile-content {
   display: flex;
   gap: 40px;
@@ -253,7 +201,6 @@
   flex: 2;
 }
 
-/* Profile Image */
 .image-container {
   width: 160px;
   height: 160px;
@@ -261,7 +208,7 @@
   border-radius: 50%;
   overflow: hidden;
   border: 4px solid #e9ecef;
-  transition: 0.4s ease;
+  transition: 0.3s ease;
 }
 
 .image-container img {
@@ -272,298 +219,128 @@
 
 .image-container:hover {
   transform: scale(1.05);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.15);
 }
 
-/* Floating Input */
-.floating-group {
-  position: relative;
-  margin-bottom: 25px;
-}
-
-.floating-group input {
-  width: 100%;
-  padding: 14px;
-  border-radius: 12px;
-  border: 1px solid #ddd;
-  outline: none;
-  font-size: 15px;
-  transition: 0.3s ease;
-}
-
-.floating-group input:focus {
-  border-color: #4a90e2;
-  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
-}
-
-.floating-group label {
-  position: absolute;
-  top: 14px;
-  left: 14px;
-  color: #999;
-  background: #fff;
-  padding: 0 5px;
-  transition: 0.3s ease;
-  pointer-events: none;
-}
-
-.floating-group input:focus + label,
-.floating-group input:not(:placeholder-shown) + label {
-  top: -8px;
-  font-size: 12px;
-  color: #4a90e2;
-}
-
-/* Button */
-.btn-update {
-  width: 100%;
-  padding: 14px;
-  border-radius: 12px;
-  border: none;
-  background: #4a90e2;
-  color: white;
-  font-weight: 600;
-  transition: 0.3s ease;
-}
-
-.btn-update:hover {
-  background: #357abd;
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(74, 144, 226, 0.3);
-}
-
-/* Animation */
-.animate-fade {
-  animation: fadeUp 0.6s ease forwards;
-}
-
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Background */
-.product-wrapper {
-  min-height: 100vh;
-  background: #f8f9fc;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 30px;
-}
-
-/* Card */
-.product-card {
-  background: #ffffff;
-  padding: 40px;
-  border-radius: 20px;
-  width: 100%;
-  max-width: 500px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.07);
-  transition: 0.3s ease;
-}
-
-.product-card:hover {
-  transform: translateY(-5px);
-}
-
-/* Floating Input */
-.floating-group {
-  position: relative;
-  margin-bottom: 25px;
-}
-
-.floating-group input {
-  width: 100%;
-  padding: 14px;
-  border-radius: 12px;
-  border: 1px solid #ddd;
-  outline: none;
-  font-size: 15px;
-  transition: 0.3s ease;
-  background: #fff;
-}
-
-.floating-group input:focus {
-  border-color: #4a90e2;
-  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
-}
-
-.floating-group label {
-  position: absolute;
-  top: 14px;
-  left: 14px;
-  color: #999;
-  background: #fff;
-  padding: 0 5px;
-  transition: 0.3s ease;
-  pointer-events: none;
-}
-
-.floating-group input:focus + label,
-.floating-group input:not(:placeholder-shown) + label {
-  top: -8px;
-  font-size: 12px;
-  color: #4a90e2;
-}
-
-/* Button */
-.btn-submit {
-  width: 100%;
-  padding: 14px;
-  border-radius: 12px;
-  border: none;
-  background: #4a90e2;
-  color: white;
-  font-weight: 600;
-  transition: 0.3s ease;
-}
-
-.btn-submit:hover {
-  background: #357abd;
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(74, 144, 226, 0.3);
-}
-
-/* Image Preview */
-.product-preview {
-  margin-top: 15px;
-  width: 120px;
-  height: 120px;
-  object-fit: cover;
-  border-radius: 12px;
-  border: 3px solid #eee;
-  animation: fadeIn 0.4s ease;
-}
-
-/* Animation */
-.animate-fade {
-  animation: fadeUp 0.6s ease forwards;
-}
-
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* Background */
+/* ========================================
+   ADD / UPDATE PRODUCT
+======================================== */
+.product-wrapper,
 .update-wrapper {
   min-height: 100vh;
-  background: #f8f9fc;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 30px;
+  padding: 40px 20px;
 }
 
-/* Card */
+.product-card,
 .update-card {
   background: #ffffff;
-  padding: 40px;
-  border-radius: 20px;
+  padding: 45px;
+  border-radius: 24px;
   width: 100%;
   max-width: 520px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.07);
+  box-shadow: 0 20px 45px rgba(0,0,0,0.06);
+}
+
+.product-preview,
+.update-preview {
+  margin-top: 15px;
+  width: 130px;
+  height: 130px;
+  object-fit: cover;
+  border-radius: 16px;
+  border: 3px solid #f0f0f0;
   transition: 0.3s ease;
 }
 
-.update-card:hover {
-  transform: translateY(-5px);
+.product-preview:hover,
+.update-preview:hover {
+  transform: scale(1.05);
 }
 
-/* Floating Inputs */
-.floating-group {
+/* ========================================
+   SHINY PRODUCT LIST CARDS (FIXED)
+======================================== */
+.product-list-card {
+  background: linear-gradient(145deg, #ffffff, #f8f9fc);
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+  transition: all 0.35s ease;
   position: relative;
-  margin-bottom: 25px;
 }
 
-.floating-group input {
-  width: 100%;
-  padding: 14px;
-  border-radius: 12px;
-  border: 1px solid #ddd;
-  outline: none;
-  font-size: 15px;
-  transition: 0.3s ease;
-  background: #fff;
+/* Hover Lift */
+.product-list-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 25px 50px rgba(0,0,0,0.15);
 }
 
-.floating-group input:focus {
-  border-color: #4a90e2;
-  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
-}
-
-.floating-group label {
+/* Glow Overlay */
+.product-list-card::before {
+  content: "";
   position: absolute;
-  top: 14px;
-  left: 14px;
-  color: #999;
-  background: #fff;
-  padding: 0 5px;
-  transition: 0.3s ease;
-  pointer-events: none;
+  inset: 0;
+  border-radius: 22px;
+  background: linear-gradient(120deg, rgba(74,144,226,0.15), transparent);
+  opacity: 0;
+  transition: 0.4s ease;
+
+  pointer-events: none;   /* 🔥 THIS FIXES CLICK ISSUE */
 }
 
-.floating-group input:focus + label,
-.floating-group input:not(:placeholder-shown) + label {
-  top: -8px;
-  font-size: 12px;
+.product-list-card:hover::before {
+  opacity: 1;
+}
+
+/* Image Wrapper */
+.product-img-wrapper {
+  height: 220px;
+  background: linear-gradient(135deg, #f6f8ff, #eef2ff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Image Zoom */
+.product-img {
+  max-height: 180px;
+  object-fit: contain;
+  transition: transform 0.5s ease;
+}
+
+.product-list-card:hover .product-img {
+  transform: scale(1.12);
+}
+
+/* Price Highlight */
+.product-price {
+  font-weight: 700;
+  font-size: 18px;
   color: #4a90e2;
 }
 
-/* Button */
-.btn-update-product {
-  width: 100%;
-  padding: 14px;
-  border-radius: 12px;
-  border: none;
-  background: #4a90e2;
-  color: white;
-  font-weight: 600;
+/* Button Glow */
+.product-list-card .btn {
+  border-radius: 30px;
   transition: 0.3s ease;
 }
 
-.btn-update-product:hover {
-  background: #357abd;
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(74, 144, 226, 0.3);
+.product-list-card .btn-danger:hover {
+  box-shadow: 0 0 15px rgba(220,53,69,0.5);
 }
 
-/* Image Preview */
-.update-preview {
-  margin-top: 15px;
-  width: 120px;
-  height: 120px;
-  object-fit: cover;
-  border-radius: 12px;
-  border: 3px solid #eee;
-  animation: fadeIn 0.4s ease;
+.product-list-card .btn-light:hover {
+  box-shadow: 0 0 15px rgba(74,144,226,0.4);
 }
 
-/* Animation */
+
+/* ========================================
+   ANIMATION
+======================================== */
 .animate-fade {
   animation: fadeUp 0.6s ease forwards;
 }
@@ -571,7 +348,7 @@
 @keyframes fadeUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(25px);
   }
   to {
     opacity: 1;
@@ -579,101 +356,289 @@
   }
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.8);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* Background */
-.login-wrapper {
+/* ========================================
+   SIGNUP PAGE BACKGROUND
+======================================== */
+.signup-wrapper {
   min-height: 100vh;
-  background: #f8f9fc;
   display: flex;
   justify-content: center;
   align-items: center;
+  background: linear-gradient(135deg, #eef2ff, #f8fbff);
   padding: 30px;
 }
 
-/* Card */
+/* ========================================
+   SIGNUP CARD
+======================================== */
+.signup-card {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  padding: 45px;
+  border-radius: 28px;
+  width: 100%;
+  max-width: 460px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.08);
+  transition: all 0.4s ease;
+  position: relative;
+}
+
+.signup-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 35px 70px rgba(74, 144, 226, 0.15);
+}
+
+/* ========================================
+   GRADIENT HEADING
+======================================== */
+.gradient-text {
+  background: linear-gradient(90deg, #4a90e2, #357abd);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* ========================================
+   FLOATING INPUT ENHANCEMENT
+======================================== */
+.floating-group input {
+  background: #fdfdfd;
+  border: 1px solid #e6eaf2;
+  border-radius: 16px;
+  padding: 15px;
+  transition: all 0.3s ease;
+}
+
+.floating-group input:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
+}
+
+/* ========================================
+   FILE INPUT
+======================================== */
+.upload-label {
+  font-weight: 600;
+  color: #444;
+}
+
+.form-control {
+  border-radius: 14px;
+  border: 1px solid #e6eaf2;
+  transition: 0.3s ease;
+}
+
+.form-control:focus {
+  border-color: #4a90e2;
+  box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
+}
+
+/* ========================================
+   IMAGE PREVIEW
+======================================== */
+.image-preview {
+  margin-top: 15px;
+  width: 110px;
+  height: 110px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid #f0f4ff;
+  transition: 0.4s ease;
+}
+
+.image-preview:hover {
+  transform: scale(1.08);
+  box-shadow: 0 10px 25px rgba(74,144,226,0.25);
+}
+
+/* ========================================
+   BUTTON SHINY
+======================================== */
+.btn-modern {
+  width: 100%;
+  padding: 16px;
+  border-radius: 16px;
+  border: none;
+  background: linear-gradient(90deg, #4a90e2, #357abd);
+  color: white;
+  font-weight: 600;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-modern:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 35px rgba(74,144,226,0.35);
+}
+
+/* Button Shine Animation */
+.btn-modern::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.5), transparent);
+  transform: skewX(-25deg);
+}
+
+.btn-modern:hover::after {
+  animation: shine 0.8s ease;
+}
+
+@keyframes shine {
+  100% {
+    left: 125%;
+  }
+}
+
+/* ========================================
+   ANIMATION
+======================================== */
+.animate-slide {
+  animation: slideUp 0.6s ease forwards;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========================================
+   LOGIN PAGE BACKGROUND
+======================================== */
+.login-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(circle at top, #eef2ff, #f8fbff);
+  padding: 30px;
+}
+
+/* ========================================
+   LOGIN CARD
+======================================== */
 .login-card {
-  background: #ffffff;
-  padding: 40px;
-  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  padding: 45px;
+  border-radius: 28px;
   width: 100%;
   max-width: 420px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.07);
-  transition: 0.3s ease;
+  box-shadow: 
+    0 25px 60px rgba(0, 0, 0, 0.08),
+    0 0 0 1px rgba(255,255,255,0.6);
+  transition: all 0.4s ease;
+  position: relative;
 }
 
 .login-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-8px);
+  box-shadow: 0 35px 70px rgba(74,144,226,0.18);
 }
 
-/* Floating Inputs */
-.floating-group {
-  position: relative;
-  margin-bottom: 25px;
+/* ========================================
+   LOGIN HEADER
+======================================== */
+.login-card h3 {
+  font-weight: 700;
+  color: #222;
 }
 
+.login-card p {
+  font-size: 14px;
+}
+
+/* ========================================
+   FLOATING INPUT ENHANCEMENT
+======================================== */
 .floating-group input {
-  width: 100%;
-  padding: 14px;
-  border-radius: 12px;
-  border: 1px solid #ddd;
-  outline: none;
-  font-size: 15px;
-  transition: 0.3s ease;
-  background: #fff;
+  background: #fdfdfd;
+  border: 1px solid #e6eaf2;
+  border-radius: 16px;
+  padding: 15px;
+  transition: all 0.3s ease;
 }
 
 .floating-group input:focus {
   border-color: #4a90e2;
-  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+  box-shadow: 0 0 0 4px rgba(74,144,226,0.12);
 }
 
-.floating-group label {
-  position: absolute;
-  top: 14px;
-  left: 14px;
-  color: #999;
-  background: #fff;
-  padding: 0 5px;
-  transition: 0.3s ease;
-  pointer-events: none;
-}
-
-.floating-group input:focus + label,
-.floating-group input:not(:placeholder-shown) + label {
-  top: -8px;
-  font-size: 12px;
-  color: #4a90e2;
-}
-
-/* Button */
+/* ========================================
+   LOGIN BUTTON (SHINY)
+======================================== */
 .btn-login {
   width: 100%;
-  padding: 14px;
-  border-radius: 12px;
+  padding: 16px;
+  border-radius: 16px;
   border: none;
-  background: #4a90e2;
+  background: linear-gradient(90deg, #4a90e2, #357abd);
   color: white;
   font-weight: 600;
-  transition: 0.3s ease;
+  font-size: 15px;
+  letter-spacing: 0.3px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
 }
 
 .btn-login:hover {
-  background: #357abd;
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(74, 144, 226, 0.3);
+  transform: translateY(-3px);
+  box-shadow: 0 18px 35px rgba(74,144,226,0.35);
 }
 
-/* Animation */
+/* Button Shine Effect */
+.btn-login::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -80%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.6),
+    transparent
+  );
+  transform: skewX(-25deg);
+}
+
+.btn-login:hover::after {
+  animation: shine 0.9s ease;
+}
+
+@keyframes shine {
+  100% {
+    left: 120%;
+  }
+}
+
+/* ========================================
+   SIGNUP LINK
+======================================== */
+.login-card a {
+  color: #4a90e2;
+  font-weight: 500;
+}
+
+.login-card a:hover {
+  text-decoration: underline;
+}
+
+/* ========================================
+   ANIMATION
+======================================== */
 .animate-fade {
   animation: fadeUp 0.6s ease forwards;
 }
@@ -681,7 +646,7 @@
 @keyframes fadeUp {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(35px);
   }
   to {
     opacity: 1;

@@ -1,116 +1,297 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const ProductList = () => {
 
-    const [products, setProducts] = React.useState([]);
+    const [products, setProducts] = useState([]);
+    const [filteredProducts, setFilteredProducts] = useState([]);
+
+    const [selectedCategory, setSelectedCategory] = useState("");
+    const [priceRange, setPriceRange] = useState(0);
+    const [maxProductPrice, setMaxProductPrice] = useState(0);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         getProducts();
     }, []);
 
-    const getProducts = async () => {
-        let result = await fetch("http://172.16.60.17:5000/products", {
-            headers: {
-                authorization: `bearer ${JSON.parse(localStorage.getItem('token'))}`
-            }
-        });
-        result = await result.json();
-        setProducts(result);
-    }
-    const deleteProduct = async (id) => {
-        let result = await fetch(`http://172.16.60.17:5000/product/${id}`, {
-            method: 'delete',
-            headers: {
-                authorization: `bearer ${JSON.parse(localStorage.getItem('token'))}`
-            }
-        });
-        result = await result.json();
-        if (result) {
-            getProducts();
-        }
-    }
+    useEffect(() => {
+        applyFilters();
+    }, [selectedCategory, priceRange]);
 
-    const searchHandle = async (event) => {
-        let key = event.target.value;
-        if (key) {
-            let result = await fetch(`http://172.16.60.17:5000/search/${key}`, {
+    /* ================= SAFE FETCH PRODUCTS ================= */
+
+    const getProducts = async () => {
+        try {
+            const auth = JSON.parse(localStorage.getItem("user"));
+            if (!auth) return;
+
+            let response = await fetch("http://localhost:5000/products", {
                 headers: {
-                    authorization: `bearer ${JSON.parse(localStorage.getItem('token'))}`
+                    Authorization: `Bearer ${auth.auth}`
                 }
             });
-            result = await result.json();
-            if (result) {
-                setProducts(result);
+
+            let result = await response.json();
+
+            // 🔥 IMPORTANT FIX
+            if (!Array.isArray(result)) {
+                console.error("API did not return array:", result);
+                setProducts([]);
+                setFilteredProducts([]);
+                return;
             }
-        } else {
-            getProducts();
+
+            setProducts(result);
+            setFilteredProducts(result);
+
+            const highestPrice =
+                result.length > 0
+                    ? Math.max(...result.map(item => Number(item.price)))
+                    : 0;
+
+            setMaxProductPrice(highestPrice);
+            setPriceRange(highestPrice);
+
+        } catch (error) {
+            console.log("Fetch Error:", error);
+            setProducts([]);
+            setFilteredProducts([]);
         }
-    }
+    };
+
+    /* ================= DELETE ================= */
+
+    const deleteProduct = async (id) => {
+        try {
+            const auth = JSON.parse(localStorage.getItem("user"));
+            if (!auth) return;
+
+            await fetch(
+                `http://localhost:5000/product/${id}`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        Authorization: `Bearer ${auth.auth}`
+                    }
+                }
+            );
+
+            getProducts();
+
+        } catch (error) {
+            console.log("Delete Error:", error);
+        }
+    };
+
+    /* ================= APPLY FILTERS ================= */
+
+    const applyFilters = () => {
+
+        if (!Array.isArray(products)) return;
+
+        let updated = [...products];
+
+        if (selectedCategory) {
+            updated = updated.filter(
+                (item) => item.category === selectedCategory
+            );
+        }
+
+        if (priceRange) {
+            updated = updated.filter(
+                (item) => Number(item.price) <= Number(priceRange)
+            );
+        }
+
+        setFilteredProducts(updated);
+    };
+
+    const resetFilters = () => {
+        setSelectedCategory("");
+        setPriceRange(maxProductPrice);
+        setFilteredProducts(products);
+    };
+
+    /* ================= SEARCH ================= */
+
+    const searchHandle = async (event) => {
+
+        try {
+            const key = event.target.value;
+            const auth = JSON.parse(localStorage.getItem("user"));
+            if (!auth) return;
+
+            if (key) {
+                let response = await fetch(
+                    `http://localhost:5000/search/${key}`,
+                    {
+                        headers: {
+                            Authorization: `Bearer ${auth.auth}`
+                        }
+                    }
+                );
+
+                let result = await response.json();
+
+                if (!Array.isArray(result)) {
+                    setFilteredProducts([]);
+                    return;
+                }
+
+                setFilteredProducts(result);
+
+            } else {
+                setFilteredProducts(products);
+            }
+
+        } catch (error) {
+            console.log("Search Error:", error);
+        }
+    };
+
+    /* ================= SAFE CATEGORY ================= */
+
+    const categories = Array.isArray(products)
+        ? [...new Set(products.map(p => p.category))]
+        : [];
+
     return (
         <div className="container py-5">
 
-            {/* HEADER */}
-            <div className="d-flex justify-content-between align-items-center mb-5 flex-wrap gap-3">
-                <div>
-                    <h2 className="fw-bold mb-1">Our Products</h2>
-                    <p className="text-muted mb-0">
-                        {products.length} Products Available
-                    </p>
-                </div>
+            <div className="row">
 
-                <div className="input-group shadow-sm" style={{ maxWidth: "350px" }}>
-                    <span className="input-group-text bg-white border-end-0">
-                        <i className="bi bi-search"></i>
-                    </span>
-                    <input
-                        type="text"
-                        className="form-control border-start-0"
-                        placeholder="Search products..."
-                        onChange={searchHandle}
-                    />
-                </div>
-            </div>
+                {/* SIDEBAR */}
+                <div className="col-lg-3 mb-4">
 
-            {/* PRODUCT GRID */}
-            {products.length > 0 ? (
-                <div className="row g-4">
-                    {products.map((item) => (
-                        <div className="col-sm-6 col-md-4 col-lg-3" key={item._id}>
-                            <div className="card product-card border-0 shadow-sm h-100">
+                    <div className="border rounded-4 p-4 shadow-sm">
 
-                                {/* IMAGE */}
-                                <div className="product-img-wrapper">
-                                    <img
-                                        src={`http://172.16.60.17:5000/uploads/${item.image}`}
-                                        alt={item.name}
-                                        className="card-img-top product-img"
+                        <h5 className="fw-bold mb-4">Filters</h5>
+
+                        <div className="mb-4">
+                            <h6 className="fw-semibold mb-3">Category</h6>
+
+                            {categories.map((cat, index) => (
+                                <div key={index} className="form-check mb-2">
+                                    <input
+                                        type="radio"
+                                        name="category"
+                                        className="form-check-input"
+                                        checked={selectedCategory === cat}
+                                        onChange={() => setSelectedCategory(cat)}
                                     />
+                                    <label className="form-check-label">
+                                        {cat}
+                                    </label>
                                 </div>
+                            ))}
+                        </div>
 
-                                <div className="card-body d-flex flex-column">
+                        <div className="mb-4">
+                            <h6 className="fw-semibold mb-3">Price Range</h6>
 
-                                    <small className="text-uppercase text-muted mb-1">
-                                        {item.category}
-                                    </small>
+                            <input
+                                type="range"
+                                min="0"
+                                max={maxProductPrice}
+                                value={priceRange}
+                                className="form-range"
+                                onChange={(e) => setPriceRange(e.target.value)}
+                            />
 
-                                    <h6 className="fw-semibold mb-2 text-truncate">
-                                        {item.name}
-                                    </h6>
+                            <div className="d-flex justify-content-between mt-2">
+                                <span className="text-muted">₹0</span>
+                                <span className="fw-bold">₹{priceRange}</span>
+                            </div>
+                        </div>
 
-                                    <span className="text-muted small mb-2">
-                                        Brand: <strong>{item.company}</strong>
-                                    </span>
+                        <button
+                            className="btn btn-outline-dark w-100 rounded-pill"
+                            onClick={resetFilters}
+                        >
+                            Reset Filters
+                        </button>
 
-                                    <div className="mt-auto">
-                                        <h5 className="fw-bold text-dark mb-3">
+                    </div>
+
+                </div>
+
+                {/* PRODUCTS */}
+                <div className="col-lg-9">
+
+                    <div className="d-flex justify-content-between align-items-center mb-4">
+
+                        <div>
+                            <h2 className="fw-bold mb-1">Admin Products</h2>
+                            <p className="text-muted mb-0">
+                                {filteredProducts.length} Products Available
+                            </p>
+                        </div>
+
+                        <div
+                            className="input-group shadow-sm rounded-pill overflow-hidden"
+                            style={{ maxWidth: "300px" }}
+                        >
+                            <span className="input-group-text bg-white border-0">
+                                🔍
+                            </span>
+                            <input
+                                type="text"
+                                className="form-control border-0"
+                                placeholder="Search..."
+                                onChange={searchHandle}
+                            />
+                        </div>
+
+                    </div>
+
+                    {Array.isArray(filteredProducts) &&
+                        filteredProducts.length > 0 ? (
+                        <div className="row g-4">
+                            {filteredProducts.map((item) => (
+                                <div className="col-sm-6 col-md-4" key={item._id}>
+                                    <div className="border rounded-4 shadow-sm p-3 h-100">
+
+                                        <div
+                                            className="text-center mb-3"
+                                            onClick={() =>
+                                                navigate(`/product/${item._id}`)
+                                            }
+                                            style={{ cursor: "pointer" }}
+                                        >
+                                            <img
+                                                src={
+                                                    item.images &&
+                                                        item.images.length > 0
+                                                        ? `http://localhost:5000/uploads/${item.images[0]}`
+                                                        : ""
+                                                }
+                                                alt={item.name}
+                                                className="img-fluid"
+                                                style={{
+                                                    height: "180px",
+                                                    objectFit: "contain"
+                                                }}
+                                            />
+                                        </div>
+
+                                        <small className="text-muted">
+                                            {item.category}
+                                        </small>
+
+                                        <h6 className="fw-semibold mt-2">
+                                            {item.name}
+                                        </h6>
+
+                                        <p className="fw-bold text-dark">
                                             ₹{item.price}
-                                        </h5>
+                                        </p>
 
-                                        <div className="d-flex gap-2">
+                                        <div className="d-flex gap-2 mt-3">
                                             <Link
                                                 to={`/update-product/${item._id}`}
-                                                className="btn btn-outline-dark btn-sm w-100"
+                                                className="btn btn-light btn-sm w-100 shadow-sm fw-semibold"
                                             >
                                                 Edit
                                             </Link>
@@ -122,23 +303,25 @@ const ProductList = () => {
                                                 Delete
                                             </button>
                                         </div>
+
                                     </div>
                                 </div>
-
-                            </div>
+                            ))}
                         </div>
-                    ))}
+                    ) : (
+                        <div className="text-center py-5">
+                            <h5 className="text-muted">
+                                No products found
+                            </h5>
+                        </div>
+                    )}
+
                 </div>
-            ) : (
-                <div className="text-center py-5">
-                    <i className="bi bi-bag fs-1 text-muted"></i>
-                    <h5 className="mt-3 text-muted">No products available</h5>
-                </div>
-            )}
+
+            </div>
 
         </div>
     );
-
-}
+};
 
 export default ProductList;

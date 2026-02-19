@@ -9,6 +9,9 @@ import AddProduct from './Components/AddProduct';
 import ProductList from './Components/ProductList';
 import UpdateProduct from './Components/UpdateProduct';
 import Profile from './Components/Profile';
+import SingleProduct from './Components/SingleProduct';
+import Orders from './Components/Orders';
+import Dashboard from './Components/Dashboard';
 
 function App() {
   return (
@@ -18,9 +21,12 @@ function App() {
         <Routes>
 
           <Route element={<PrivateComponent />}>
-            <Route path="/" element={<ProductList />} />
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/products" element={<ProductList />} />
             <Route path="/add-product" element={<AddProduct />} />
+            <Route path="/orders" element={<Orders />} />
             <Route path="/update-product/:id" element={<UpdateProduct />} />
+            <Route path="/product/:id" element={<SingleProduct />} />
             <Route path="/logout" element={<h1>Logout</h1>} />
             <Route path="/profile" element={<Profile />} />
           </Route>

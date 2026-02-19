@@ -19,121 +19,121 @@ const SignUp = () => {
         }
     }, []);
 
-const collectData = async (e) => {
-    e.preventDefault();
+    const collectData = async (e) => {
+        e.preventDefault();
 
-    const formData = new FormData();
-    formData.append("name", name);
-    formData.append("email", email);
-    formData.append("password", password);
-    formData.append("mobile", mobile);
+        const formData = new FormData();
+        formData.append("name", name);
+        formData.append("email", email);
+        formData.append("password", password);
+        formData.append("mobile", mobile);
 
-    if (image) {
-        formData.append("image", image);
-    }
+        if (image) {
+            formData.append("image", image);
+        }
 
-    const response = await fetch("http://172.16.60.17:5000/register", {
-        method: "POST",
-        body: formData
-       
-    });
+        const response = await fetch("http://localhost:5000/admin-register", {
+            method: "POST",
+            body: formData
+        });
 
-    const result = await response.json();
-    console.log(result);
+        const result = await response.json();
+        console.log(result);
 
-    if (result.auth) {
-        localStorage.setItem("user", JSON.stringify(result.user));
-        localStorage.setItem("token", JSON.stringify(result.auth));
-        navigate("/login");
-    }
-};
+        if (response.ok) {
+            navigate("/login");
+        } else {
+            alert(result.error || "Registration failed");
+        }
+    };
+
 
 
     return (
-    <div className="signup-wrapper">
+        <div className="signup-wrapper">
 
-        <div className="signup-card animate-slide">
+            <div className="signup-card animate-slide">
 
-            <div className="text-center mb-4">
-                <h2 className="fw-bold gradient-text">Create Account</h2>
-                <p className="text-muted">Join us and start your journey 🚀</p>
-            </div>
-
-            <form onSubmit={collectData}>
-
-                <div className="floating-group">
-                    <input
-                        type="text"
-                        required
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                    />
-                    <label>Full Name</label>
+                <div className="text-center mb-4">
+                    <h2 className="fw-bold gradient-text">Create Account</h2>
+                    <p className="text-muted">Join us and start your journey 🚀</p>
                 </div>
 
-                <div className="floating-group">
-                    <input
-                        type="email"
-                        required
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                    <label>Email Address</label>
-                </div>
+                <form onSubmit={collectData}>
 
-                <div className="floating-group">
-                    <input
-                        type="text"
-                        required
-                        value={mobile}
-                        onChange={(e) => setMobile(e.target.value)}
-                    />
-                    <label>Mobile Number</label>
-                </div>
-
-                <div className="floating-group">
-                    <input
-                        type="password"
-                        required
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                    <label>Password</label>
-                </div>
-
-                <div className="mb-3 text-center">
-                    <label className="upload-label">Upload Profile Image</label>
-                    <input
-                        type="file"
-                        className="form-control"
-                        onChange={(e) => setImage(e.target.files[0])}
-                    />
-
-                    {image && (
-                        <img
-                            src={URL.createObjectURL(image)}
-                            alt="preview"
-                            className="image-preview"
+                    <div className="floating-group">
+                        <input
+                            type="text"
+                            required
+                            value={name}
+                            onChange={(e) => setName(e.target.value)}
                         />
-                    )}
-                </div>
+                        <label>Full Name</label>
+                    </div>
 
-                <button type="submit" className="btn btn-modern">
-                    Create Account
-                </button>
+                    <div className="floating-group">
+                        <input
+                            type="email"
+                            required
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                        <label>Email Address</label>
+                    </div>
 
-                <div className="text-center mt-3">
-                    <small>
-                        Already have an account?
-                        <a href="/login" className="ms-1">Login</a>
-                    </small>
-                </div>
+                    <div className="floating-group">
+                        <input
+                            type="text"
+                            required
+                            value={mobile}
+                            onChange={(e) => setMobile(e.target.value)}
+                        />
+                        <label>Mobile Number</label>
+                    </div>
 
-            </form>
+                    <div className="floating-group">
+                        <input
+                            type="password"
+                            required
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+                        <label>Password</label>
+                    </div>
+
+                    <div className="mb-3 text-center">
+                        <label className="upload-label">Upload Profile Image</label>
+                        <input
+                            type="file"
+                            className="form-control"
+                            onChange={(e) => setImage(e.target.files[0])}
+                        />
+
+                        {image && (
+                            <img
+                                src={URL.createObjectURL(image)}
+                                alt="preview"
+                                className="image-preview"
+                            />
+                        )}
+                    </div>
+
+                    <button type="submit" className="btn btn-modern">
+                        Create Account
+                    </button>
+
+                    <div className="text-center mt-3">
+                        <small>
+                            Already have an account?
+                            <a href="/login" className="ms-1">Login</a>
+                        </small>
+                    </div>
+
+                </form>
+            </div>
         </div>
-    </div>
     );
-    
+
 };
 
 export default SignUp;

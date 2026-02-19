@@ -5,17 +5,18 @@ import logo from "../assets/e-commm.png";
 const Nav = () => {
 
     const auth = localStorage.getItem("user");
-    const user = auth ? JSON.parse(auth) : null;
+    const parsed = auth ? JSON.parse(auth) : null;
+    const user = parsed ? parsed.user : null;
+
     const navigate = useNavigate();
 
     const logout = () => {
         localStorage.removeItem("user");
-        localStorage.removeItem("token");
         navigate("/login", { replace: true });
     };
 
     return (
-        <nav className="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm px-3">
+        <nav className="navbar navbar-expand-lg navbar-custom sticky-top px-3">
             <div className="container-fluid align-items-center">
 
                 <Link to="/" className="navbar-brand d-flex align-items-center py-0">
@@ -23,7 +24,7 @@ const Nav = () => {
                         src={logo}
                         alt="Logo"
                         className="img-fluid"
-                        style={{ maxHeight: "36px" }}
+                        style={{ maxHeight: "40px" }}
                     />
                 </Link>
 
@@ -39,15 +40,18 @@ const Nav = () => {
                 <div className="collapse navbar-collapse align-items-center" id="mainNavbar">
 
                     {user && (
-                        <ul className="navbar-nav me-auto align-items-center">
+                        <ul className="navbar-nav me-auto align-items-center gap-2">
+                            <li className="nav-item"><NavLink to="/" className="nav-link nav-animated">Dashboard</NavLink></li>
                             <li className="nav-item">
-                                <NavLink to="/" className="nav-link">Products</NavLink>
+                                <NavLink to="/products" className="nav-link nav-animated">Products</NavLink>
                             </li>
                             <li className="nav-item">
-                                <NavLink to="/add-product" className="nav-link">Add Product</NavLink>
+                                <NavLink to="/add-product" className="nav-link nav-animated">Add Product</NavLink>
                             </li>
                             <li className="nav-item">
-                                <NavLink to="/profile" className="nav-link">Profile</NavLink>
+                                <Link className="nav-link" to="/orders">
+                                    Orders
+                                </Link>
                             </li>
                         </ul>
                     )}
@@ -56,31 +60,32 @@ const Nav = () => {
                         {user ? (
                             <li className="nav-item dropdown">
                                 <button
-                                    className="btn btn-outline-primary dropdown-toggle d-flex align-items-center"
+                                    className="btn profile-btn dropdown-toggle d-flex align-items-center"
                                     data-bs-toggle="dropdown"
                                 >
                                     <img
                                         src={
                                             user.image
-                                                ? `http://172.16.60.17:5000/uploads/${user.image}`
+                                                ? `http://localhost:5000/uploads/${user.image}`
                                                 : "https://via.placeholder.com/40"
                                         }
                                         alt="Profile"
                                         className="rounded-circle me-2"
-                                        width="35"
-                                        height="35"
-                                        style={{ objectFit: "cover" }}
+                                        width="38"
+                                        height="38"
                                     />
                                     {user.name}
                                 </button>
 
-                                <ul className="dropdown-menu dropdown-menu-end shadow-sm">
+                                <ul className="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4">
                                     <li>
-                                        <NavLink to="/profile" className="dropdown-item">Profile</NavLink>
+                                        <NavLink to="/profile" className="dropdown-item">
+                                            Profile
+                                        </NavLink>
                                     </li>
                                     <li><hr className="dropdown-divider" /></li>
                                     <li>
-                                        <button className="dropdown-item text-danger" onClick={logout}>
+                                        <button className="dropdown-item text-danger fw-semibold" onClick={logout}>
                                             Logout
                                         </button>
                                     </li>
@@ -88,13 +93,13 @@ const Nav = () => {
                             </li>
                         ) : (
                             <>
-                                <li className="nav-item">
-                                    <NavLink to="/login" className="btn btn-outline-primary me-2">
+                                <li className="nav-item me-2">
+                                    <NavLink to="/login" className="btn btn-gradient rounded-pill px-4">
                                         Login
                                     </NavLink>
                                 </li>
                                 <li className="nav-item">
-                                    <NavLink to="/signup" className="btn btn-primary">
+                                    <NavLink to="/signup" className="btn btn-gradient rounded-pill px-4">
                                         Sign Up
                                     </NavLink>
                                 </li>

@@ -1,0 +1,86 @@
+/* Navbar */
+.nav-hover {
+    position: relative;
+    transition: 0.3s;
+}
+
+.nav-hover::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0%;
+    height: 2px;
+    background: #000;
+    transition: 0.3s;
+}
+
+.nav-hover:hover::after {
+    width: 100%;
+}
+
+.navbar-brand:hover {
+    color: #000 !important;
+}
+
+/* HomePage */
+
+/* ================= HERO ================= */
+
+.hero-section {
+    min-height: 85vh;
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+}
+
+.hero-title {
+    font-size: 3.2rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #111;
+}
+
+.brand-highlight {
+    background: linear-gradient(90deg, #000, #555);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+    max-width: 650px;
+    margin: 20px auto;
+    font-size: 1.1rem;
+    color: #666;
+}
+
+/* ================= FEATURES ================= */
+
+.features-section {
+    background: #fafafa;
+}
+
+.feature-card {
+    background: #ffffff;
+    padding: 35px 25px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+    transition: 0.3s;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+}
+
+.feature-icon {
+    font-size: 2rem;
+}
+
+/* ================= CTA ================= */
+
+.cta-section {
+    background: #ffffff;
+    border-top: 1px solid #f0f0f0;
+}
+
