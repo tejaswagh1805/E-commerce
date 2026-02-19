@@ -7,7 +7,20 @@ const Home = () => {
 
     useEffect(() => {
         fetchProducts();
+
+        const carouselElement = document.getElementById("premiumCarousel");
+
+        if (carouselElement && window.bootstrap) {
+            new window.bootstrap.Carousel(carouselElement, {
+                interval: 3000,
+                ride: "carousel",
+                pause: false,
+                wrap: true
+            });
+        }
+
     }, []);
+
 
     const fetchProducts = async () => {
         try {
@@ -39,53 +52,126 @@ const Home = () => {
     return (
         <div style={{ backgroundColor: "#f8f9fa" }}>
 
-            {/* ================= HERO SECTION ================= */}
-            <section
-                className="d-flex align-items-center"
-                style={{
-                    minHeight: "90vh",
-                    background: "#ffffff"
-                }}
-            >
-                <div className="container text-center">
+            {/* ================= PREMIUM PRODUCT SLIDER ================= */}
+            <section className="py-4 bg-white">
+                <div className="container">
 
-                    <h1
-                        className="fw-bold"
-                        style={{
-                            fontSize: "3.2rem",
-                            background: "linear-gradient(90deg, #000, #555)",
-                            WebkitBackgroundClip: "text",
-                            WebkitTextFillColor: "transparent"
-                        }}
+                    <div
+                        id="premiumCarousel"
+                        className="carousel slide carousel-fade"
+                        data-bs-ride="carousel"
                     >
-                        Discover Premium Shopping Experience
-                    </h1>
+                        <div className="carousel-inner rounded-4 shadow-sm">
 
-                    <p
-                        className="mt-4 mb-4 text-secondary"
-                        style={{
-                            maxWidth: "600px",
-                            margin: "0 auto",
-                            fontSize: "1.1rem"
-                        }}
-                    >
-                        Elegant products, seamless checkout, and fast delivery —
-                        crafted for modern shoppers.
-                    </p>
+                            {products.map((item, index) => (
+                                <div
+                                    key={item._id}
+                                    className={`carousel-item ${index === 0 ? "active" : ""}`}
+                                >
+                                    <div
+                                        className="d-flex align-items-center justify-content-between p-5"
+                                        style={{
+                                            background: "linear-gradient(135deg, #ffffff, #f5f5f5)",
+                                            borderRadius: "25px",
+                                            minHeight: "380px"
+                                        }}
+                                    >
 
-                    <Link
-                        to="/shop"
-                        className="btn btn-lg px-5 py-3 fw-semibold shadow"
-                        style={{
-                            borderRadius: "50px",
-                            background: "linear-gradient(90deg, #000, #444)",
-                            color: "#fff",
-                            border: "none",
-                            transition: "0.3s"
-                        }}
-                    >
-                        Start Shopping →
-                    </Link>
+                                        {/* LEFT CONTENT */}
+                                        <div style={{ maxWidth: "500px" }}>
+                                            <small className="text-muted fw-semibold">
+                                                {item.category}
+                                            </small>
+
+                                            <h2
+                                                className="fw-bold mt-2"
+                                                style={{
+                                                    fontSize: "2.5rem",
+                                                    background: "linear-gradient(90deg, #000, #666)",
+                                                    WebkitBackgroundClip: "text",
+                                                    WebkitTextFillColor: "transparent"
+                                                }}
+                                            >
+                                                {item.name}
+                                            </h2>
+
+                                            <p className="text-secondary mt-3">
+                                                Experience premium quality and timeless elegance.
+                                            </p>
+
+                                            <h4 className="fw-bold mt-3">
+                                                ₹{item.price}
+                                            </h4>
+
+                                            <div className="mt-4 d-flex gap-3">
+                                                <button
+                                                    className="btn px-4 py-2 rounded-pill"
+                                                    style={{
+                                                        background: "#000",
+                                                        color: "#fff"
+                                                    }}
+                                                    onClick={() => navigate(`/product/${item._id}`)}
+                                                >
+                                                    View Product
+                                                </button>
+
+                                                <button
+                                                    className="btn px-4 py-2 rounded-pill border"
+                                                    style={{
+                                                        borderColor: "#000",
+                                                        color: "#000"
+                                                    }}
+                                                    onClick={() => addToCart(item)}
+                                                >
+                                                    Add to Cart
+                                                </button>
+                                            </div>
+                                        </div>
+
+                                        {/* RIGHT IMAGE */}
+                                        <div
+                                            className="text-center"
+                                            style={{
+                                                flex: 1
+                                            }}
+                                        >
+                                            <img
+                                                src={`http://172.16.60.17:5000/uploads/${item.images?.[0]}`}
+                                                alt={item.name}
+                                                style={{
+                                                    maxHeight: "280px",
+                                                    objectFit: "contain",
+                                                    filter: "drop-shadow(0 20px 30px rgba(0,0,0,0.15))",
+                                                    transition: "0.4s"
+                                                }}
+                                            />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            ))}
+
+                        </div>
+
+                        {/* Controls */}
+                        <button
+                            className="carousel-control-prev"
+                            type="button"
+                            data-bs-target="#premiumCarousel"
+                            data-bs-slide="prev"
+                        >
+                            <span className="carousel-control-prev-icon"></span>
+                        </button>
+
+                        <button
+                            className="carousel-control-next"
+                            type="button"
+                            data-bs-target="#premiumCarousel"
+                            data-bs-slide="next"
+                        >
+                            <span className="carousel-control-next-icon"></span>
+                        </button>
+                    </div>
 
                 </div>
             </section>
