@@ -18,7 +18,7 @@ const SingleProduct = () => {
         if (!storedData) return;
 
         const result = await fetch(
-            `http://localhost:5000/product/${id}`,
+            `http://172.16.60.17:5000/product/${id}`,
             {
                 headers: {
                     Authorization: `Bearer ${storedData.auth}`
@@ -53,7 +53,7 @@ const SingleProduct = () => {
                     <div className="border rounded-4 p-3 text-center">
 
                         <img
-                            src={`http://localhost:5000/uploads/${selectedImage}`}
+                            src={`http://172.16.60.17:5000/uploads/${selectedImage}`}
                             alt="product"
                             className="img-fluid"
                             style={{
@@ -70,7 +70,7 @@ const SingleProduct = () => {
                             {product.images.map((img, index) => (
                                 <img
                                     key={index}
-                                    src={`http://localhost:5000/uploads/${img}`}
+                                    src={`http://172.16.60.17:5000/uploads/${img}`}
                                     alt="thumb"
                                     onClick={() => setSelectedImage(img)}
                                     style={{

@@ -22,12 +22,12 @@ const SingleProduct = () => {
     }, [id]);
 
     const fetchProduct = async () => {
-        const res = await fetch(`http://localhost:5000/shop-product/${id}`);
+        const res = await fetch(`http://172.16.60.17:5000/shop-product/${id}`);
         const data = await res.json();
         setProduct(data);
         setActiveImage(0);
 
-        const allProductsRes = await fetch(`http://localhost:5000/shop-products`);
+        const allProductsRes = await fetch(`http://172.16.60.17:5000/shop-products`);
         const allProducts = await allProductsRes.json();
 
         const related = allProducts.filter(
@@ -65,7 +65,7 @@ const SingleProduct = () => {
                             <div className="bg-white p-4 shadow-sm rounded-4 text-center">
 
                                 <img
-                                    src={`http://localhost:5000/uploads/${product.images?.[activeImage]}`}
+                                    src={`http://172.16.60.17:5000/uploads/${product.images?.[activeImage]}`}
                                     alt={product.name}
                                     style={{
                                         maxHeight: "400px",
@@ -80,7 +80,7 @@ const SingleProduct = () => {
                                         {product.images.map((img, index) => (
                                             <img
                                                 key={index}
-                                                src={`http://localhost:5000/uploads/${img}`}
+                                                src={`http://172.16.60.17:5000/uploads/${img}`}
                                                 alt="thumb"
                                                 onClick={() => setActiveImage(index)}
                                                 style={{
@@ -224,7 +224,7 @@ const SingleProduct = () => {
                                             onClick={() => navigate(`/product/${item._id}`)}
                                         >
                                             <img
-                                                src={`http://localhost:5000/uploads/${item.images?.[0]}`}
+                                                src={`http://172.16.60.17:5000/uploads/${item.images?.[0]}`}
                                                 alt={item.name}
                                                 className="img-fluid mb-2"
                                                 style={{

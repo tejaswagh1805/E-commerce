@@ -23,7 +23,7 @@ const Profile = () => {
         try {
 
             const response = await fetch(
-                `http://localhost:5000/profile/${user._id}`,
+                `http://172.16.60.17:5000/profile/${user._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -60,7 +60,7 @@ const Profile = () => {
             }
 
             const response = await fetch(
-                `http://localhost:5000/profile/${user._id}`,
+                `http://172.16.60.17:5000/profile/${user._id}`,
                 {
                     method: "PUT",
                     headers: {
@@ -103,7 +103,7 @@ const Profile = () => {
                                     newImage
                                         ? URL.createObjectURL(newImage)
                                         : image
-                                            ? `http://localhost:5000/uploads/${image}`
+                                            ? `http://172.16.60.17:5000/uploads/${image}`
                                             : "https://via.placeholder.com/150"
                                 }
                                 alt="Profile"

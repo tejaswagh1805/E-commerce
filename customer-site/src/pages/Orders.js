@@ -11,7 +11,7 @@ const Orders = () => {
 
     const fetchOrders = async () => {
         const res = await fetch(
-            `http://localhost:5000/customer-orders/${user._id}`
+            `http://172.16.60.17:5000/customer-orders/${user._id}`
         );
         const data = await res.json();
         if (Array.isArray(data)) setOrders(data);
@@ -48,7 +48,7 @@ const Orders = () => {
             const token = localStorage.getItem("token");
 
             const response = await fetch(
-                `http://localhost:5000/invoice/${order._id}`,
+                `http://172.16.60.17:5000/invoice/${order._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -183,7 +183,7 @@ const Orders = () => {
                                             }}
                                         >
                                             <img
-                                                src={`http://localhost:5000/uploads/${item.images?.[0]}`}
+                                                src={`http://172.16.60.17:5000/uploads/${item.images?.[0]}`}
                                                 alt={item.name}
                                                 style={{
                                                     width: "70px",
