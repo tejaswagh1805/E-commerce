@@ -26,8 +26,19 @@ const Navbar = () => {
     }, []);
 
     const handleLogout = () => {
+
+        const user = JSON.parse(localStorage.getItem("user"));
+
+        if (user) {
+            localStorage.removeItem(`cart_${user._id}`);
+        }
+
         localStorage.removeItem("user");
         localStorage.removeItem("token");
+
+        // 🔥 Force CartContext to reload
+        window.dispatchEvent(new Event("storage"));
+
         setUser(null);
         navigate("/");
     };

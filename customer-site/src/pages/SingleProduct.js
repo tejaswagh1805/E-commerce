@@ -4,9 +4,9 @@ import { CartContext } from "../context/CartContext";
 import CartDrawer from "../components/CartDrawer";
 
 const SingleProduct = () => {
-
     const { id } = useParams();
     const navigate = useNavigate();
+    const { addToCart } = useContext(CartContext);
 
     const [product, setProduct] = useState(null);
     const [relatedProducts, setRelatedProducts] = useState([]);
@@ -14,8 +14,6 @@ const SingleProduct = () => {
     const [activeTab, setActiveTab] = useState("description");
     const [activeImage, setActiveImage] = useState(0);
     const [showDrawer, setShowDrawer] = useState(false);
-
-    const { addToCart } = useContext(CartContext);
 
     useEffect(() => {
         fetchProduct();
@@ -41,8 +39,12 @@ const SingleProduct = () => {
         for (let i = 0; i < quantity; i++) {
             addToCart(product);
         }
+        setShowDrawer(true);
+    };
 
-        setShowDrawer(true); // 🔥 OPEN DRAWER
+    const handleBuyNow = () => {
+        handleAddToCart();
+        navigate("/checkout");
     };
 
     if (!product) {
@@ -55,28 +57,37 @@ const SingleProduct = () => {
 
     return (
         <>
-            <div style={{ background: "#f8f9fa", minHeight: "100vh" }}>
+            <div style={{ background: "#f5f6fa", minHeight: "100vh" }}>
                 <div className="container py-5">
 
-                    <div className="row align-items-center">
+                    {/* ================= PRODUCT SECTION ================= */}
+                    <div className="row g-5">
 
-                        {/* IMAGE SECTION */}
-                        <div className="col-md-6 mb-4">
-                            <div className="bg-white p-4 shadow-sm rounded-4 text-center">
+                        {/* IMAGE GALLERY */}
+                        <div className="col-lg-6">
+                            <div className="bg-white p-4 rounded-4 shadow-sm">
 
-                                <img
-                                    src={`http://172.16.60.17:5000/uploads/${product.images?.[activeImage]}`}
-                                    alt={product.name}
+                                <div
                                     style={{
-                                        maxHeight: "400px",
-                                        objectFit: "contain",
-                                        width: "100%"
+                                        overflow: "hidden",
+                                        borderRadius: "20px"
                                     }}
-                                />
+                                >
+                                    <img
+                                        src={`http://172.16.60.17:5000/uploads/${product.images?.[activeImage]}`}
+                                        alt={product.name}
+                                        className="img-fluid"
+                                        style={{
+                                            transition: "0.4s",
+                                            cursor: "zoom-in"
+                                        }}
+                                        onMouseOver={e => e.currentTarget.style.transform = "scale(1.1)"}
+                                        onMouseOut={e => e.currentTarget.style.transform = "scale(1)"}
+                                    />
+                                </div>
 
-                                {/* THUMBNAILS */}
                                 {product.images?.length > 1 && (
-                                    <div className="d-flex justify-content-center gap-3 mt-4 flex-wrap">
+                                    <div className="d-flex gap-3 mt-4 flex-wrap">
                                         {product.images.map((img, index) => (
                                             <img
                                                 key={index}
@@ -84,15 +95,15 @@ const SingleProduct = () => {
                                                 alt="thumb"
                                                 onClick={() => setActiveImage(index)}
                                                 style={{
-                                                    width: "70px",
-                                                    height: "70px",
+                                                    width: "80px",
+                                                    height: "80px",
                                                     objectFit: "contain",
-                                                    borderRadius: "10px",
+                                                    borderRadius: "15px",
                                                     cursor: "pointer",
                                                     border: activeImage === index
                                                         ? "2px solid #000"
                                                         : "2px solid #eee",
-                                                    padding: "5px",
+                                                    padding: "6px",
                                                     background: "#fff"
                                                 }}
                                             />
@@ -103,65 +114,92 @@ const SingleProduct = () => {
                             </div>
                         </div>
 
-                        {/* DETAILS */}
-                        <div className="col-md-6">
-                            <div className="bg-white p-4 shadow-sm rounded-4">
+                        {/* DETAILS / BUY BOX */}
+                        <div className="col-lg-6">
+                            <div
+                                className="bg-white p-4 rounded-4 shadow-sm"
+                                style={{ position: "sticky", top: "100px" }}
+                            >
 
-                                <small className="text-muted">
+                                <small className="text-uppercase text-muted fw-semibold">
                                     {product.category}
                                 </small>
 
-                                <h2 className="fw-bold mt-2">
-                                    {product.name}
-                                </h2>
+                                <h2 className="fw-bold mt-2">{product.name}</h2>
 
-                                <h3 className="fw-bold mt-3">
-                                    ₹{product.price}
+                                {/* Rating */}
+                                <div className="mb-2 text-warning">
+                                    ⭐⭐⭐⭐☆ <span className="text-muted">(245 ratings)</span>
+                                </div>
+
+                                {/* Price */}
+                                <h3 className="mt-3">
+                                    <span className="text-danger fw-bold">
+                                        ₹{product.price}
+                                    </span>
+                                    <span className="text-muted text-decoration-line-through ms-2">
+                                        ₹{product.price + 500}
+                                    </span>
                                 </h3>
 
-                                <p className="mt-3 text-muted">
-                                    Premium quality product crafted with excellence.
-                                </p>
+                                <p className="text-success fw-semibold">In Stock</p>
+
+                                <hr />
+
+                                <ul className="text-muted">
+                                    <li>Premium Quality Material</li>
+                                    <li>1 Year Warranty</li>
+                                    <li>Easy Returns</li>
+                                    <li>Fast & Secure Delivery</li>
+                                </ul>
 
                                 {/* Quantity */}
                                 <div className="d-flex align-items-center gap-3 mt-4">
                                     <button
-                                        className="btn btn-outline-dark"
+                                        className="btn btn-outline-dark rounded-circle"
                                         onClick={() => quantity > 1 && setQuantity(quantity - 1)}
-                                    >
-                                        −
-                                    </button>
+                                    >−</button>
 
-                                    <span className="fw-bold fs-5">
-                                        {quantity}
-                                    </span>
+                                    <span className="fw-bold fs-5">{quantity}</span>
 
                                     <button
-                                        className="btn btn-outline-dark"
+                                        className="btn btn-outline-dark rounded-circle"
                                         onClick={() => setQuantity(quantity + 1)}
-                                    >
-                                        +
-                                    </button>
+                                    >+</button>
                                 </div>
 
-                                <button
-                                    className="btn w-100 mt-4 text-white"
-                                    style={{
-                                        background: "linear-gradient(135deg, #000, #434343)",
-                                        borderRadius: "30px",
-                                        padding: "12px"
-                                    }}
-                                    onClick={handleAddToCart}
-                                >
-                                    🛒 Add to Cart
-                                </button>
+                                {/* Buttons */}
+                                <div className="mt-4 d-flex gap-3">
+
+                                    {/* Add To Cart */}
+                                    <button
+                                        className="btn add-cart-btn"
+                                        onClick={handleAddToCart}
+                                    >
+                                        Add to Cart
+                                    </button>
+
+                                    {/* Buy Now */}
+                                    <button
+                                        className="btn buy-now-btn"
+                                        onClick={handleBuyNow}
+                                    >
+                                        Buy Now
+                                    </button>
+
+                                </div>
+
+                                <div className="mt-4 p-3 bg-light rounded-3">
+                                    <p className="mb-1">🚚 Free Delivery by Tomorrow</p>
+                                    <p className="mb-0">🔒 100% Secure Payment</p>
+                                </div>
 
                             </div>
                         </div>
 
                     </div>
 
-                    {/* ================= TABS SECTION ================= */}
+                    {/* ================= TABS ================= */}
                     <div className="mt-5 bg-white p-4 shadow-sm rounded-4">
                         <ul className="nav nav-tabs mb-4">
                             <li className="nav-item">
@@ -172,13 +210,12 @@ const SingleProduct = () => {
                                     Description
                                 </button>
                             </li>
-
                             <li className="nav-item">
                                 <button
                                     className={`nav-link ${activeTab === "reviews" ? "active" : ""}`}
                                     onClick={() => setActiveTab("reviews")}
                                 >
-                                    Reviews (2)
+                                    Reviews
                                 </button>
                             </li>
                         </ul>
@@ -186,60 +223,50 @@ const SingleProduct = () => {
                         {activeTab === "description" && (
                             <p>
                                 {product.description ||
-                                    "High-quality product designed for performance."}
+                                    "High-quality premium product designed for performance and durability."}
                             </p>
                         )}
 
                         {activeTab === "reviews" && (
                             <>
                                 <div className="mb-3">
-                                    <strong>⭐️⭐️⭐️⭐️⭐️ John Doe</strong>
-                                    <p className="text-muted">
-                                        Amazing quality and fast delivery.
-                                    </p>
+                                    <strong>⭐⭐⭐⭐⭐ John</strong>
+                                    <p className="text-muted">Amazing product quality.</p>
                                 </div>
-
                                 <div>
-                                    <strong>⭐️⭐️⭐️⭐️ Sarah</strong>
-                                    <p className="text-muted">
-                                        Worth every penny.
-                                    </p>
+                                    <strong>⭐⭐⭐⭐ Sarah</strong>
+                                    <p className="text-muted">Worth every penny.</p>
                                 </div>
                             </>
                         )}
-
                     </div>
 
                     {/* ================= RELATED PRODUCTS ================= */}
                     {relatedProducts.length > 0 && (
                         <div className="mt-5">
                             <h4 className="fw-bold mb-4">Related Products</h4>
-
                             <div className="row g-4">
                                 {relatedProducts.map(item => (
                                     <div key={item._id} className="col-md-3">
                                         <div
-                                            className="bg-white p-3 shadow-sm rounded-4 h-100"
-                                            style={{ cursor: "pointer" }}
+                                            className="bg-white p-3 rounded-4 h-100"
+                                            style={{
+                                                cursor: "pointer",
+                                                transition: "0.3s",
+                                                boxShadow: "0 5px 15px rgba(0,0,0,0.05)"
+                                            }}
                                             onClick={() => navigate(`/product/${item._id}`)}
+                                            onMouseOver={e => e.currentTarget.style.transform = "translateY(-5px)"}
+                                            onMouseOut={e => e.currentTarget.style.transform = "translateY(0)"}
                                         >
                                             <img
                                                 src={`http://172.16.60.17:5000/uploads/${item.images?.[0]}`}
                                                 alt={item.name}
                                                 className="img-fluid mb-2"
-                                                style={{
-                                                    height: "150px",
-                                                    objectFit: "contain"
-                                                }}
+                                                style={{ height: "150px", objectFit: "contain" }}
                                             />
-
-                                            <h6 className="fw-semibold">
-                                                {item.name}
-                                            </h6>
-
-                                            <p className="fw-bold">
-                                                ₹{item.price}
-                                            </p>
+                                            <h6 className="fw-semibold">{item.name}</h6>
+                                            <p className="fw-bold text-danger">₹{item.price}</p>
                                         </div>
                                     </div>
                                 ))}
@@ -250,7 +277,6 @@ const SingleProduct = () => {
                 </div>
             </div>
 
-            {/* 🔥 CART DRAWER */}
             <CartDrawer
                 show={showDrawer}
                 onClose={() => setShowDrawer(false)}

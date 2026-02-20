@@ -166,7 +166,10 @@ const Orders = () => {
                                                 }
                                             >
                                                 <option value="Pending">Pending</option>
-                                                <option value="Completed">Completed</option>
+                                                <option value="Confirmed">Confirmed</option>
+                                                <option value="Shipped">Shipped</option>
+                                                <option value="OutForDelivery">Out For Delivery</option>
+                                                <option value="Delivered">Delivered</option>
                                                 <option value="Cancelled">Cancelled</option>
                                                 <option value="Refunded">Refunded</option>
                                             </select>
@@ -210,7 +213,7 @@ const Orders = () => {
                                                             className="px-3 py-2 rounded-pill text-white"
                                                             style={{
                                                                 background:
-                                                                    order.status === "Completed"
+                                                                    order.status === "Delivered"
                                                                         ? "#28a745"
                                                                         : order.status === "Pending"
                                                                             ? "#ffc107"

@@ -4,6 +4,13 @@ const Orders = () => {
 
     const [orders, setOrders] = useState([]);
     const user = JSON.parse(localStorage.getItem("user"));
+    const [selectedOrder, setSelectedOrder] = useState(null);
+    const [newAddress, setNewAddress] = useState({
+        address: "",
+        city: "",
+        state: "",
+        pincode: ""
+    });
 
     useEffect(() => {
         if (user) fetchOrders();
@@ -20,24 +27,101 @@ const Orders = () => {
     const getStatusColor = (status) => {
         const map = {
             Pending: "#ffb703",
-            Completed: "#2ecc71",
+            Confirmed: "#17a2b8",
+            Shipped: "#007bff",
+            OutForDelivery: "#6610f2",
+            Delivered: "#2ecc71",
             Cancelled: "#e63946",
             Refunded: "#6c757d"
         };
         return map[status] || "#999";
     };
 
+    const openAddressModal = (order) => {
+        setSelectedOrder(order);
+        setNewAddress(order.shippingAddress || {
+            address: "",
+            city: "",
+            state: "",
+            pincode: ""
+        });
+    };
+
     const getProgressStep = (status) => {
         switch (status) {
             case "Pending":
-                return 1;
-            case "Completed":
-                return 3;
-            case "Cancelled":
-            case "Refunded":
                 return 0;
-            default:
+            case "Confirmed":
+                return 1;
+            case "Shipped":
                 return 2;
+            case "OutForDelivery":
+                return 3;
+            case "Delivered":
+                return 4;
+            default:
+                return 0;
+        }
+    };
+
+    const cancelOrder = async (id) => {
+        try {
+            const token = localStorage.getItem("token");
+
+            const res = await fetch(
+                `http://172.16.60.17:5000/cancel-order/${id}`,
+                {
+                    method: "PUT",
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
+
+            const data = await res.json();
+
+            if (res.ok) {
+                alert("Order Cancelled");
+                fetchOrders(); // Refresh orders
+            } else {
+                alert(data.error);
+            }
+
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const updateAddress = async () => {
+        try {
+            const token = localStorage.getItem("token");
+
+            const res = await fetch(
+                `http://172.16.60.17:5000/update-order-address/${selectedOrder._id}`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        address: newAddress
+                    })
+                }
+            );
+
+            const data = await res.json();
+
+            if (res.ok) {
+                alert("Address updated successfully");
+                setSelectedOrder(null);
+                fetchOrders();
+            } else {
+                alert(data.error);
+            }
+
+        } catch (error) {
+            console.error(error);
         }
     };
 
@@ -134,34 +218,57 @@ const Orders = () => {
                                 </div>
                             </div>
 
-                            {/* PROGRESS TRACKER */}
-                            <div className="mt-4 mb-4">
-                                <div className="d-flex justify-content-between align-items-center">
+                            {/* 🚚 TRACKING BAR */}
+                            <div className="mt-4 mb-4 position-relative">
 
-                                    {["Ordered", "Shipped", "Delivered"].map((step, i) => (
-                                        <div key={i} className="text-center flex-fill">
+                                <div
+                                    style={{
+                                        height: "6px",
+                                        background: "#e5e7eb",
+                                        borderRadius: "20px",
+                                        position: "relative",
+                                        overflow: "hidden"
+                                    }}
+                                >
+                                    {/* Progress Fill */}
+                                    <div
+                                        style={{
+                                            width: `${(progress / 4) * 100}%`,
+                                            height: "100%",
+                                            background: "linear-gradient(90deg,#4f46e5,#6366f1)",
+                                            transition: "width 0.6s ease"
+                                        }}
+                                    />
 
-                                            <div
-                                                style={{
-                                                    width: "24px",
-                                                    height: "24px",
-                                                    margin: "0 auto",
-                                                    borderRadius: "50%",
-                                                    background:
-                                                        progress > i
-                                                            ? "#4f46e5"
-                                                            : "#e5e7eb",
-                                                    transition: "0.3s"
-                                                }}
-                                            />
-
-                                            <small className="text-muted d-block mt-1">
-                                                {step}
-                                            </small>
-
+                                    {/* 🚚 Moving Truck */}
+                                    {progress > 0 && (
+                                        <div
+                                            style={{
+                                                position: "absolute",
+                                                top: "-18px",
+                                                left: `calc(${(progress / 4) * 100}% - 20px)`,
+                                                fontSize: "22px",
+                                                transition: "left 0.6s ease"
+                                            }}
+                                        >
+                                            🚚
                                         </div>
-                                    ))}
+                                    )}
+                                </div>
 
+                                {/* Status Labels */}
+                                <div className="d-flex justify-content-between mt-3">
+                                    {["Pending", "Confirmed", "Shipped", "Out", "Delivered"].map((step, i) => (
+                                        <small
+                                            key={i}
+                                            style={{
+                                                fontWeight: progress >= i ? "600" : "400",
+                                                color: progress >= i ? "#4f46e5" : "#6b7280"
+                                            }}
+                                        >
+                                            {step}
+                                        </small>
+                                    ))}
                                 </div>
                             </div>
 
@@ -210,27 +317,240 @@ const Orders = () => {
                                 </div>
                             ))}
 
-                            <hr />
-
-                            {/* TOTAL + INVOICE */}
-                            <div className="d-flex justify-content-between align-items-center">
+                            {/* TOTAL + ACTIONS */}
+                            <div className="d-flex justify-content-between align-items-center flex-wrap gap-2">
                                 <div className="fw-bold fs-5">
                                     Total: ₹{order.totalAmount}
                                 </div>
 
-                                <button
-                                    className="btn btn-outline-primary btn-sm rounded-pill px-4"
-                                    onClick={() => downloadInvoice(order)}
-                                >
-                                    Download Invoice
-                                </button>
+                                <div className="d-flex gap-2">
+
+                                    {order.status === "Delivered" && (
+                                        <button
+                                            className="btn btn-outline-primary btn-sm rounded-pill px-4"
+                                            onClick={() => downloadInvoice(order)}
+                                        >
+                                            Download Invoice
+                                        </button>
+                                    )}
+
+                                    {/* ✅ EDIT ADDRESS BUTTON */}
+                                    {order.status === "Pending" && (
+                                        <button
+                                            className="btn btn-outline-secondary btn-sm rounded-pill px-4"
+                                            onClick={() => openAddressModal(order)}
+                                        >
+                                            Edit Address
+                                        </button>
+                                    )}
+
+                                    {/* ✅ CANCEL BUTTON */}
+                                    {order.status === "Pending" && (
+                                        <button
+                                            className="btn btn-outline-danger btn-sm rounded-pill px-4"
+                                            onClick={() => cancelOrder(order._id)}
+                                        >
+                                            Cancel
+                                        </button>
+                                    )}
+
+                                </div>
                             </div>
 
+                            {/* DELIVERY INFO */}
+                            {order.shippedAt && (
+                                <>
+                                    <div
+                                        className="mt-4 p-3 rounded-4"
+                                        style={{
+                                            background: "linear-gradient(135deg,#eef2ff,#f8fafc)",
+                                            border: "1px solid #e5e7eb"
+                                        }}
+                                    >
+                                        <div className="d-flex justify-content-between flex-wrap">
+
+                                            <div>
+                                                <small className="text-muted d-block">
+                                                    🚚 Shipped On
+                                                </small>
+                                                <div className="fw-semibold">
+                                                    {new Date(order.shippedAt).toLocaleDateString()}
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                <small className="text-muted d-block">
+                                                    📦 Estimated Delivery
+                                                </small>
+                                                <div className="fw-semibold text-success">
+                                                    {new Date(order.estimatedDelivery).toLocaleDateString()}
+                                                </div>
+                                            </div>
+
+                                            <div>
+                                                {order.trackingId && (
+                                                    <div className="mt-2">
+                                                        <small className="text-muted">Tracking ID</small>
+                                                        <div className="fw-semibold text-primary">
+                                                            {order.trackingId}
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </>
+                            )}
                         </div>
                     );
                 })}
 
             </div>
+
+            {/* ADDRESS MODAL */}
+            {selectedOrder && (
+                <div
+                    style={{
+                        position: "fixed",
+                        inset: 0,
+                        background: "rgba(0,0,0,0.6)",
+                        backdropFilter: "blur(6px)",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        zIndex: 9999,
+                        animation: "fadeIn 0.3s ease"
+                    }}
+                >
+                    <div
+                        style={{
+                            background: "linear-gradient(145deg, #ffffff, #f8f9ff)",
+                            padding: "35px",
+                            borderRadius: "20px",
+                            width: "450px",
+                            maxWidth: "95%",
+                            boxShadow: "0 25px 60px rgba(0,0,0,0.2)",
+                            animation: "slideUp 0.3s ease"
+                        }}
+                    >
+                        <h4
+                            style={{
+                                fontWeight: "600",
+                                marginBottom: "20px",
+                                color: "#1e293b"
+                            }}
+                        >
+                            ✏️ Edit Shipping Address
+                        </h4>
+
+                        {/* Address */}
+                        <textarea
+                            className="form-control mb-3"
+                            placeholder="Street Address"
+                            style={{
+                                borderRadius: "12px",
+                                padding: "12px",
+                                border: "1px solid #e2e8f0"
+                            }}
+                            value={newAddress.address}
+                            onChange={(e) =>
+                                setNewAddress({ ...newAddress, address: e.target.value })
+                            }
+                        />
+
+                        {/* City */}
+                        <input
+                            className="form-control mb-3"
+                            placeholder="City"
+                            style={{
+                                borderRadius: "12px",
+                                padding: "12px",
+                                border: "1px solid #e2e8f0"
+                            }}
+                            value={newAddress.city}
+                            onChange={(e) =>
+                                setNewAddress({ ...newAddress, city: e.target.value })
+                            }
+                        />
+
+                        {/* State */}
+                        <input
+                            className="form-control mb-3"
+                            placeholder="State"
+                            style={{
+                                borderRadius: "12px",
+                                padding: "12px",
+                                border: "1px solid #e2e8f0"
+                            }}
+                            value={newAddress.state}
+                            onChange={(e) =>
+                                setNewAddress({ ...newAddress, state: e.target.value })
+                            }
+                        />
+
+                        {/* Pincode */}
+                        <input
+                            className="form-control mb-4"
+                            placeholder="Pincode"
+                            style={{
+                                borderRadius: "12px",
+                                padding: "12px",
+                                border: "1px solid #e2e8f0"
+                            }}
+                            value={newAddress.pincode}
+                            onChange={(e) =>
+                                setNewAddress({ ...newAddress, pincode: e.target.value })
+                            }
+                        />
+
+                        <div className="d-flex justify-content-end gap-3">
+                            <button
+                                onClick={() => setSelectedOrder(null)}
+                                style={{
+                                    background: "#e2e8f0",
+                                    border: "none",
+                                    padding: "10px 20px",
+                                    borderRadius: "30px",
+                                    fontWeight: "500"
+                                }}
+                            >
+                                Cancel
+                            </button>
+
+                            <button
+                                onClick={updateAddress}
+                                style={{
+                                    background: "linear-gradient(135deg, #4f46e5, #6366f1)",
+                                    color: "#fff",
+                                    border: "none",
+                                    padding: "10px 24px",
+                                    borderRadius: "30px",
+                                    fontWeight: "600",
+                                    boxShadow: "0 8px 20px rgba(99,102,241,0.4)",
+                                    transition: "0.3s"
+                                }}
+                            >
+                                Save Changes
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Animation Styles */}
+                    <style>
+                        {`
+                            @keyframes fadeIn {
+                                from { opacity: 0; }
+                                to { opacity: 1; }
+                            }
+                            @keyframes slideUp {
+                                from { transform: translateY(30px); opacity: 0; }
+                                to { transform: translateY(0); opacity: 1; }
+                            }
+                            `}
+                    </style>
+                </div>
+            )}
         </div>
     );
 };

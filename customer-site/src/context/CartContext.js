@@ -4,14 +4,40 @@ export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
 
+    const getUserCartKey = () => {
+        const user = JSON.parse(localStorage.getItem("user"));
+        return user ? `cart_${user._id}` : "cart_guest";
+    };
+
     const [cart, setCart] = useState(() => {
-        const storedCart = localStorage.getItem("cart");
+        const key = getUserCartKey();
+        const storedCart = localStorage.getItem(key);
         return storedCart ? JSON.parse(storedCart) : [];
     });
 
-    // Sync cart to localStorage
+    // 🔥 Load cart when user changes (login/logout)
     useEffect(() => {
-        localStorage.setItem("cart", JSON.stringify(cart));
+
+        const loadCart = () => {
+            const key = getUserCartKey();
+            const storedCart = localStorage.getItem(key);
+            setCart(storedCart ? JSON.parse(storedCart) : []);
+        };
+
+        loadCart();
+
+        window.addEventListener("storage", loadCart);
+
+        return () => {
+            window.removeEventListener("storage", loadCart);
+        };
+
+    }, []);
+
+    // 🔥 Sync cart per user
+    useEffect(() => {
+        const key = getUserCartKey();
+        localStorage.setItem(key, JSON.stringify(cart));
     }, [cart]);
 
     const addToCart = (product) => {
@@ -51,8 +77,9 @@ export const CartProvider = ({ children }) => {
     };
 
     const clearCart = () => {
+        const key = getUserCartKey();
+        localStorage.removeItem(key);
         setCart([]);
-        localStorage.removeItem("cart");
     };
 
     return (

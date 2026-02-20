@@ -75,9 +75,9 @@ const orderSchema = new mongoose.Schema({
         type: String,
         enum: [
             "Pending",
-            "Processing",
+            "Confirmed",
             "Shipped",
-            "Out for Delivery",
+            "OutForDelivery",
             "Delivered",
             "Cancelled",
             "Refunded"
@@ -85,12 +85,28 @@ const orderSchema = new mongoose.Schema({
         default: "Pending"
     },
 
-    /* 🔥 NEW FIELDS FOR PROFESSIONAL SYSTEM */
-
     trackingId: {
         type: String,
         default: ""
     },
+
+    statusHistory: {
+        type: [
+            {
+                status: String,
+                updatedAt: {
+                    type: Date,
+                    default: Date.now
+                }
+            }
+        ],
+        default: []
+    },
+
+    confirmedAt: Date,
+    shippedAt: Date,
+    deliveredAt: Date,
+    estimatedDelivery: Date,
 
     adminNotes: {
         type: String,

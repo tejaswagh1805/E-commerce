@@ -9,6 +9,7 @@ const Checkout = () => {
     const user = JSON.parse(localStorage.getItem("user"));
 
     const [sameAsBilling, setSameAsBilling] = useState(true);
+    const [errors, setErrors] = useState({});
 
     const [form, setForm] = useState({
         name: "",
@@ -57,14 +58,95 @@ const Checkout = () => {
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
+
+        // remove error when typing
+        setErrors({ ...errors, [e.target.name]: "" });
+    };
+
+    const validate = () => {
+        let newErrors = {};
+
+        // Name
+        if (!form.name.trim()) {
+            newErrors.name = "Full name is required";
+        }
+
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!form.email) {
+            newErrors.email = "Email is required";
+        } else if (!emailRegex.test(form.email)) {
+            newErrors.email = "Invalid email format";
+        }
+
+        // Mobile (exact 10 digits)
+        const mobileRegex = /^[0-9]{10}$/;
+        if (!form.mobile) {
+            newErrors.mobile = "Mobile is required";
+        } else if (!mobileRegex.test(form.mobile)) {
+            newErrors.mobile = "Mobile must be exactly 10 digits";
+        }
+
+        // Billing address
+        if (!form.billingAddress.trim())
+            newErrors.billingAddress = "Billing address required";
+
+        if (!form.billingCity.trim())
+            newErrors.billingCity = "City required";
+
+        if (!form.billingState.trim())
+            newErrors.billingState = "State required";
+
+        // Pincode (6 digits only)
+        const pincodeRegex = /^[0-9]{6}$/;
+
+        if (!form.billingPincode) {
+            newErrors.billingPincode = "Pincode required";
+        } else if (!pincodeRegex.test(form.billingPincode)) {
+            newErrors.billingPincode = "Pincode must be exactly 6 digits";
+        }
+
+        // Shipping validation
+        if (!sameAsBilling) {
+
+            if (!form.shippingAddress.trim())
+                newErrors.shippingAddress = "Shipping address required";
+
+            if (!form.shippingCity.trim())
+                newErrors.shippingCity = "City required";
+
+            if (!form.shippingState.trim())
+                newErrors.shippingState = "State required";
+
+            if (!pincodeRegex.test(form.shippingPincode))
+                newErrors.shippingPincode = "Pincode must be 6 digits";
+        }
+
+        // Card validation
+        if (form.paymentMethod === "Card") {
+
+            const cardRegex = /^[0-9]{16}$/;
+            const cvvRegex = /^[0-9]{3}$/;
+
+            if (!cardRegex.test(form.cardNumber))
+                newErrors.cardNumber = "Card must be 16 digits";
+
+            if (!form.cardName.trim())
+                newErrors.cardName = "Name on card required";
+
+            if (!form.expiry.trim())
+                newErrors.expiry = "Expiry required";
+
+            if (!cvvRegex.test(form.cvv))
+                newErrors.cvv = "CVV must be 3 digits";
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
     };
 
     const placeOrder = async () => {
-
-        if (!form.name || !form.email || !form.mobile) {
-            alert("Please fill required fields");
-            return;
-        }
+        if (!validate()) return;
 
         const shippingData = sameAsBilling
             ? {
@@ -132,6 +214,7 @@ const Checkout = () => {
                                 onChange={handleChange}
                                 placeholder="Full Name"
                             />
+                            <small className="text-danger">{errors.name}</small>
 
                             <input className="form-control mb-3"
                                 name="email"
@@ -139,6 +222,7 @@ const Checkout = () => {
                                 onChange={handleChange}
                                 placeholder="Email"
                             />
+                            <small className="text-danger">{errors.email}</small>
 
                             <input className="form-control mb-3"
                                 name="mobile"
@@ -146,6 +230,7 @@ const Checkout = () => {
                                 onChange={handleChange}
                                 placeholder="Mobile"
                             />
+                            <small className="text-danger">{errors.mobile}</small>
 
                             <textarea className="form-control mb-3"
                                 name="billingAddress"
@@ -153,6 +238,7 @@ const Checkout = () => {
                                 onChange={handleChange}
                                 placeholder="Full Address"
                             />
+                            <small className="text-danger">{errors.billingAddress}</small>
 
                             <div className="row">
                                 <div className="col">
@@ -161,6 +247,7 @@ const Checkout = () => {
                                         placeholder="City"
                                         onChange={handleChange}
                                     />
+                                    <small className="text-danger">{errors.billingCity}</small>
                                 </div>
                                 <div className="col">
                                     <input className="form-control mb-3"
@@ -168,6 +255,7 @@ const Checkout = () => {
                                         placeholder="State"
                                         onChange={handleChange}
                                     />
+                                    <small className="text-danger">{errors.billingState}</small>
                                 </div>
                                 <div className="col">
                                     <input className="form-control mb-3"
@@ -175,6 +263,7 @@ const Checkout = () => {
                                         placeholder="Pincode"
                                         onChange={handleChange}
                                     />
+                                    <small className="text-danger">{errors.billingPincode}</small>
                                 </div>
                             </div>
                         </div>
@@ -200,6 +289,7 @@ const Checkout = () => {
                                         placeholder="Shipping Address"
                                         onChange={handleChange}
                                     />
+                                    <small className="text-danger">{errors.shippingAddress}</small>
 
                                     <div className="row">
                                         <div className="col">
@@ -208,6 +298,7 @@ const Checkout = () => {
                                                 placeholder="City"
                                                 onChange={handleChange}
                                             />
+                                            <small className="text-danger">{errors.shippingCity}</small>
                                         </div>
                                         <div className="col">
                                             <input className="form-control mb-3"
@@ -215,6 +306,7 @@ const Checkout = () => {
                                                 placeholder="State"
                                                 onChange={handleChange}
                                             />
+                                            <small className="text-danger">{errors.shippingState}</small>
                                         </div>
                                         <div className="col">
                                             <input className="form-control mb-3"
@@ -222,6 +314,7 @@ const Checkout = () => {
                                                 placeholder="Pincode"
                                                 onChange={handleChange}
                                             />
+                                            <small className="text-danger">{errors.shippingPincode}</small>
                                         </div>
                                     </div>
                                 </>
@@ -266,6 +359,7 @@ const Checkout = () => {
                                         value={form.cardNumber}
                                         onChange={handleChange}
                                     />
+                                    <small className="text-danger">{errors.cardNumber}</small>
 
                                     <input
                                         className="form-control mb-3"
@@ -274,6 +368,7 @@ const Checkout = () => {
                                         value={form.cardName}
                                         onChange={handleChange}
                                     />
+                                    <small className="text-danger">{errors.cardName}</small>
 
                                     <div className="row">
                                         <div className="col">
@@ -284,6 +379,7 @@ const Checkout = () => {
                                                 value={form.expiry}
                                                 onChange={handleChange}
                                             />
+                                            <small className="text-danger">{errors.expiry}</small>
                                         </div>
 
                                         <div className="col">
@@ -295,6 +391,7 @@ const Checkout = () => {
                                                 value={form.cvv}
                                                 onChange={handleChange}
                                             />
+                                            <small className="text-danger">{errors.cvv}</small>
                                         </div>
                                     </div>
 

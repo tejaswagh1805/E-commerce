@@ -236,6 +236,26 @@ app.put("/product/:id",
     }
 );
 
+// GET SINGLE PRODUCT (ADMIN)
+app.get("/product/:id",
+    verifyToken,
+    verifyAdmin,
+    async (req, res) => {
+        try {
+            const product = await Product.findById(req.params.id);
+
+            if (!product) {
+                return res.status(404).json({ error: "Product not found" });
+            }
+
+            res.json(product);
+
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    }
+);
+
 // DELETE PRODUCT (ADMIN)
 app.delete("/product/:id", verifyToken, verifyAdmin, async (req, res) => {
     const result = await Product.findByIdAndDelete(req.params.id);
@@ -277,22 +297,116 @@ app.post("/place-order", async (req, res) => {
     res.status(201).json(savedOrder);
 });
 
+// Cancel Order
+app.put("/cancel-order/:id", verifyToken, async (req, res) => {
+    try {
+        const order = await Order.findById(req.params.id);
+
+        if (!order) {
+            return res.status(404).send({ error: "Order not found" });
+        }
+
+        if (order.status === "Completed") {
+            return res.status(400).send({ error: "Cannot cancel delivered order" });
+        }
+
+        order.status = "Cancelled";
+        await order.save();
+
+        res.send({ message: "Order cancelled successfully" });
+
+    } catch (error) {
+        res.status(500).send({ error: "Server error" });
+    }
+});
+
+app.put("/update-order-address/:id", verifyToken, async (req, res) => {
+    try {
+        const { address } = req.body;
+
+        const order = await Order.findById(req.params.id);
+
+        if (!order) {
+            return res.status(404).send({ error: "Order not found" });
+        }
+
+        if (order.status !== "Pending") {
+            return res.status(400).send({ error: "Address cannot be updated now" });
+        }
+
+        order.shippingAddress = address;
+        await order.save();
+
+        res.send({ message: "Address updated successfully" });
+
+    } catch (error) {
+        res.status(500).send({ error: "Server error" });
+    }
+});
+
+// Customer tracking order
+app.put("/confirm-order/:id", async (req, res) => {
+    const order = await Order.findById(req.params.id);
+    order.status = "Confirmed";
+    await order.save();
+    res.send({ message: "Order confirmed" });
+});
+
 // ADMIN VIEW ALL ORDERS
 app.get("/orders", verifyToken, verifyAdmin, async (req, res) => {
     const orders = await Order.find().sort({ createdAt: -1 });
     res.json(orders);
 });
 
-// ADMIN UPDATE ORDER STATUS
 app.put("/order/:id", verifyToken, verifyAdmin, async (req, res) => {
+    try {
+        const { status } = req.body;
 
-    const updated = await Order.findByIdAndUpdate(
-        req.params.id,
-        { status: req.body.status },
-        { new: true }
-    );
+        const updateData = {
+            status,
+            $push: {
+                statusHistory: {
+                    status: status,
+                    date: new Date()
+                }
+            }
+        };
 
-    res.json(updated);
+        // ✅ Confirmed
+        if (status === "Confirmed") {
+            updateData.confirmedAt = new Date();
+        }
+
+        // ✅ Shipped
+        if (status === "Shipped") {
+            updateData.shippedAt = new Date();
+            updateData.trackingId = "TRK-" + Date.now();
+            updateData.estimatedDelivery = new Date(
+                Date.now() + 5 * 24 * 60 * 60 * 1000
+            );
+        }
+
+        // ✅ Delivered
+        if (status === "Delivered") {
+            updateData.deliveredAt = new Date();
+        }
+
+        const updatedOrder = await Order.findByIdAndUpdate(
+            req.params.id,
+            updateData,
+            { new: true }
+        );
+
+        if (!updatedOrder) {
+            return res.status(404).json({ error: "Order not found" });
+        }
+
+        res.json(updatedOrder);
+
+    } catch (error) {
+        console.error("ORDER UPDATE ERROR:", error);
+        res.status(500).json({ error: error.message });
+    }
 });
 
 // CUSTOMER ORDER HISTORY
@@ -431,10 +545,14 @@ app.get("/invoice/:id", verifyToken, async (req, res) => {
             if (item.images?.length > 0) {
                 const imgPath = path.join(__dirname, "uploads", item.images[0]);
                 if (fs.existsSync(imgPath)) {
-                    doc.image(imgPath, 40, y, {
-                        width: 35,
-                        height: 35
-                    });
+                    try {
+                        doc.image(imgPath, 40, y, {
+                            width: 35,
+                            height: 35
+                        });
+                    } catch (err) {
+                        console.log("Invalid image skipped:", imgPath);
+                    };
                 }
             }
 
@@ -471,7 +589,11 @@ app.get("/invoice/:id", verifyToken, async (req, res) => {
             "base64"
         );
 
-        doc.image(qrBuffer, 40, y + 30, { width: 80 });
+        try {
+            doc.image(qrBuffer, 40, y + 30, { width: 80 });
+        } catch (err) {
+            console.log("QR image failed");
+        }
 
         /* ================= SIGNATURE ================= */
 
