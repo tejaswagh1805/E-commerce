@@ -28,7 +28,7 @@ const AddProduct = () => {
             formData.append("images", file);
         });
 
-        const result = await fetch("http://172.16.60.17:5000/add-product", {
+        const result = await fetch("http://localhost:5000/add-product", {
             method: "POST",
             headers: {
                 Authorization: `Bearer ${storedData.auth}`

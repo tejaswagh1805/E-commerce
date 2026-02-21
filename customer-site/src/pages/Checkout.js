@@ -164,7 +164,7 @@ const Checkout = () => {
                 country: form.shippingCountry
             };
 
-        const res = await fetch("http://172.16.60.17:5000/place-order", {
+        const res = await fetch("http://localhost:5000/place-order", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({

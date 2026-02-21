@@ -15,7 +15,7 @@ const Login = () => {
     const handleLogin = async (e) => {
         e.preventDefault();
 
-        let result = await fetch("http://172.16.60.17:5000/login", {
+        let result = await fetch("http://localhost:5000/login", {
             method: "POST",
             body: JSON.stringify({ email, password }),
             headers: {

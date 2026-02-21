@@ -24,7 +24,7 @@ const Home = () => {
 
     const fetchProducts = async () => {
         try {
-            const res = await fetch("http://172.16.60.17:5000/shop-products");
+            const res = await fetch("http://localhost:5000/shop-products");
             const data = await res.json();
 
             // Show only first 3 products
@@ -136,7 +136,7 @@ const Home = () => {
                                             }}
                                         >
                                             <img
-                                                src={`http://172.16.60.17:5000/uploads/${item.images?.[0]}`}
+                                                src={`http://localhost:5000/uploads/${item.images?.[0]}`}
                                                 alt={item.name}
                                                 style={{
                                                     maxHeight: "280px",
@@ -272,7 +272,7 @@ const Home = () => {
                                             onClick={() => navigate(`/product/${item._id}`)}
                                         >
                                             <img
-                                                src={`http://172.16.60.17:5000/uploads/${item.images?.[0]}`}
+                                                src={`http://localhost:5000/uploads/${item.images?.[0]}`}
                                                 alt={item.name}
                                                 style={{
                                                     maxHeight: "100%",

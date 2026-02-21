@@ -40,7 +40,7 @@ const Login = () => {
             setLoading(true);
 
             const result = await axios.post(
-                "http://172.16.60.17:5000/login",
+                "http://localhost:5000/login",
                 { email, password }
             );
 

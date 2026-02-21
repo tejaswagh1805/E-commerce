@@ -28,7 +28,7 @@ const UpdateProduct = () => {
         try {
 
             let result = await fetch(
-                `http://172.16.60.17:5000/product/${params.id}`,
+                `http://localhost:5000/product/${params.id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -71,7 +71,7 @@ const UpdateProduct = () => {
             });
 
             const result = await fetch(
-                `http://172.16.60.17:5000/product/${params.id}`,
+                `http://localhost:5000/product/${params.id}`,
                 {
                     method: "PUT",
                     headers: {
@@ -161,7 +161,7 @@ const UpdateProduct = () => {
                                 {existingImages.map((img, index) => (
                                     <img
                                         key={index}
-                                        src={`http://172.16.60.17:5000/uploads/${img}`}
+                                        src={`http://localhost:5000/uploads/${img}`}
                                         alt="existing"
                                         className="update-preview"
                                         style={{ width: "120px", marginRight: "10px" }}

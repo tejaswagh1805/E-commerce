@@ -20,12 +20,12 @@ const SingleProduct = () => {
     }, [id]);
 
     const fetchProduct = async () => {
-        const res = await fetch(`http://172.16.60.17:5000/shop-product/${id}`);
+        const res = await fetch(`http://localhost:5000/shop-product/${id}`);
         const data = await res.json();
         setProduct(data);
         setActiveImage(0);
 
-        const allProductsRes = await fetch(`http://172.16.60.17:5000/shop-products`);
+        const allProductsRes = await fetch(`http://localhost:5000/shop-products`);
         const allProducts = await allProductsRes.json();
 
         const related = allProducts.filter(
@@ -74,7 +74,7 @@ const SingleProduct = () => {
                                     }}
                                 >
                                     <img
-                                        src={`http://172.16.60.17:5000/uploads/${product.images?.[activeImage]}`}
+                                        src={`http://localhost:5000/uploads/${product.images?.[activeImage]}`}
                                         alt={product.name}
                                         className="img-fluid"
                                         style={{
@@ -91,7 +91,7 @@ const SingleProduct = () => {
                                         {product.images.map((img, index) => (
                                             <img
                                                 key={index}
-                                                src={`http://172.16.60.17:5000/uploads/${img}`}
+                                                src={`http://localhost:5000/uploads/${img}`}
                                                 alt="thumb"
                                                 onClick={() => setActiveImage(index)}
                                                 style={{
@@ -260,7 +260,7 @@ const SingleProduct = () => {
                                             onMouseOut={e => e.currentTarget.style.transform = "translateY(0)"}
                                         >
                                             <img
-                                                src={`http://172.16.60.17:5000/uploads/${item.images?.[0]}`}
+                                                src={`http://localhost:5000/uploads/${item.images?.[0]}`}
                                                 alt={item.name}
                                                 className="img-fluid mb-2"
                                                 style={{ height: "150px", objectFit: "contain" }}

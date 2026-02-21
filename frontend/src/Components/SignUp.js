@@ -32,7 +32,7 @@ const SignUp = () => {
             formData.append("image", image);
         }
 
-        const response = await fetch("http://172.16.60.17:5000/admin-register", {
+        const response = await fetch("http://localhost:5000/admin-register", {
             method: "POST",
             body: formData
         });

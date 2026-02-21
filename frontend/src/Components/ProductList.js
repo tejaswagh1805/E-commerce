@@ -27,7 +27,7 @@ const ProductList = () => {
             const auth = JSON.parse(localStorage.getItem("user"));
             if (!auth) return;
 
-            let response = await fetch("http://172.16.60.17:5000/products", {
+            let response = await fetch("http://localhost:5000/products", {
                 headers: {
                     Authorization: `Bearer ${auth.auth}`
                 }
@@ -69,7 +69,7 @@ const ProductList = () => {
             if (!auth) return;
 
             await fetch(
-                `http://172.16.60.17:5000/product/${id}`,
+                `http://localhost:5000/product/${id}`,
                 {
                     method: "DELETE",
                     headers: {
@@ -125,7 +125,7 @@ const ProductList = () => {
 
             if (key) {
                 let response = await fetch(
-                    `http://172.16.60.17:5000/search/${key}`,
+                    `http://localhost:5000/search/${key}`,
                     {
                         headers: {
                             Authorization: `Bearer ${auth.auth}`
@@ -264,7 +264,7 @@ const ProductList = () => {
                                                 src={
                                                     item.images &&
                                                         item.images.length > 0
-                                                        ? `http://172.16.60.17:5000/uploads/${item.images[0]}`
+                                                        ? `http://localhost:5000/uploads/${item.images[0]}`
                                                         : ""
                                                 }
                                                 alt={item.name}

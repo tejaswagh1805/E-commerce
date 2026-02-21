@@ -7,7 +7,7 @@ A full-stack E-Commerce Dashboard application built using the **MERN Stack (Mong
 ## 🚀 Live Preview
 
 * **Frontend:** [http://localhost:3000/](http://localhost:3000/)
-* **Backend API:** [http://172.16.60.17:5000/](http://172.16.60.17:5000/)
+* **Backend API:** [http://localhost:5000/](http://localhost:5000/)
 
 ---
 

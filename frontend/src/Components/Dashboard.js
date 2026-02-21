@@ -28,7 +28,7 @@ const Dashboard = () => {
         try {
             const auth = JSON.parse(localStorage.getItem("user"));
 
-            const response = await fetch("http://172.16.60.17:5000/orders", {
+            const response = await fetch("http://localhost:5000/orders", {
                 headers: {
                     Authorization: `Bearer ${auth.auth}`
                 }

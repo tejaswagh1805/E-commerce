@@ -66,7 +66,7 @@ const Nav = () => {
                                     <img
                                         src={
                                             user.image
-                                                ? `http://172.16.60.17:5000/uploads/${user.image}`
+                                                ? `http://localhost:5000/uploads/${user.image}`
                                                 : "https://via.placeholder.com/40"
                                         }
                                         alt="Profile"

@@ -18,7 +18,7 @@ const Orders = () => {
 
     const fetchOrders = async () => {
         const res = await fetch(
-            `http://172.16.60.17:5000/customer-orders/${user._id}`
+            `http://localhost:5000/customer-orders/${user._id}`
         );
         const data = await res.json();
         if (Array.isArray(data)) setOrders(data);
@@ -69,7 +69,7 @@ const Orders = () => {
             const token = localStorage.getItem("token");
 
             const res = await fetch(
-                `http://172.16.60.17:5000/cancel-order/${id}`,
+                `http://localhost:5000/cancel-order/${id}`,
                 {
                     method: "PUT",
                     headers: {
@@ -97,7 +97,7 @@ const Orders = () => {
             const token = localStorage.getItem("token");
 
             const res = await fetch(
-                `http://172.16.60.17:5000/update-order-address/${selectedOrder._id}`,
+                `http://localhost:5000/update-order-address/${selectedOrder._id}`,
                 {
                     method: "PUT",
                     headers: {
@@ -132,7 +132,7 @@ const Orders = () => {
             const token = localStorage.getItem("token");
 
             const response = await fetch(
-                `http://172.16.60.17:5000/invoice/${order._id}`,
+                `http://localhost:5000/invoice/${order._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -290,7 +290,7 @@ const Orders = () => {
                                             }}
                                         >
                                             <img
-                                                src={`http://172.16.60.17:5000/uploads/${item.images?.[0]}`}
+                                                src={`http://localhost:5000/uploads/${item.images?.[0]}`}
                                                 alt={item.name}
                                                 style={{
                                                     width: "70px",
