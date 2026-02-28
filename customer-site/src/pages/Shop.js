@@ -17,6 +17,14 @@ const Shop = () => {
 
     const navigate = useNavigate();
 
+    // Helper function to create URL-friendly slug
+    const createSlug = (name) => {
+        return name
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/^-+|-+$/g, '');
+    };
+
     useEffect(() => {
         fetchProducts();
     }, []);
@@ -162,9 +170,28 @@ const Shop = () => {
                                                 className="bg-white p-3 h-100"
                                                 style={{
                                                     borderRadius: "16px",
-                                                    boxShadow: "0 4px 12px rgba(0,0,0,0.05)"
+                                                    boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+                                                    position: "relative"
                                                 }}
                                             >
+
+                                                {/* Discount Badge */}
+                                                {item.discount > 0 && (
+                                                    <div style={{
+                                                        position: "absolute",
+                                                        top: "10px",
+                                                        left: "10px",
+                                                        background: "#ff6b9d",
+                                                        color: "#fff",
+                                                        padding: "4px 10px",
+                                                        borderRadius: "20px",
+                                                        fontSize: "12px",
+                                                        fontWeight: "bold",
+                                                        zIndex: 1
+                                                    }}>
+                                                        {item.discount}% OFF
+                                                    </div>
+                                                )}
 
                                                 {/* Image */}
                                                 <div
@@ -175,7 +202,7 @@ const Shop = () => {
                                                         justifyContent: "center",
                                                         cursor: "pointer"
                                                     }}
-                                                    onClick={() => navigate(`/product/${item._id}`)}
+                                                    onClick={() => navigate(`/product/${createSlug(item.name)}`)}
                                                 >
                                                     <img
                                                         src={`http://localhost:5000/uploads/${item.images?.[0]}`}
@@ -196,21 +223,56 @@ const Shop = () => {
                                                     {item.name}
                                                 </h6>
 
-                                                <p className="fw-semibold mb-3">
-                                                    ₹{item.price}
-                                                </p>
+                                                <div className="d-flex align-items-center gap-2">
+                                                    <p className="fw-semibold mb-0">
+                                                        ₹{item.price}
+                                                    </p>
+                                                    {item.discount > 0 && (
+                                                        <>
+                                                            <p className="text-muted text-decoration-line-through mb-0" style={{ fontSize: "14px" }}>
+                                                                ₹{(Number(item.price) / (1 - item.discount / 100)).toFixed(0)}
+                                                            </p>
+                                                        </>
+                                                    )}
+                                                </div>
 
-                                                <div className="d-flex gap-2">
+                                                <div className="d-flex gap-2 mt-3">
                                                     <button
-                                                        className="btn btn-outline-dark w-50 rounded-pill"
-                                                        onClick={() => navigate(`/product/${item._id}`)}
+                                                        className="btn w-50"
+                                                        style={{
+                                                            background: "#fff",
+                                                            color: "#000",
+                                                            border: "2px solid #000",
+                                                            borderRadius: "8px",
+                                                            fontWeight: "600",
+                                                            padding: "8px",
+                                                            transition: "all 0.3s ease"
+                                                        }}
+                                                        onClick={() => navigate(`/product/${createSlug(item.name)}`)}
+                                                        onMouseOver={(e) => {
+                                                            e.currentTarget.style.background = "#f8f9fa";
+                                                        }}
+                                                        onMouseOut={(e) => {
+                                                            e.currentTarget.style.background = "#fff";
+                                                        }}
                                                     >
                                                         View
                                                     </button>
 
                                                     <button
-                                                        className="btn btn-dark w-50 rounded-pill"
+                                                        className="btn w-50"
+                                                        style={{
+                                                            background: "#000",
+                                                            color: "#fff",
+                                                            border: "none",
+                                                            borderRadius: "8px",
+                                                            fontWeight: "600",
+                                                            padding: "8px",
+                                                            transition: "all 0.3s ease"
+                                                        }}
                                                         onClick={() => handleAddToCart(item)}
+                                                        onMouseOver={(e) => e.currentTarget.style.background = "#333"}
+                                                        onMouseOut={(e) => e.currentTarget.style.background = "#000"}
                                                     >
                                                         Add to Cart
                                                     </button>

@@ -6,11 +6,17 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const Jwt = require("jsonwebtoken");
+const { sendOrderConfirmationEmail } = require("./emailService");
+
+require("dotenv").config();
 
 require("./db/config");
 const User = require("./db/User");
 const Product = require("./db/Product");
 const Order = require("./db/Order");
+const Wishlist = require("./db/Wishlist");
+const Newsletter = require("./db/Newsletter");
+const Coupon = require("./db/Coupon");
 
 const jwtKey = "e-comm";
 const PDFDocument = require("pdfkit");
@@ -173,6 +179,41 @@ app.get("/profile/:id", verifyToken, async (req, res) => {
     res.json(user);
 });
 
+app.put("/profile/:id", verifyToken, upload.single("image"), async (req, res) => {
+    try {
+        const { name, email, mobile } = req.body;
+        const updateData = { name, mobile };
+
+        // Only check email if it's being changed
+        const currentUser = await User.findById(req.params.id);
+        if (email && email !== currentUser.email) {
+            const existingUser = await User.findOne({ email });
+            if (existingUser) {
+                return res.status(400).json({ error: "Email already in use" });
+            }
+            updateData.email = email;
+        }
+
+        if (req.file) {
+            updateData.image = req.file.filename;
+        }
+
+        const user = await User.findByIdAndUpdate(
+            req.params.id,
+            { $set: updateData },
+            { new: true }
+        ).select("-password");
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        res.json(user);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 /* =====================================================
    📦 ADMIN PRODUCT ROUTES
 ===================================================== */
@@ -221,6 +262,30 @@ app.put("/product/:id",
             category: req.body.category,
             company: req.body.company,
         };
+
+        // Add inventory fields if provided
+        if (req.body.stock !== undefined) updateData.stock = req.body.stock;
+        if (req.body.discount !== undefined) updateData.discount = req.body.discount;
+        if (req.body.brand) updateData.brand = req.body.brand;
+        if (req.body.sku) updateData.sku = req.body.sku;
+        if (req.body.description) updateData.description = req.body.description;
+        
+        // Parse sizes and colors from JSON strings
+        if (req.body.sizes) {
+            try {
+                updateData.sizes = JSON.parse(req.body.sizes);
+            } catch (e) {
+                updateData.sizes = [];
+            }
+        }
+        
+        if (req.body.colors) {
+            try {
+                updateData.colors = JSON.parse(req.body.colors);
+            } catch (e) {
+                updateData.colors = [];
+            }
+        }
 
         if (req.files && req.files.length > 0) {
             updateData.images = req.files.map(file => file.filename);
@@ -275,6 +340,13 @@ app.get("/shop-products", async (req, res) => {
 // SINGLE PRODUCT
 app.get("/shop-product/:id", async (req, res) => {
     const product = await Product.findById(req.params.id);
+    
+    // Increment view count
+    if (product) {
+        product.views = (product.views || 0) + 1;
+        await product.save();
+    }
+    
     res.json(product);
 });
 
@@ -294,7 +366,243 @@ app.post("/place-order", async (req, res) => {
     });
 
     const savedOrder = await order.save();
+    
+    // Send order confirmation email
+    try {
+        await sendOrderConfirmationEmail({
+            email: req.body.email,
+            customerName: req.body.customerName,
+            orderId: orderId,
+            products: req.body.products,
+            totalAmount: req.body.totalAmount,
+            shippingAddress: req.body.shippingAddress,
+            couponCode: req.body.couponCode || null,
+            discount: req.body.discount || 0,
+            subtotal: req.body.subtotal || req.body.totalAmount
+        });
+    } catch (emailError) {
+        console.error('Failed to send email:', emailError);
+        // Don't fail the order if email fails
+    }
+    
     res.status(201).json(savedOrder);
+});
+
+/* =====================================================
+   ⭐ PRODUCT REVIEWS
+===================================================== */
+
+app.post("/product/:id/review", verifyToken, async (req, res) => {
+    try {
+        const { rating, comment } = req.body;
+        const product = await Product.findById(req.params.id);
+
+        if (!product) {
+            return res.status(404).json({ error: "Product not found" });
+        }
+
+        const review = {
+            userId: req.user._id,
+            userName: req.user.name,
+            rating,
+            comment,
+            createdAt: new Date()
+        };
+
+        product.reviews.push(review);
+        
+        // Calculate average rating
+        const totalRating = product.reviews.reduce((sum, r) => sum + r.rating, 0);
+        product.rating = totalRating / product.reviews.length;
+
+        await product.save();
+        res.json({ message: "Review added successfully", product });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+/* =====================================================
+   ❤️ WISHLIST ROUTES
+===================================================== */
+
+app.post("/wishlist/add", verifyToken, async (req, res) => {
+    try {
+        const { productId } = req.body;
+        
+        let wishlist = await Wishlist.findOne({ userId: req.user._id });
+        
+        if (!wishlist) {
+            wishlist = new Wishlist({ userId: req.user._id, products: [] });
+        }
+
+        const exists = wishlist.products.find(p => p.productId.toString() === productId);
+        
+        if (exists) {
+            return res.status(400).json({ error: "Already in wishlist" });
+        }
+
+        wishlist.products.push({ productId });
+        await wishlist.save();
+        
+        res.json({ message: "Added to wishlist", wishlist });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.delete("/wishlist/remove/:productId", verifyToken, async (req, res) => {
+    try {
+        const wishlist = await Wishlist.findOne({ userId: req.user._id });
+        
+        if (!wishlist) {
+            return res.status(404).json({ error: "Wishlist not found" });
+        }
+
+        wishlist.products = wishlist.products.filter(
+            p => p.productId.toString() !== req.params.productId
+        );
+        
+        await wishlist.save();
+        res.json({ message: "Removed from wishlist" });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get("/wishlist", verifyToken, async (req, res) => {
+    try {
+        const wishlist = await Wishlist.findOne({ userId: req.user._id })
+            .populate("products.productId");
+        
+        res.json(wishlist || { products: [] });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+/* =====================================================
+   📧 NEWSLETTER
+===================================================== */
+
+app.post("/newsletter/subscribe", async (req, res) => {
+    try {
+        const { email } = req.body;
+        
+        const exists = await Newsletter.findOne({ email });
+        if (exists) {
+            return res.status(400).json({ error: "Email already subscribed" });
+        }
+
+        const newsletter = new Newsletter({ email });
+        await newsletter.save();
+        
+        res.json({ message: "Subscribed successfully!" });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+/* =====================================================
+   🎫 COUPON ROUTES
+===================================================== */
+
+app.post("/coupon/validate", async (req, res) => {
+    try {
+        const { code, totalAmount } = req.body;
+        
+        const coupon = await Coupon.findOne({ 
+            code: code.toUpperCase(),
+            isActive: true,
+            expiryDate: { $gte: new Date() }
+        });
+
+        if (!coupon) {
+            return res.status(404).json({ error: "Invalid or expired coupon" });
+        }
+
+        if (coupon.usageLimit && coupon.usedCount >= coupon.usageLimit) {
+            return res.status(400).json({ error: "Coupon usage limit reached" });
+        }
+
+        if (totalAmount < coupon.minPurchase) {
+            return res.status(400).json({ 
+                error: `Minimum purchase of ₹${coupon.minPurchase} required` 
+            });
+        }
+
+        let discount = 0;
+        if (coupon.type === "percentage") {
+            discount = (totalAmount * coupon.discount) / 100;
+            if (coupon.maxDiscount && discount > coupon.maxDiscount) {
+                discount = coupon.maxDiscount;
+            }
+        } else {
+            discount = coupon.discount;
+        }
+
+        res.json({ 
+            valid: true, 
+            discount,
+            finalAmount: totalAmount - discount,
+            coupon: {
+                code: coupon.code,
+                type: coupon.type,
+                value: coupon.discount
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Admin: Create Coupon
+app.post("/admin/coupon", verifyToken, verifyAdmin, async (req, res) => {
+    try {
+        const coupon = new Coupon(req.body);
+        await coupon.save();
+        res.json({ message: "Coupon created", coupon });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Admin: Get All Coupons
+app.get("/admin/coupons", verifyToken, verifyAdmin, async (req, res) => {
+    try {
+        const coupons = await Coupon.find().sort({ createdAt: -1 });
+        res.json(coupons);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+/* =====================================================
+   🎯 RECOMMENDATIONS & TRENDING
+===================================================== */
+
+app.get("/products/trending", async (req, res) => {
+    try {
+        const trending = await Product.find()
+            .sort({ views: -1, rating: -1 })
+            .limit(6);
+        res.json(trending);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.get("/products/recommended/:category", async (req, res) => {
+    try {
+        const recommended = await Product.find({ 
+            category: req.params.category 
+        })
+        .sort({ rating: -1 })
+        .limit(4);
+        res.json(recommended);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 });
 
 // Cancel Order

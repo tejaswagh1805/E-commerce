@@ -50,9 +50,15 @@ const CartDrawer = ({ show, onClose }) => {
                 {cart.length === 0 ? (
                     <p>Your cart is empty</p>
                 ) : (
-                    cart.map(item => (
-                        <div key={item._id} className="mb-3 border-bottom pb-2">
+                    cart.map((item, index) => (
+                        <div key={`${item._id}-${item.selectedSize}-${item.selectedColor}-${index}`} className="mb-3 border-bottom pb-2">
                             <div className="fw-semibold">{item.name}</div>
+                            {item.selectedSize && (
+                                <div style={{ fontSize: "13px", color: "#666" }}>Size: {item.selectedSize}</div>
+                            )}
+                            {item.selectedColor && (
+                                <div style={{ fontSize: "13px", color: "#666" }}>Color: {item.selectedColor}</div>
+                            )}
                             <div>₹{item.price}</div>
                             <div>Qty: {item.quantity}</div>
                             <button

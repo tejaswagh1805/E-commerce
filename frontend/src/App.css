@@ -1,10 +1,10 @@
 /* ========================================
-   GLOBAL RESET
+   GLOBAL RESET - WHITE THEME
 ======================================== */
 body {
   margin: 0;
-  font-family: 'Segoe UI', sans-serif;
-  background: #f4f7fb;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  background: #f8f9fa;
 }
 
 a {
@@ -12,67 +12,75 @@ a {
 }
 
 /* ========================================
-   NAVBAR (WHITE THEME)
+   NAVBAR - WHITE THEME
 ======================================== */
 .navbar-custom {
   background: #ffffff;
-  border-bottom: 1px solid #f1f1f1;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  border-bottom: 1px solid #e0e0e0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .nav-link {
   color: #333 !important;
-  font-weight: 500;
+  font-weight: 600;
   position: relative;
-  padding: 8px 12px;
+  padding: 10px 16px;
   transition: 0.3s ease;
+  border-radius: 8px;
 }
 
 .nav-link:hover {
-  color: #4a90e2 !important;
+  color: #ff6b9d !important;
+  background: #fff5f8;
 }
 
 .nav-animated::after {
   content: "";
   position: absolute;
   width: 0;
-  height: 2px;
-  background: #4a90e2;
-  left: 0;
+  height: 3px;
+  background: #ff6b9d;
+  left: 50%;
   bottom: 0;
+  transform: translateX(-50%);
   transition: width 0.3s ease;
+  border-radius: 2px;
 }
 
 .nav-animated:hover::after {
-  width: 100%;
+  width: 80%;
 }
 
 .profile-btn {
   background: #f8f9fa;
   border-radius: 50px;
-  padding: 6px 15px;
-  border: 1px solid #e9ecef;
+  padding: 8px 18px;
+  border: 1px solid #e0e0e0;
   transition: 0.3s ease;
+  color: #333 !important;
 }
 
 .profile-btn:hover {
-  background: #ffffff;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
 
 /* ========================================
-   GLOBAL CARD STYLE
+   GLOBAL CARD STYLE - WHITE THEME
 ======================================== */
 .card-modern {
   background: #ffffff;
-  border-radius: 24px;
-  padding: 40px;
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.06);
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   transition: 0.3s ease;
+  border: 1px solid #f0f0f0;
 }
 
 .card-modern:hover {
-  transform: translateY(-5px);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
 /* ========================================
@@ -87,18 +95,18 @@ a {
 }
 
 /* ========================================
-   FLOATING INPUT (GLOBAL)
+   FLOATING INPUT - WHITE THEME
 ======================================== */
 .floating-group {
   position: relative;
-  margin-bottom: 25px;
+  margin-bottom: 24px;
 }
 
 .floating-group input {
   width: 100%;
   padding: 14px;
-  border-radius: 14px;
-  border: 1px solid #ddd;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
   outline: none;
   font-size: 15px;
   transition: 0.3s ease;
@@ -106,8 +114,8 @@ a {
 }
 
 .floating-group input:focus {
-  border-color: #4a90e2;
-  box-shadow: 0 0 0 3px rgba(74,144,226,0.1);
+  border-color: #ff6b9d;
+  box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.1);
 }
 
 .floating-group label {
@@ -116,54 +124,60 @@ a {
   left: 14px;
   color: #999;
   background: #fff;
-  padding: 0 5px;
+  padding: 0 6px;
   transition: 0.3s ease;
   pointer-events: none;
+  font-weight: 500;
 }
 
 .floating-group input:focus + label,
 .floating-group input:not(:placeholder-shown) + label {
-  top: -8px;
+  top: -10px;
   font-size: 12px;
-  color: #4a90e2;
+  color: #ff6b9d;
+  font-weight: 600;
 }
 
 /* ========================================
-   BUTTONS
+   BUTTONS - WHITE THEME
 ======================================== */
 .btn-primary-modern {
   width: 100%;
-  padding: 15px;
-  border-radius: 14px;
+  padding: 14px;
+  border-radius: 8px;
   border: none;
-  background: linear-gradient(90deg, #4a90e2, #357abd);
+  background: #ff6b9d;
   color: white;
-  font-weight: 600;
+  font-weight: 700;
   transition: 0.3s ease;
+  box-shadow: 0 4px 12px rgba(255, 107, 157, 0.3);
 }
 
 .btn-primary-modern:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 15px 25px rgba(74,144,226,0.25);
+  background: #ff5a8d;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 107, 157, 0.4);
 }
 
 /* ========================================
-   LOGIN / SIGNUP
+   LOGIN / SIGNUP - WHITE THEME
 ======================================== */
 .auth-wrapper {
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  background: #f8f9fa;
 }
 
 .auth-card {
   background: #ffffff;
   padding: 40px;
-  border-radius: 24px;
+  border-radius: 16px;
   width: 100%;
-  max-width: 420px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.07);
+  max-width: 440px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border: 1px solid #f0f0f0;
 }
 
 /* ========================================
@@ -223,7 +237,7 @@ a {
 }
 
 /* ========================================
-   ADD / UPDATE PRODUCT
+   ADD / UPDATE PRODUCT - WHITE THEME
 ======================================== */
 .product-wrapper,
 .update-wrapper {
@@ -232,109 +246,104 @@ a {
   justify-content: center;
   align-items: center;
   padding: 40px 20px;
+  background: #f8f9fa;
 }
 
 .product-card,
 .update-card {
   background: #ffffff;
-  padding: 45px;
-  border-radius: 24px;
+  padding: 40px;
+  border-radius: 16px;
   width: 100%;
-  max-width: 520px;
-  box-shadow: 0 20px 45px rgba(0,0,0,0.06);
+  max-width: 540px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border: 1px solid #f0f0f0;
 }
 
 .product-preview,
 .update-preview {
   margin-top: 15px;
-  width: 130px;
-  height: 130px;
+  width: 120px;
+  height: 120px;
   object-fit: cover;
-  border-radius: 16px;
-  border: 3px solid #f0f0f0;
+  border-radius: 12px;
+  border: 2px solid #f0f0f0;
   transition: 0.3s ease;
 }
 
 .product-preview:hover,
 .update-preview:hover {
   transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 14px;
+  border-radius: 8px;
+  border: none;
+  background: #ff6b9d;
+  color: white;
+  font-weight: 700;
+  font-size: 15px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(255, 107, 157, 0.3);
+  cursor: pointer;
+}
+
+.btn-submit:hover {
+  background: #ff5a8d;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 107, 157, 0.4);
+}
+
+.image-preview-container {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 /* ========================================
-   SHINY PRODUCT LIST CARDS (FIXED)
+   PRODUCT LIST CARDS - WHITE THEME
 ======================================== */
 .product-list-card {
-  background: linear-gradient(145deg, #ffffff, #f8f9fc);
-  border-radius: 22px;
+  background: #ffffff;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.08);
-  transition: all 0.35s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
   position: relative;
+  border: 1px solid #f0f0f0;
 }
 
-/* Hover Lift */
 .product-list-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+  transform: translateY(-6px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
 }
 
-/* Glow Overlay */
-.product-list-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 22px;
-  background: linear-gradient(120deg, rgba(74,144,226,0.15), transparent);
-  opacity: 0;
-  transition: 0.4s ease;
-
-  pointer-events: none;   /* 🔥 THIS FIXES CLICK ISSUE */
-}
-
-.product-list-card:hover::before {
-  opacity: 1;
-}
-
-/* Image Wrapper */
 .product-img-wrapper {
   height: 220px;
-  background: linear-gradient(135deg, #f6f8ff, #eef2ff);
+  background: #f8f9fa;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
 }
 
-/* Image Zoom */
 .product-img {
   max-height: 180px;
   object-fit: contain;
-  transition: transform 0.5s ease;
+  transition: transform 0.4s ease;
 }
 
 .product-list-card:hover .product-img {
-  transform: scale(1.12);
+  transform: scale(1.08);
 }
 
-/* Price Highlight */
 .product-price {
   font-weight: 700;
   font-size: 18px;
-  color: #4a90e2;
-}
-
-/* Button Glow */
-.product-list-card .btn {
-  border-radius: 30px;
-  transition: 0.3s ease;
-}
-
-.product-list-card .btn-danger:hover {
-  box-shadow: 0 0 15px rgba(220,53,69,0.5);
-}
-
-.product-list-card .btn-light:hover {
-  box-shadow: 0 0 15px rgba(74,144,226,0.4);
+  color: #ff6b9d;
 }
 
 
@@ -357,44 +366,43 @@ a {
 }
 
 /* ========================================
-   SIGNUP PAGE BACKGROUND
+   SIGNUP PAGE - BOSS THEME
 ======================================== */
 .signup-wrapper {
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #eef2ff, #f8fbff);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 30px;
 }
 
-/* ========================================
-   SIGNUP CARD
-======================================== */
 .signup-card {
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(10px);
-  padding: 45px;
-  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(15px);
+  padding: 50px;
+  border-radius: 32px;
   width: 100%;
-  max-width: 460px;
-  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.08);
+  max-width: 480px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
   transition: all 0.4s ease;
   position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .signup-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 35px 70px rgba(74, 144, 226, 0.15);
+  transform: translateY(-10px);
+  box-shadow: 0 40px 100px rgba(102, 126, 234, 0.3);
 }
 
 /* ========================================
-   GRADIENT HEADING
+   GRADIENT HEADING - BOSS THEME
 ======================================== */
 .gradient-text {
-  background: linear-gradient(90deg, #4a90e2, #357abd);
+  background: linear-gradient(135deg, #667eea, #764ba2);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  font-weight: 800;
 }
 
 /* ========================================
@@ -451,25 +459,27 @@ a {
 }
 
 /* ========================================
-   BUTTON SHINY
+   BUTTON SHINY - BOSS THEME
 ======================================== */
 .btn-modern {
   width: 100%;
-  padding: 16px;
+  padding: 18px;
   border-radius: 16px;
   border: none;
-  background: linear-gradient(90deg, #4a90e2, #357abd);
+  background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
-  font-weight: 600;
-  font-size: 15px;
+  font-weight: 700;
+  font-size: 16px;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+  letter-spacing: 0.5px;
 }
 
 .btn-modern:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 15px 35px rgba(74,144,226,0.35);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(102, 126, 234, 0.5);
 }
 
 /* Button Shine Animation */
@@ -480,7 +490,7 @@ a {
   left: -75%;
   width: 50%;
   height: 100%;
-  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.5), transparent);
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.6), transparent);
   transform: skewX(-25deg);
 }
 
@@ -513,37 +523,33 @@ a {
 }
 
 /* ========================================
-   LOGIN PAGE BACKGROUND
+   LOGIN PAGE - BOSS THEME
 ======================================== */
 .login-wrapper {
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: radial-gradient(circle at top, #eef2ff, #f8fbff);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   padding: 30px;
 }
 
-/* ========================================
-   LOGIN CARD
-======================================== */
 .login-card {
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(12px);
-  padding: 45px;
-  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(15px);
+  padding: 50px;
+  border-radius: 32px;
   width: 100%;
-  max-width: 420px;
-  box-shadow: 
-    0 25px 60px rgba(0, 0, 0, 0.08),
-    0 0 0 1px rgba(255,255,255,0.6);
+  max-width: 460px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.2);
   transition: all 0.4s ease;
   position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 .login-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 35px 70px rgba(74,144,226,0.18);
+  transform: translateY(-10px);
+  box-shadow: 0 40px 100px rgba(102, 126, 234, 0.3);
 }
 
 /* ========================================
@@ -575,26 +581,27 @@ a {
 }
 
 /* ========================================
-   LOGIN BUTTON (SHINY)
+   LOGIN BUTTON - BOSS THEME
 ======================================== */
 .btn-login {
   width: 100%;
-  padding: 16px;
+  padding: 18px;
   border-radius: 16px;
   border: none;
-  background: linear-gradient(90deg, #4a90e2, #357abd);
+  background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
-  font-weight: 600;
-  font-size: 15px;
-  letter-spacing: 0.3px;
+  font-weight: 700;
+  font-size: 16px;
+  letter-spacing: 0.5px;
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
 }
 
 .btn-login:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 18px 35px rgba(74,144,226,0.35);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(102, 126, 234, 0.5);
 }
 
 /* Button Shine Effect */
@@ -608,7 +615,7 @@ a {
   background: linear-gradient(
     120deg,
     transparent,
-    rgba(255,255,255,0.6),
+    rgba(255, 255, 255, 0.6),
     transparent
   );
   transform: skewX(-25deg);
@@ -628,12 +635,13 @@ a {
    SIGNUP LINK
 ======================================== */
 .login-card a {
-  color: #4a90e2;
-  font-weight: 500;
+  color: #667eea;
+  font-weight: 600;
 }
 
 .login-card a:hover {
   text-decoration: underline;
+  color: #764ba2;
 }
 
 /* ========================================

@@ -12,6 +12,7 @@ import Profile from './Components/Profile';
 import SingleProduct from './Components/SingleProduct';
 import Orders from './Components/Orders';
 import Dashboard from './Components/Dashboard';
+import CouponManagement from './Components/CouponManagement';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
             <Route path="/products" element={<ProductList />} />
             <Route path="/add-product" element={<AddProduct />} />
             <Route path="/orders" element={<Orders />} />
+            <Route path="/coupons" element={<CouponManagement />} />
             <Route path="/update-product/:id" element={<UpdateProduct />} />
             <Route path="/product/:id" element={<SingleProduct />} />
             <Route path="/logout" element={<h1>Logout</h1>} />

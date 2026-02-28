@@ -47,7 +47,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3 sticky-top">
+    <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3 sticky-top" style={{ borderBottom: "3px solid #FF6B9D" }}>
       <div className="container">
         {/* Logo */}
         <Link to="/" className="navbar-brand d-flex align-items-center py-0">
@@ -92,6 +92,14 @@ const Navbar = () => {
 
             {user && (
               <li className="nav-item">
+                <Link className="nav-link" to="/wishlist">
+                  ❤️ Wishlist
+                </Link>
+              </li>
+            )}
+
+            {user && (
+              <li className="nav-item">
                 <Link className="nav-link" to="/orders">
                   Orders
                 </Link>
@@ -127,7 +135,7 @@ const Navbar = () => {
 
                 <ul className="dropdown-menu dropdown-menu-end">
                   <li>
-                    <Link className="dropdown-item" to={`/profile/${user._id}`}>
+                    <Link className="dropdown-item" to="/profile">
                       Profile
                     </Link>
                   </li>

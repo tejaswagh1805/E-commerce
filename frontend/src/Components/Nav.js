@@ -53,6 +53,11 @@ const Nav = () => {
                                     Orders
                                 </Link>
                             </li>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/coupons">
+                                    Coupons
+                                </Link>
+                            </li>
                         </ul>
                     )}
 

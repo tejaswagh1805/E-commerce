@@ -42,9 +42,9 @@ const Cart = () => {
                         {/* LEFT SIDE - ITEMS */}
                         <div className="col-md-8">
 
-                            {cart.map((item) => (
+                            {cart.map((item, index) => (
                                 <div
-                                    key={item._id}
+                                    key={`${item._id}-${item.selectedSize}-${item.selectedColor}-${index}`}
                                     className="card mb-4 border-0 shadow-sm"
                                     style={{
                                         borderRadius: "16px"
@@ -70,7 +70,17 @@ const Cart = () => {
                                                 <h6 className="fw-bold mb-1">
                                                     {item.name}
                                                 </h6>
-                                                <p className="mb-1 text-muted">
+                                                {item.selectedSize && (
+                                                    <p className="mb-0" style={{ fontSize: "13px", color: "#666" }}>
+                                                        Size: <span className="fw-semibold">{item.selectedSize}</span>
+                                                    </p>
+                                                )}
+                                                {item.selectedColor && (
+                                                    <p className="mb-0" style={{ fontSize: "13px", color: "#666" }}>
+                                                        Color: <span className="fw-semibold">{item.selectedColor}</span>
+                                                    </p>
+                                                )}
+                                                <p className="mb-1 text-muted mt-1">
                                                     ₹{item.price}
                                                 </p>
 

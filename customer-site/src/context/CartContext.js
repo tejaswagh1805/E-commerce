@@ -40,19 +40,25 @@ export const CartProvider = ({ children }) => {
         localStorage.setItem(key, JSON.stringify(cart));
     }, [cart]);
 
-    const addToCart = (product) => {
+    const addToCart = (product, selectedSize = null, selectedColor = null) => {
         setCart(prevCart => {
-            const exist = prevCart.find(item => item._id === product._id);
+            const exist = prevCart.find(item => 
+                item._id === product._id && 
+                item.selectedSize === selectedSize && 
+                item.selectedColor === selectedColor
+            );
 
             if (exist) {
                 return prevCart.map(item =>
-                    item._id === product._id
+                    item._id === product._id && 
+                    item.selectedSize === selectedSize && 
+                    item.selectedColor === selectedColor
                         ? { ...item, quantity: item.quantity + 1 }
                         : item
                 );
             }
 
-            return [...prevCart, { ...product, quantity: 1 }];
+            return [...prevCart, { ...product, quantity: 1, selectedSize, selectedColor }];
         });
     };
 

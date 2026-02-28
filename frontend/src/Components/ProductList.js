@@ -20,8 +20,6 @@ const ProductList = () => {
         applyFilters();
     }, [selectedCategory, priceRange]);
 
-    /* ================= SAFE FETCH PRODUCTS ================= */
-
     const getProducts = async () => {
         try {
             const auth = JSON.parse(localStorage.getItem("user"));
@@ -35,7 +33,6 @@ const ProductList = () => {
 
             let result = await response.json();
 
-            // 🔥 IMPORTANT FIX
             if (!Array.isArray(result)) {
                 console.error("API did not return array:", result);
                 setProducts([]);
@@ -61,8 +58,6 @@ const ProductList = () => {
         }
     };
 
-    /* ================= DELETE ================= */
-
     const deleteProduct = async (id) => {
         try {
             const auth = JSON.parse(localStorage.getItem("user"));
@@ -84,8 +79,6 @@ const ProductList = () => {
             console.log("Delete Error:", error);
         }
     };
-
-    /* ================= APPLY FILTERS ================= */
 
     const applyFilters = () => {
 
@@ -113,8 +106,6 @@ const ProductList = () => {
         setPriceRange(maxProductPrice);
         setFilteredProducts(products);
     };
-
-    /* ================= SEARCH ================= */
 
     const searchHandle = async (event) => {
 
@@ -151,8 +142,6 @@ const ProductList = () => {
         }
     };
 
-    /* ================= SAFE CATEGORY ================= */
-
     const categories = Array.isArray(products)
         ? [...new Set(products.map(p => p.category))]
         : [];
@@ -165,9 +154,9 @@ const ProductList = () => {
                 {/* SIDEBAR */}
                 <div className="col-lg-3 mb-4">
 
-                    <div className="border rounded-4 p-4 shadow-sm">
+                    <div className="card border-0 shadow-sm rounded-3 p-4">
 
-                        <h5 className="fw-bold mb-4">Filters</h5>
+                        <h5 className="fw-bold mb-4">🎯 Filters</h5>
 
                         <div className="mb-4">
                             <h6 className="fw-semibold mb-3">Category</h6>
@@ -202,12 +191,17 @@ const ProductList = () => {
 
                             <div className="d-flex justify-content-between mt-2">
                                 <span className="text-muted">₹0</span>
-                                <span className="fw-bold">₹{priceRange}</span>
+                                <span className="fw-bold" style={{ color: "#ff6b9d" }}>₹{priceRange}</span>
                             </div>
                         </div>
 
                         <button
-                            className="btn btn-outline-dark w-100 rounded-pill"
+                            className="btn w-100 rounded-pill fw-bold"
+                            style={{
+                                background: "#ff6b9d",
+                                color: "#fff",
+                                border: "none"
+                            }}
                             onClick={resetFilters}
                         >
                             Reset Filters
@@ -223,7 +217,7 @@ const ProductList = () => {
                     <div className="d-flex justify-content-between align-items-center mb-4">
 
                         <div>
-                            <h2 className="fw-bold mb-1">Admin Products</h2>
+                            <h2 className="fw-bold mb-1">🛍️ Admin Products</h2>
                             <p className="text-muted mb-0">
                                 {filteredProducts.length} Products Available
                             </p>
@@ -231,7 +225,7 @@ const ProductList = () => {
 
                         <div
                             className="input-group shadow-sm rounded-pill overflow-hidden"
-                            style={{ maxWidth: "300px" }}
+                            style={{ maxWidth: "300px", border: "1px solid #e0e0e0" }}
                         >
                             <span className="input-group-text bg-white border-0">
                                 🔍
@@ -251,7 +245,7 @@ const ProductList = () => {
                         <div className="row g-4">
                             {filteredProducts.map((item) => (
                                 <div className="col-sm-6 col-md-4" key={item._id}>
-                                    <div className="border rounded-4 shadow-sm p-3 h-100">
+                                    <div className="card border-0 shadow-sm rounded-3 p-3 h-100">
 
                                         <div
                                             className="text-center mb-3"
@@ -284,23 +278,27 @@ const ProductList = () => {
                                             {item.name}
                                         </h6>
 
-                                        <p className="fw-bold text-dark">
+                                        <p className="fw-bold" style={{ color: "#ff6b9d" }}>
                                             ₹{item.price}
                                         </p>
+
+                                        {item.stock && (
+                                            <small className="text-muted">Stock: {item.stock}</small>
+                                        )}
 
                                         <div className="d-flex gap-2 mt-3">
                                             <Link
                                                 to={`/update-product/${item._id}`}
                                                 className="btn btn-light btn-sm w-100 shadow-sm fw-semibold"
                                             >
-                                                Edit
+                                                ✏️ Edit
                                             </Link>
 
                                             <button
                                                 className="btn btn-danger btn-sm w-100"
                                                 onClick={() => deleteProduct(item._id)}
                                             >
-                                                Delete
+                                                🗑️ Delete
                                             </button>
                                         </div>
 
@@ -311,7 +309,7 @@ const ProductList = () => {
                     ) : (
                         <div className="text-center py-5">
                             <h5 className="text-muted">
-                                No products found
+                                🔍 No products found
                             </h5>
                         </div>
                     )}

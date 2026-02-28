@@ -18,8 +18,6 @@ const Dashboard = () => {
 
     const [orders, setOrders] = useState([]);
 
-    /* ================= FETCH REAL ORDERS ================= */
-
     useEffect(() => {
         fetchOrders();
     }, []);
@@ -45,8 +43,6 @@ const Dashboard = () => {
         }
     };
 
-    /* ================= DYNAMIC SUMMARY ================= */
-
     const totalRevenue = orders
         .filter(o => o.status === "Completed")
         .reduce((acc, curr) => acc + curr.totalAmount, 0);
@@ -56,22 +52,19 @@ const Dashboard = () => {
     const summary = {
         income: totalRevenue,
         orders: totalOrders,
-        activity: totalOrders * 6, // simple activity logic
+        activity: totalOrders * 6,
         revenue: totalRevenue
     };
 
-    /* ================= ORDER STATUS PIE DATA ================= */
-
     const orderStatusData = [
-        { name: "Completed", value: orders.filter(o => o.status === "Completed").length },
+        { name: "Completed", value: orders.filter(o => o.status === "Completed" || o.status === "Delivered").length },
         { name: "Pending", value: orders.filter(o => o.status === "Pending").length },
+        { name: "Shipped", value: orders.filter(o => o.status === "Shipped" || o.status === "Confirmed" || o.status === "OutForDelivery").length },
         { name: "Cancelled", value: orders.filter(o => o.status === "Cancelled").length },
         { name: "Refunded", value: orders.filter(o => o.status === "Refunded").length }
-    ];
+    ].filter(item => item.value > 0);
 
-    const COLORS = ["#28a745", "#ffc107", "#dc3545", "#6c757d"];
-
-    /* ================= MONTHLY REVENUE ================= */
+    const COLORS = ["#28a745", "#ffc107", "#17a2b8", "#dc3545", "#6c757d"];
 
     const revenueData = [
         "Jan", "Feb", "Mar", "Apr", "May", "Jun",
@@ -84,16 +77,12 @@ const Dashboard = () => {
         return { month, revenue: monthRevenue };
     });
 
-    /* ================= SALES COUNT ================= */
-
     const salesData = revenueData.map(item => ({
         month: item.month,
         sales: orders.filter(o =>
             new Date(o.createdAt).toLocaleString('default', { month: 'short' }) === item.month
         ).length
     }));
-
-    /* ================= LATEST ORDERS ================= */
 
     const latestOrders = orders
         .slice(0, 5)
@@ -108,60 +97,62 @@ const Dashboard = () => {
         const map = {
             Pending: "warning",
             Completed: "success",
+            Delivered: "success",
+            Confirmed: "info",
+            Shipped: "info",
+            OutForDelivery: "primary",
             Cancelled: "danger",
             Refunded: "secondary"
         };
-        return `badge bg-${map[status]} rounded-pill px-3 py-2`;
+        return `badge bg-${map[status] || 'secondary'} rounded-pill px-3 py-2`;
     };
 
     return (
         <div className="container py-5">
 
-            <h3 className="fw-bold mb-4">E-Commerce Dashboard</h3>
+            <h3 className="fw-bold mb-4">📊 E-Commerce Dashboard</h3>
 
-            {/* ================= SUMMARY CARDS ================= */}
             <div className="row g-4 mb-4">
 
                 <div className="col-md-3">
-                    <div className="card shadow-sm border-0 rounded-4 p-4">
-                        <h6 className="text-muted">Income</h6>
-                        <h3 className="fw-bold">₹{summary.income}</h3>
-                        <small className="text-success">Live Data</small>
+                    <div className="card border-0 shadow-sm rounded-3 p-4" style={{ background: "#fff5f8" }}>
+                        <h6 className="text-muted mb-2">💰 Income</h6>
+                        <h3 className="fw-bold" style={{ color: "#ff6b9d" }}>₹{summary.income}</h3>
+                        <small className="text-success">✓ Live Data</small>
                     </div>
                 </div>
 
                 <div className="col-md-3">
-                    <div className="card shadow-sm border-0 rounded-4 p-4">
-                        <h6 className="text-muted">Orders</h6>
-                        <h3 className="fw-bold">{summary.orders}</h3>
+                    <div className="card border-0 shadow-sm rounded-3 p-4" style={{ background: "#f0f9ff" }}>
+                        <h6 className="text-muted mb-2">📦 Orders</h6>
+                        <h3 className="fw-bold" style={{ color: "#0ea5e9" }}>{summary.orders}</h3>
                         <small className="text-muted">Total Orders</small>
                     </div>
                 </div>
 
                 <div className="col-md-3">
-                    <div className="card shadow-sm border-0 rounded-4 p-4">
-                        <h6 className="text-muted">Activity</h6>
-                        <h3 className="fw-bold">{summary.activity}</h3>
+                    <div className="card border-0 shadow-sm rounded-3 p-4" style={{ background: "#f0fdf4" }}>
+                        <h6 className="text-muted mb-2">⚡ Activity</h6>
+                        <h3 className="fw-bold" style={{ color: "#10b981" }}>{summary.activity}</h3>
                         <small className="text-muted">User Activity</small>
                     </div>
                 </div>
 
                 <div className="col-md-3">
-                    <div className="card shadow-sm border-0 rounded-4 p-4">
-                        <h6 className="text-muted">Revenue</h6>
-                        <h3 className="fw-bold">₹{summary.revenue}</h3>
+                    <div className="card border-0 shadow-sm rounded-3 p-4" style={{ background: "#fef3c7" }}>
+                        <h6 className="text-muted mb-2">💎 Revenue</h6>
+                        <h3 className="fw-bold" style={{ color: "#f59e0b" }}>₹{summary.revenue}</h3>
                         <small className="text-muted">Completed Orders</small>
                     </div>
                 </div>
 
             </div>
 
-            {/* ================= MAIN CHART ROW ================= */}
             <div className="row g-4 mb-4">
 
                 <div className="col-lg-8">
-                    <div className="card shadow-sm border-0 rounded-4 p-4">
-                        <h6 className="fw-bold mb-3">Total Revenue</h6>
+                    <div className="card border-0 shadow-sm rounded-3 p-4">
+                        <h6 className="fw-bold mb-3">📈 Total Revenue</h6>
                         <ResponsiveContainer width="100%" height={300}>
                             <LineChart data={revenueData}>
                                 <CartesianGrid strokeDasharray="3 3" />
@@ -171,7 +162,7 @@ const Dashboard = () => {
                                 <Line
                                     type="monotone"
                                     dataKey="revenue"
-                                    stroke="#4e73df"
+                                    stroke="#ff6b9d"
                                     strokeWidth={3}
                                 />
                             </LineChart>
@@ -180,8 +171,8 @@ const Dashboard = () => {
                 </div>
 
                 <div className="col-lg-4">
-                    <div className="card shadow-sm border-0 rounded-4 p-4">
-                        <h6 className="fw-bold mb-3">Order Status</h6>
+                    <div className="card border-0 shadow-sm rounded-3 p-4">
+                        <h6 className="fw-bold mb-3">🎯 Order Status</h6>
                         <ResponsiveContainer width="100%" height={300}>
                             <PieChart>
                                 <Pie data={orderStatusData} dataKey="value" outerRadius={100}>
@@ -197,27 +188,26 @@ const Dashboard = () => {
 
             </div>
 
-            {/* ================= SALES + LATEST ORDERS ================= */}
             <div className="row g-4">
 
                 <div className="col-lg-4">
-                    <div className="card shadow-sm border-0 rounded-4 p-4">
-                        <h6 className="fw-bold mb-3">Sales / Revenue</h6>
+                    <div className="card border-0 shadow-sm rounded-3 p-4">
+                        <h6 className="fw-bold mb-3">📊 Sales Overview</h6>
                         <ResponsiveContainer width="100%" height={300}>
                             <BarChart data={salesData}>
                                 <CartesianGrid strokeDasharray="3 3" />
                                 <XAxis dataKey="month" />
                                 <YAxis />
                                 <Tooltip />
-                                <Bar dataKey="sales" fill="#4e73df" />
+                                <Bar dataKey="sales" fill="#ff6b9d" />
                             </BarChart>
                         </ResponsiveContainer>
                     </div>
                 </div>
 
                 <div className="col-lg-8">
-                    <div className="card shadow-sm border-0 rounded-4 p-4">
-                        <h6 className="fw-bold mb-3">Latest Orders</h6>
+                    <div className="card border-0 shadow-sm rounded-3 p-4">
+                        <h6 className="fw-bold mb-3">🛒 Latest Orders</h6>
 
                         <div className="table-responsive">
                             <table className="table align-middle">
@@ -234,7 +224,7 @@ const Dashboard = () => {
                                         <tr key={order.id}>
                                             <td className="fw-semibold">#{order.id}</td>
                                             <td>{order.customer}</td>
-                                            <td className="fw-bold">₹{order.total}</td>
+                                            <td className="fw-bold" style={{ color: "#ff6b9d" }}>₹{order.total}</td>
                                             <td>
                                                 <span className={getBadge(order.status)}>
                                                     {order.status}

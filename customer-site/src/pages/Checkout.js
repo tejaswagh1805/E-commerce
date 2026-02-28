@@ -1,6 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { CartContext } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Checkout = () => {
 
@@ -10,6 +11,11 @@ const Checkout = () => {
 
     const [sameAsBilling, setSameAsBilling] = useState(true);
     const [errors, setErrors] = useState({});
+    const [couponData, setCouponData] = useState(null);
+    const [couponCode, setCouponCode] = useState("");
+    const [couponLoading, setCouponLoading] = useState(false);
+    const [couponMessage, setCouponMessage] = useState("");
+    const [applied, setApplied] = useState(false);
 
     const [form, setForm] = useState({
         name: "",
@@ -55,6 +61,41 @@ const Checkout = () => {
         (acc, item) => acc + item.price * item.quantity,
         0
     );
+
+    const finalTotal = couponData ? couponData.finalAmount : total;
+
+    const handleApplyCoupon = async () => {
+        if (!couponCode.trim()) {
+            setCouponMessage("Please enter a coupon code");
+            return;
+        }
+
+        setCouponLoading(true);
+        setCouponMessage("");
+
+        try {
+            const res = await axios.post("http://localhost:5000/coupon/validate", {
+                code: couponCode,
+                totalAmount: total
+            });
+
+            setCouponMessage(`✅ Coupon applied! You saved ₹${res.data.discount}`);
+            setApplied(true);
+            setCouponData(res.data);
+        } catch (error) {
+            setCouponMessage(error.response?.data?.error || "Invalid coupon code");
+            setApplied(false);
+        } finally {
+            setCouponLoading(false);
+        }
+    };
+
+    const handleRemoveCoupon = () => {
+        setCouponCode("");
+        setCouponMessage("");
+        setApplied(false);
+        setCouponData(null);
+    };
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -185,7 +226,8 @@ const Checkout = () => {
 
                 paymentMethod: form.paymentMethod,
                 products: cart,
-                totalAmount: total
+                totalAmount: finalTotal,
+                couponApplied: couponData ? couponData.coupon.code : null
             })
         });
 
@@ -404,6 +446,67 @@ const Checkout = () => {
                     {/* RIGHT SUMMARY */}
                     <div className="col-md-4">
 
+                        {/* COUPON */}
+                        <div className="card mb-3" style={{ border: "2px solid #000", borderRadius: "12px" }}>
+                            <div className="card-body">
+                                <h6 className="fw-bold mb-3">🎫 Have a Coupon Code?</h6>
+                                
+                                <div className="d-flex gap-2">
+                                    <input
+                                        type="text"
+                                        className="form-control"
+                                        placeholder="Enter coupon code"
+                                        style={{
+                                            border: "2px solid #e0e0e0",
+                                            borderRadius: "8px",
+                                            padding: "10px 16px"
+                                        }}
+                                        value={couponCode}
+                                        onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                                        disabled={applied}
+                                    />
+                                    
+                                    {!applied ? (
+                                        <button
+                                            className="btn px-4"
+                                            style={{
+                                                background: "#000",
+                                                color: "#fff",
+                                                border: "none",
+                                                borderRadius: "8px",
+                                                fontWeight: "600",
+                                                whiteSpace: "nowrap"
+                                            }}
+                                            onClick={handleApplyCoupon}
+                                            disabled={couponLoading}
+                                        >
+                                            {couponLoading ? "Applying..." : "Apply"}
+                                        </button>
+                                    ) : (
+                                        <button
+                                            className="btn px-3"
+                                            style={{
+                                                background: "#fff",
+                                                color: "#000",
+                                                border: "2px solid #000",
+                                                borderRadius: "8px",
+                                                fontWeight: "600"
+                                            }}
+                                            onClick={handleRemoveCoupon}
+                                        >
+                                            Remove
+                                        </button>
+                                    )}
+                                </div>
+
+                                {couponMessage && (
+                                    <div className={`mt-2 small fw-semibold ${applied ? "text-success" : "text-danger"}`}>
+                                        {couponMessage}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+
                         <div className="bg-white shadow rounded-4 p-4">
                             <h5 className="fw-bold mb-4">🛒 Order Summary</h5>
 
@@ -417,9 +520,23 @@ const Checkout = () => {
 
                             <hr />
 
+                            <div className="d-flex justify-content-between mb-2">
+                                <span>Subtotal</span>
+                                <span>₹{total}</span>
+                            </div>
+
+                            {couponData && (
+                                <div className="d-flex justify-content-between mb-2 text-success">
+                                    <span>Discount ({couponData.coupon.code})</span>
+                                    <span>- ₹{couponData.discount}</span>
+                                </div>
+                            )}
+
+                            <hr />
+
                             <div className="d-flex justify-content-between fw-bold">
                                 <span>Total</span>
-                                <span>₹{total}</span>
+                                <span>₹{finalTotal}</span>
                             </div>
 
                             <button

@@ -9,14 +9,6 @@ const Orders = () => {
 
     const ordersPerPage = 10;
 
-    const statusColors = {
-        All: "dark",
-        Pending: "warning",
-        Completed: "success",
-        Cancelled: "danger",
-        Refunded: "secondary"
-    };
-
     useEffect(() => {
         fetchOrders();
     }, []);
@@ -90,38 +82,33 @@ const Orders = () => {
     return (
         <div className="container py-5">
 
-            {/* HEADER */}
-            <div className="mb-5 p-4 rounded-4 text-white"
-                style={{ background: "linear-gradient(90deg, #1e3c72, #2a5298)" }}
-            >
-                <h2 className="fw-bold mb-1">Orders Dashboard</h2>
-                <p className="mb-0 opacity-75">
-                    Monitor and manage customer transactions
-                </p>
+            <div className="mb-4">
+                <h2 className="fw-bold">📊 Orders Dashboard</h2>
+                <p className="text-muted">Monitor and manage customer transactions</p>
             </div>
 
-            {/* SUMMARY CARDS */}
             <div className="row mb-4 g-3">
-                {["Pending", "Completed", "Cancelled", "Refunded"].map((status) => (
-                    <div className="col-md-3" key={status}>
-                        <div className={`p-4 rounded-4 shadow-sm text-white bg-${statusColors[status]}`}>
-                            <h6 className="mb-2">{status} Orders</h6>
-                            <h3 className="fw-bold">{countByStatus(status)}</h3>
+                {["Pending", "Completed", "Cancelled", "Refunded"].map((status, idx) => {
+                    const colors = ["#fef3c7", "#d1fae5", "#fee2e2", "#f3f4f6"];
+                    const textColors = ["#f59e0b", "#10b981", "#ef4444", "#6b7280"];
+                    return (
+                        <div className="col-md-3" key={status}>
+                            <div className="card border-0 shadow-sm rounded-3 p-4" style={{ background: colors[idx] }}>
+                                <h6 className="mb-2" style={{ color: textColors[idx] }}>{status} Orders</h6>
+                                <h3 className="fw-bold" style={{ color: textColors[idx] }}>{countByStatus(status)}</h3>
+                            </div>
                         </div>
-                    </div>
-                ))}
+                    );
+                })}
             </div>
 
-            {/* FILTER */}
             <div className="d-flex gap-3 flex-wrap mb-4">
                 {["All", "Pending", "Completed", "Cancelled", "Refunded"].map(
                     (status) => (
                         <button
                             key={status}
-                            className={`btn rounded-pill px-4 fw-semibold ${activeTab === status
-                                ? `btn-${statusColors[status]}`
-                                : `btn-outline-${statusColors[status]}`
-                                }`}
+                            className={`btn rounded-pill px-4 fw-semibold ${activeTab === status ? 'btn-primary' : 'btn-outline-secondary'}`}
+                            style={activeTab === status ? { background: "#ff6b9d", border: "none" } : {}}
                             onClick={() => {
                                 setActiveTab(status);
                                 setCurrentPage(1);
@@ -133,8 +120,7 @@ const Orders = () => {
                 )}
             </div>
 
-            {/* TABLE */}
-            <div className="card shadow-lg border-0 rounded-4">
+            <div className="card border-0 shadow-sm rounded-3">
                 <div className="table-responsive">
                     <table className="table align-middle mb-0">
                         <thead className="table-light">
@@ -155,7 +141,7 @@ const Orders = () => {
                                     <tr>
                                         <td className="fw-semibold">#{order.orderId}</td>
                                         <td>{order.customerName}</td>
-                                        <td className="fw-bold">₹{order.totalAmount}</td>
+                                        <td className="fw-bold" style={{ color: "#ff6b9d" }}>₹{order.totalAmount}</td>
 
                                         <td>
                                             <select
@@ -191,48 +177,24 @@ const Orders = () => {
                                         </td>
                                     </tr>
 
-                                    {/* EXPANDED DETAILS */}
                                     {expanded === order._id && (
                                         <tr>
                                             <td colSpan="6">
-                                                <div
-                                                    className="p-4 rounded-4"
-                                                    style={{
-                                                        background: "#ffffff",
-                                                        boxShadow: "0 10px 30px rgba(0,0,0,0.05)",
-                                                        border: "1px solid #f1f1f1"
-                                                    }}
-                                                >
+                                                <div className="p-4 rounded-3" style={{ background: "#f8f9fa" }}>
 
-                                                    {/* ================= CUSTOMER HEADER ================= */}
                                                     <div className="d-flex justify-content-between align-items-center mb-4">
                                                         <h5 className="fw-bold mb-0">
                                                             🧾 Order Details
                                                         </h5>
-                                                        <span
-                                                            className="px-3 py-2 rounded-pill text-white"
-                                                            style={{
-                                                                background:
-                                                                    order.status === "Delivered"
-                                                                        ? "#28a745"
-                                                                        : order.status === "Pending"
-                                                                            ? "#ffc107"
-                                                                            : order.status === "Cancelled"
-                                                                                ? "#dc3545"
-                                                                                : "#6c757d",
-                                                                fontSize: "0.8rem",
-                                                                fontWeight: "600"
-                                                            }}
-                                                        >
+                                                        <span className="badge bg-primary px-3 py-2">
                                                             {order.status}
                                                         </span>
                                                     </div>
 
-                                                    {/* ================= CUSTOMER INFO ================= */}
                                                     <div className="row g-4 mb-4">
 
                                                         <div className="col-md-4">
-                                                            <div className="p-3 rounded-3 bg-light h-100">
+                                                            <div className="p-3 rounded-3 bg-white">
                                                                 <small className="text-muted d-block mb-1">
                                                                     Customer Email
                                                                 </small>
@@ -243,7 +205,7 @@ const Orders = () => {
                                                         </div>
 
                                                         <div className="col-md-4">
-                                                            <div className="p-3 rounded-3 bg-light h-100">
+                                                            <div className="p-3 rounded-3 bg-white">
                                                                 <small className="text-muted d-block mb-1">
                                                                     Mobile
                                                                 </small>
@@ -254,7 +216,7 @@ const Orders = () => {
                                                         </div>
 
                                                         <div className="col-md-4">
-                                                            <div className="p-3 rounded-3 bg-light h-100">
+                                                            <div className="p-3 rounded-3 bg-white">
                                                                 <small className="text-muted d-block mb-1">
                                                                     Payment Method
                                                                 </small>
@@ -266,11 +228,10 @@ const Orders = () => {
 
                                                     </div>
 
-                                                    {/* ================= ADDRESSES ================= */}
                                                     <div className="row g-4 mb-4">
 
                                                         <div className="col-md-6">
-                                                            <div className="p-3 rounded-3 border h-100">
+                                                            <div className="p-3 rounded-3 border bg-white">
                                                                 <h6 className="fw-bold mb-2">
                                                                     📍 Billing Address
                                                                 </h6>
@@ -281,7 +242,7 @@ const Orders = () => {
                                                         </div>
 
                                                         <div className="col-md-6">
-                                                            <div className="p-3 rounded-3 border h-100">
+                                                            <div className="p-3 rounded-3 border bg-white">
                                                                 <h6 className="fw-bold mb-2">
                                                                     🚚 Shipping Address
                                                                 </h6>
@@ -295,7 +256,6 @@ const Orders = () => {
 
                                                     <hr />
 
-                                                    {/* ================= PRODUCTS ================= */}
                                                     <h6 className="fw-bold mb-3">
                                                         🛍 Ordered Products
                                                     </h6>
@@ -303,12 +263,7 @@ const Orders = () => {
                                                     {order.products.map((item, index) => (
                                                         <div
                                                             key={index}
-                                                            className="d-flex justify-content-between align-items-center mb-3 p-3 rounded-3"
-                                                            style={{
-                                                                background: "#f8f9fa",
-                                                                border: "1px solid #eee",
-                                                                transition: "0.2s"
-                                                            }}
+                                                            className="d-flex justify-content-between align-items-center mb-3 p-3 rounded-3 bg-white"
                                                         >
                                                             <div>
                                                                 <div className="fw-semibold">
@@ -327,7 +282,6 @@ const Orders = () => {
 
                                                     <hr />
 
-                                                    {/* ================= TOTAL ================= */}
                                                     <div className="d-flex justify-content-end">
                                                         <div className="text-end">
                                                             <div className="text-muted">

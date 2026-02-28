@@ -1,0 +1,31 @@
+# 🚀 Quick Push to GitHub
+
+## Copy and paste these commands one by one:
+
+```bash
+cd d:\mern_stack_project
+
+git init
+
+git add .
+
+git commit -m "Initial commit: Full-featured MERN e-commerce application with admin dashboard, customer site, email notifications, coupon system, and inventory management"
+
+git remote add origin https://github.com/tejaswagh1805/E-commerce.git
+
+git branch -M main
+
+git push -u origin main
+```
+
+## ⚠️ Important:
+- Install Git first if not installed: https://git-scm.com/downloads
+- Use Personal Access Token as password (not regular password)
+- Get token from: https://github.com/settings/tokens
+
+## ✅ After pushing, your code will be live at:
+https://github.com/tejaswagh1805/E-commerce
+
+---
+
+**That's it! Your code is now on GitHub!** 🎉
