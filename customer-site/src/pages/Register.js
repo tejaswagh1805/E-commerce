@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
 const Register = () => {
   const navigate = useNavigate();
 
@@ -69,7 +71,7 @@ const Register = () => {
     formData.append("image", image);
 
     try {
-      await axios.post("http://localhost:5000/register", formData, {
+      await axios.post(`${API_URL}/register`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
