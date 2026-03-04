@@ -1,2 +1,7 @@
-const mangoose = require('mongoose');
-mangoose.connect('mongodb://localhost:27017/e-comm');
+const mongoose = require('mongoose');
+
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/e-comm';
+
+mongoose.connect(MONGODB_URI)
+  .then(() => console.log('✅ MongoDB Connected'))
+  .catch(err => console.error('❌ MongoDB Connection Error:', err));
