@@ -100,14 +100,15 @@ app.post("/register", upload.single("image"), async (req, res) => {
             email: req.body.email,
             password: req.body.password,
             mobile: req.body.mobile || "",
-            image: req.file ? req.file.filename : "",
+            image: req.file ? req.file.filename : "default-avatar.png",
             role: "customer"  // 🔥 FORCE CUSTOMER
         });
 
         const result = await user.save();
-        res.json(result);
+        res.json({ message: "Registration successful", user: result });
 
     } catch (err) {
+        console.error("Registration error:", err);
         res.status(500).json({ error: err.message });
     }
 });

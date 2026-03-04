@@ -49,10 +49,10 @@ const Register = () => {
       newErrors.mobile = "Mobile number must be exactly 10 digits";
     }
 
-    // Image
-    if (!image) {
-      newErrors.image = "Profile image is required";
-    }
+    // Image (OPTIONAL)
+    // if (!image) {
+    //   newErrors.image = "Profile image is required";
+    // }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
