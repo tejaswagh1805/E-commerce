@@ -15,28 +15,13 @@ const Home = () => {
 
     useEffect(() => {
         fetchProducts();
-
-        const carouselElement = document.getElementById("premiumCarousel");
-
-        if (carouselElement && window.bootstrap) {
-            new window.bootstrap.Carousel(carouselElement, {
-                interval: 3000,
-                ride: "carousel",
-                pause: false,
-                wrap: true
-            });
-        }
-
     }, []);
-
 
     const fetchProducts = async () => {
         try {
             const res = await fetch("http://localhost:5000/shop-products");
             const data = await res.json();
-
-            // Show only first 3 products
-            setProducts(data.slice(0, 3));
+            setProducts(data.slice(0, 6));
         } catch (error) {
             console.log("Error fetching products:", error);
         }
@@ -44,7 +29,6 @@ const Home = () => {
 
     const addToCart = (product) => {
         let cart = JSON.parse(localStorage.getItem("cart")) || [];
-
         const exists = cart.find(item => item._id === product._id);
 
         if (!exists) {
@@ -56,263 +40,172 @@ const Home = () => {
         }
     };
 
-
     return (
         <div style={{ backgroundColor: "#fff" }}>
 
-            {/* ================= TOP BANNER ================= */}
-            <div style={{ background: "linear-gradient(135deg, #FF6B9D 0%, #C06C84 100%)", padding: "8px 0" }}>
+            {/* ================= HERO SECTION ================= */}
+            <section style={{ 
+                minHeight: "85vh", 
+                display: "flex", 
+                alignItems: "center",
+                background: "#fff",
+                borderBottom: "1px solid #e5e5e5"
+            }}>
                 <div className="container">
-                    <div className="d-flex justify-content-between align-items-center text-white">
-                        <small>🎉 Free Shipping on Orders Above ₹999</small>
-                        <small>📞 Customer Care: 1800-123-4567</small>
-                    </div>
-                </div>
-            </div>
-
-            {/* ================= PREMIUM PRODUCT SLIDER ================= */}
-            <section className="py-4" style={{ background: "#FFF5F7" }}>
-                <div className="container">
-
-                    <div
-                        id="premiumCarousel"
-                        className="carousel slide carousel-fade"
-                        data-bs-ride="carousel"
-                    >
-                        <div className="carousel-inner rounded-4 shadow-sm">
-
-                            {products.map((item, index) => (
-                                <div
-                                    key={item._id}
-                                    className={`carousel-item ${index === 0 ? "active" : ""}`}
+                    <div className="row align-items-center">
+                        <div className="col-lg-6">
+                            <h1 style={{ 
+                                fontSize: "3.5rem", 
+                                fontWeight: "300",
+                                color: "#000",
+                                letterSpacing: "-1px",
+                                lineHeight: "1.2",
+                                marginBottom: "30px"
+                            }}>
+                                Premium Quality<br/>
+                                <span style={{ fontWeight: "700" }}>For Your Baby</span>
+                            </h1>
+                            <p style={{ 
+                                fontSize: "1.1rem", 
+                                color: "#666",
+                                marginBottom: "40px",
+                                lineHeight: "1.8"
+                            }}>
+                                Discover our curated collection of safe, certified, and premium baby products designed for modern parents.
+                            </p>
+                            <div className="d-flex gap-3">
+                                <Link
+                                    to="/shop"
+                                    className="btn btn-lg"
+                                    style={{
+                                        background: "#000",
+                                        color: "#fff",
+                                        border: "none",
+                                        padding: "15px 40px",
+                                        fontWeight: "600",
+                                        textTransform: "uppercase",
+                                        letterSpacing: "1px",
+                                        fontSize: "14px"
+                                    }}
                                 >
-                                    <div
-                                        className="d-flex align-items-center justify-content-between p-5"
-                                        style={{
-                                            background: "linear-gradient(135deg, #FFE5EC, #FFF)",
-                                            borderRadius: "25px",
-                                            minHeight: "380px",
-                                            border: "3px solid #FFB6C1"
-                                        }}
-                                    >
-
-                                        {/* LEFT CONTENT */}
-                                        <div style={{ maxWidth: "500px" }}>
-                                            <small className="text-muted fw-semibold">
-                                                {item.category}
-                                            </small>
-
-                                            <h2
-                                                className="fw-bold mt-2"
-                                                style={{
-                                                    fontSize: "2.5rem",
-                                                    background: "linear-gradient(90deg, #000, #666)",
-                                                    WebkitBackgroundClip: "text",
-                                                    WebkitTextFillColor: "transparent"
-                                                }}
-                                            >
-                                                {item.name}
-                                            </h2>
-
-                                            <p className="text-secondary mt-3">
-                                                Experience premium quality and timeless elegance.
-                                            </p>
-
-                                            <h4 className="fw-bold mt-3">
-                                                ₹{item.price}
-                                            </h4>
-
-                                            <div className="mt-4 d-flex gap-3">
-                                                <button
-                                                    className="btn px-4 py-2 rounded-pill"
-                                                    style={{
-                                                        background: "#FF6B9D",
-                                                        color: "#fff",
-                                                        border: "none",
-                                                        fontWeight: "600"
-                                                    }}
-                                                    onClick={() => navigate(`/product/${createSlug(item.name)}`)}
-                                                >
-                                                    View Product
-                                                </button>
-
-                                                <button
-                                                    className="btn px-4 py-2 rounded-pill border"
-                                                    style={{
-                                                        borderColor: "#FF6B9D",
-                                                        color: "#FF6B9D",
-                                                        background: "#fff",
-                                                        fontWeight: "600"
-                                                    }}
-                                                    onClick={() => addToCart(item)}
-                                                >
-                                                    Add to Cart
-                                                </button>
-                                            </div>
-                                        </div>
-
-                                        {/* RIGHT IMAGE */}
-                                        <div
-                                            className="text-center"
-                                            style={{
-                                                flex: 1
-                                            }}
-                                        >
-                                            <img
-                                                src={`http://localhost:5000/uploads/${item.images?.[0]}`}
-                                                alt={item.name}
-                                                style={{
-                                                    maxHeight: "280px",
-                                                    objectFit: "contain",
-                                                    filter: "drop-shadow(0 20px 30px rgba(0,0,0,0.15))",
-                                                    transition: "0.4s"
-                                                }}
-                                            />
-                                        </div>
-
-                                    </div>
-                                </div>
-                            ))}
-
+                                    Shop Now
+                                </Link>
+                                <Link
+                                    to="/shop"
+                                    className="btn btn-lg"
+                                    style={{
+                                        background: "#fff",
+                                        color: "#000",
+                                        border: "2px solid #000",
+                                        padding: "15px 40px",
+                                        fontWeight: "600",
+                                        textTransform: "uppercase",
+                                        letterSpacing: "1px",
+                                        fontSize: "14px"
+                                    }}
+                                >
+                                    Learn More
+                                </Link>
+                            </div>
                         </div>
-
-                        {/* Controls */}
-                        <button
-                            className="carousel-control-prev"
-                            type="button"
-                            data-bs-target="#premiumCarousel"
-                            data-bs-slide="prev"
-                        >
-                            <span className="carousel-control-prev-icon"></span>
-                        </button>
-
-                        <button
-                            className="carousel-control-next"
-                            type="button"
-                            data-bs-target="#premiumCarousel"
-                            data-bs-slide="next"
-                        >
-                            <span className="carousel-control-next-icon"></span>
-                        </button>
+                        <div className="col-lg-6 text-center">
+                            {products[0] && (
+                                <img
+                                    src={`http://localhost:5000/uploads/${products[0].images?.[0]}`}
+                                    alt="Hero Product"
+                                    style={{
+                                        maxHeight: "500px",
+                                        objectFit: "contain",
+                                        filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.1))"
+                                    }}
+                                />
+                            )}
+                        </div>
                     </div>
-
                 </div>
             </section>
-
 
             {/* ================= FEATURES ================= */}
-            <section className="py-5" style={{ background: "#FFF" }}>
+            <section className="py-5" style={{ background: "#fafafa" }}>
                 <div className="container">
-
-                    <div className="text-center mb-5">
-                        <h2 className="fw-bold" style={{ color: "#FF6B9D" }}>Why Parents Love Us 👶</h2>
-                        <p className="text-muted">Safe, Quality Products for Your Little Ones</p>
-                    </div>
-
                     <div className="row g-4">
-
-                        <div className="col-md-4">
-                            <div
-                                className="p-4 text-center h-100"
-                                style={{
-                                    borderRadius: "20px",
-                                    background: "linear-gradient(135deg, #FFE5EC, #FFF)",
-                                    border: "2px solid #FFB6C1"
-                                }}
-                            >
-                                <div className="mb-3" style={{ fontSize: "3rem" }}>🚚</div>
-                                <h5 className="fw-bold" style={{ color: "#FF6B9D" }}>Fast Delivery</h5>
-                                <p className="text-muted">
-                                    Quick delivery for your baby's needs.
-                                </p>
-                            </div>
+                        <div className="col-md-4 text-center">
+                            <div style={{ fontSize: "2.5rem", marginBottom: "20px" }}>🚚</div>
+                            <h5 style={{ fontWeight: "600", color: "#000", marginBottom: "10px" }}>Free Shipping</h5>
+                            <p style={{ color: "#666", fontSize: "14px" }}>On orders over ₹999</p>
                         </div>
-
-                        <div className="col-md-4">
-                            <div
-                                className="p-4 text-center h-100"
-                                style={{
-                                    borderRadius: "20px",
-                                    background: "linear-gradient(135deg, #E0F7FA, #FFF)",
-                                    border: "2px solid #80DEEA"
-                                }}
-                            >
-                                <div className="mb-3" style={{ fontSize: "3rem" }}>✅</div>
-                                <h5 className="fw-bold" style={{ color: "#00ACC1" }}>100% Safe</h5>
-                                <p className="text-muted">
-                                    Certified & tested baby products.
-                                </p>
-                            </div>
+                        <div className="col-md-4 text-center">
+                            <div style={{ fontSize: "2.5rem", marginBottom: "20px" }}>✅</div>
+                            <h5 style={{ fontWeight: "600", color: "#000", marginBottom: "10px" }}>100% Safe</h5>
+                            <p style={{ color: "#666", fontSize: "14px" }}>Certified products</p>
                         </div>
-
-                        <div className="col-md-4">
-                            <div
-                                className="p-4 text-center h-100"
-                                style={{
-                                    borderRadius: "20px",
-                                    background: "linear-gradient(135deg, #FFF9C4, #FFF)",
-                                    border: "2px solid #FFD54F"
-                                }}
-                            >
-                                <div className="mb-3" style={{ fontSize: "3rem" }}>⭐</div>
-                                <h5 className="fw-bold" style={{ color: "#FFA000" }}>Premium Quality</h5>
-                                <p className="text-muted">
-                                    Trusted brands for your baby.
-                                </p>
-                            </div>
+                        <div className="col-md-4 text-center">
+                            <div style={{ fontSize: "2.5rem", marginBottom: "20px" }}>⭐</div>
+                            <h5 style={{ fontWeight: "600", color: "#000", marginBottom: "10px" }}>Premium Quality</h5>
+                            <p style={{ color: "#666", fontSize: "14px" }}>Trusted brands</p>
                         </div>
-
                     </div>
                 </div>
             </section>
 
-
-            {/* ================= TRENDING PRODUCTS ================= */}
-            <section className="py-5" style={{ background: "#FFF5F7" }}>
-                <div className="container text-center">
-
-                    <h2 className="fw-bold mb-4" style={{ color: "#FF6B9D" }}>Trending Baby Products 🎀</h2>
+            {/* ================= PRODUCTS GRID ================= */}
+            <section className="py-5" style={{ background: "#fff" }}>
+                <div className="container">
+                    <div className="text-center mb-5">
+                        <h2 style={{ 
+                            fontSize: "2.5rem", 
+                            fontWeight: "300",
+                            color: "#000",
+                            marginBottom: "15px"
+                        }}>
+                            Featured <span style={{ fontWeight: "700" }}>Products</span>
+                        </h2>
+                        <p style={{ color: "#666", fontSize: "1rem" }}>
+                            Handpicked collection for your little ones
+                        </p>
+                    </div>
 
                     <div className="row g-4">
                         {products.length > 0 ? (
-                            products.slice(0, 3).map((item) => (
+                            products.map((item) => (
                                 <div className="col-md-4" key={item._id}>
-
                                     <div
-                                        className="bg-white p-3 h-100"
                                         style={{
-                                            borderRadius: "16px",
-                                            boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
-                                            position: "relative"
+                                            background: "#fff",
+                                            border: "1px solid #e5e5e5",
+                                            padding: "20px",
+                                            transition: "0.3s",
+                                            cursor: "pointer"
+                                        }}
+                                        onMouseEnter={(e) => {
+                                            e.currentTarget.style.boxShadow = "0 4px 20px rgba(0,0,0,0.08)";
+                                        }}
+                                        onMouseLeave={(e) => {
+                                            e.currentTarget.style.boxShadow = "none";
                                         }}
                                     >
-
-                                        {/* Discount Badge */}
                                         {item.discount > 0 && (
                                             <div style={{
                                                 position: "absolute",
-                                                top: "10px",
-                                                right: "10px",
-                                                background: "#ff6b9d",
+                                                top: "20px",
+                                                right: "20px",
+                                                background: "#000",
                                                 color: "#fff",
-                                                padding: "4px 10px",
-                                                borderRadius: "20px",
+                                                padding: "5px 12px",
                                                 fontSize: "12px",
-                                                fontWeight: "bold",
-                                                zIndex: 1
+                                                fontWeight: "600"
                                             }}>
-                                                {item.discount}% OFF
+                                                -{item.discount}%
                                             </div>
                                         )}
 
-                                        {/* IMAGE CONTAINER (Same as Shop) */}
                                         <div
                                             style={{
-                                                height: "180px",
+                                                height: "250px",
                                                 display: "flex",
                                                 alignItems: "center",
                                                 justifyContent: "center",
-                                                cursor: "pointer"
+                                                marginBottom: "20px"
                                             }}
                                             onClick={() => navigate(`/product/${createSlug(item.name)}`)}
                                         >
@@ -327,107 +220,135 @@ const Home = () => {
                                             />
                                         </div>
 
-                                        <small className="text-muted">
-                                            {item.category}
-                                        </small>
+                                        <div style={{ textAlign: "center" }}>
+                                            <small style={{ 
+                                                color: "#999", 
+                                                textTransform: "uppercase",
+                                                fontSize: "11px",
+                                                letterSpacing: "1px"
+                                            }}>
+                                                {item.category}
+                                            </small>
 
-                                        <h6 className="fw-bold mt-1">
-                                            {item.name}
-                                        </h6>
+                                            <h6 style={{ 
+                                                fontWeight: "600", 
+                                                margin: "10px 0",
+                                                color: "#000"
+                                            }}>
+                                                {item.name}
+                                            </h6>
 
-                                        <div className="d-flex align-items-center gap-2">
-                                            <p className="fw-semibold mb-0">
-                                                ₹{item.price}
-                                            </p>
-                                            {item.discount > 0 && (
-                                                <p className="text-muted text-decoration-line-through mb-0" style={{ fontSize: "14px" }}>
-                                                    ₹{(Number(item.price) / (1 - item.discount / 100)).toFixed(0)}
-                                                </p>
-                                            )}
-                                        </div>
-
-                                        <div className="d-flex gap-2 justify-content-center mt-3">
-                                            <button
-                                                className="btn px-3"
-                                                style={{
-                                                    background: "#fff",
-                                                    color: "#FF6B9D",
-                                                    border: "2px solid #FF6B9D",
-                                                    borderRadius: "20px",
-                                                    fontWeight: "600",
-                                                    transition: "all 0.3s ease"
-                                                }}
-                                                onClick={() => navigate(`/product/${createSlug(item.name)}`)}
-                                                onMouseOver={(e) => {
-                                                    e.currentTarget.style.background = "#FFF5F7";
-                                                }}
-                                                onMouseOut={(e) => {
-                                                    e.currentTarget.style.background = "#fff";
-                                                }}
-                                            >
-                                                View
-                                            </button>
+                                            <div style={{ marginBottom: "15px" }}>
+                                                <span style={{ 
+                                                    fontSize: "1.2rem", 
+                                                    fontWeight: "700",
+                                                    color: "#000"
+                                                }}>
+                                                    ₹{item.price}
+                                                </span>
+                                                {item.discount > 0 && (
+                                                    <span style={{ 
+                                                        color: "#999", 
+                                                        textDecoration: "line-through",
+                                                        marginLeft: "10px",
+                                                        fontSize: "0.9rem"
+                                                    }}>
+                                                        ₹{(Number(item.price) / (1 - item.discount / 100)).toFixed(0)}
+                                                    </span>
+                                                )}
+                                            </div>
 
                                             <button
-                                                className="btn px-3"
                                                 style={{
-                                                    background: "#FF6B9D",
+                                                    width: "100%",
+                                                    background: "#000",
                                                     color: "#fff",
                                                     border: "none",
-                                                    borderRadius: "20px",
+                                                    padding: "12px",
                                                     fontWeight: "600",
-                                                    transition: "all 0.3s ease"
+                                                    textTransform: "uppercase",
+                                                    fontSize: "13px",
+                                                    letterSpacing: "1px",
+                                                    transition: "0.3s"
                                                 }}
                                                 onClick={() => addToCart(item)}
-                                                onMouseOver={(e) => e.currentTarget.style.background = "#E55A8A"}
-                                                onMouseOut={(e) => e.currentTarget.style.background = "#FF6B9D"}
+                                                onMouseEnter={(e) => e.currentTarget.style.background = "#333"}
+                                                onMouseLeave={(e) => e.currentTarget.style.background = "#000"}
                                             >
                                                 Add to Cart
                                             </button>
                                         </div>
-
                                     </div>
-
                                 </div>
                             ))
                         ) : (
-                            <p>Loading products...</p>
+                            <p className="text-center">Loading products...</p>
                         )}
                     </div>
 
+                    <div className="text-center mt-5">
+                        <Link
+                            to="/shop"
+                            className="btn btn-lg"
+                            style={{
+                                background: "#fff",
+                                color: "#000",
+                                border: "2px solid #000",
+                                padding: "15px 50px",
+                                fontWeight: "600",
+                                textTransform: "uppercase",
+                                letterSpacing: "1px",
+                                fontSize: "14px"
+                            }}
+                        >
+                            View All Products
+                        </Link>
+                    </div>
                 </div>
             </section>
 
             {/* ================= NEWSLETTER ================= */}
             <Newsletter />
 
-            {/* ================= CTA ================= */}
+            {/* ================= CTA SECTION ================= */}
             <section
-                className="py-5 text-center"
                 style={{
-                    background: "linear-gradient(135deg, #FF6B9D 0%, #C06C84 100%)",
-                    color: "#fff"
+                    background: "#000",
+                    color: "#fff",
+                    padding: "80px 0"
                 }}
             >
-                <div className="container">
-
-                    <h2 className="fw-bold mb-3">
-                        🎉 Shop the Best for Your Baby!
+                <div className="container text-center">
+                    <h2 style={{ 
+                        fontSize: "2.5rem", 
+                        fontWeight: "300",
+                        marginBottom: "20px"
+                    }}>
+                        Ready to <span style={{ fontWeight: "700" }}>Get Started?</span>
                     </h2>
-
+                    <p style={{ 
+                        fontSize: "1.1rem", 
+                        color: "#ccc",
+                        marginBottom: "40px"
+                    }}>
+                        Shop the best products for your baby today
+                    </p>
                     <Link
                         to="/shop"
-                        className="btn btn-lg px-5 rounded-pill shadow"
+                        className="btn btn-lg"
                         style={{
                             background: "#fff",
-                            color: "#FF6B9D",
+                            color: "#000",
                             border: "none",
-                            fontWeight: "600"
+                            padding: "15px 50px",
+                            fontWeight: "600",
+                            textTransform: "uppercase",
+                            letterSpacing: "1px",
+                            fontSize: "14px"
                         }}
                     >
                         Explore Collection
                     </Link>
-
                 </div>
             </section>
 

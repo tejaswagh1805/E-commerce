@@ -2,6 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { CartContext } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import MockPaymentModal from "../components/MockPaymentModal";
 
 const Checkout = () => {
 
@@ -16,6 +17,7 @@ const Checkout = () => {
     const [couponLoading, setCouponLoading] = useState(false);
     const [couponMessage, setCouponMessage] = useState("");
     const [applied, setApplied] = useState(false);
+    const [showPaymentModal, setShowPaymentModal] = useState(false);
 
     const [form, setForm] = useState({
         name: "",
@@ -95,6 +97,70 @@ const Checkout = () => {
         setCouponMessage("");
         setApplied(false);
         setCouponData(null);
+    };
+
+    const handleRazorpayPayment = async (shippingData) => {
+        setShowPaymentModal(true);
+    };
+
+    const handlePaymentSuccess = async (paymentData) => {
+        try {
+            setShowPaymentModal(false);
+
+            const shippingData = sameAsBilling
+                ? {
+                    address: form.billingAddress,
+                    city: form.billingCity,
+                    state: form.billingState,
+                    pincode: form.billingPincode,
+                    country: form.billingCountry
+                }
+                : {
+                    address: form.shippingAddress,
+                    city: form.shippingCity,
+                    state: form.shippingState,
+                    pincode: form.shippingPincode,
+                    country: form.shippingCountry
+                };
+
+            // Verify payment
+            const verifyRes = await axios.post("http://localhost:5000/verify-payment", paymentData);
+
+            if (verifyRes.data.success) {
+                // Save order
+                const res = await fetch("http://localhost:5000/place-order", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        userId: user._id,
+                        customerName: form.name,
+                        email: form.email,
+                        mobile: form.mobile,
+                        billingAddress: {
+                            address: form.billingAddress,
+                            city: form.billingCity,
+                            state: form.billingState,
+                            pincode: form.billingPincode,
+                            country: form.billingCountry
+                        },
+                        shippingAddress: shippingData,
+                        paymentMethod: "Online",
+                        products: cart,
+                        totalAmount: finalTotal,
+                        couponApplied: couponData ? couponData.coupon.code : null,
+                        razorpayOrderId: paymentData.payment_order_id,
+                        razorpayPaymentId: paymentData.payment_id,
+                        razorpaySignature: paymentData.signature
+                    })
+                });
+
+                const data = await res.json();
+                clearCart();
+                navigate("/thank-you", { state: data });
+            }
+        } catch (error) {
+            alert("Payment processing failed!");
+        }
     };
 
     const handleChange = (e) => {
@@ -205,6 +271,13 @@ const Checkout = () => {
                 country: form.shippingCountry
             };
 
+        // If Online payment, initiate Razorpay
+        if (form.paymentMethod === "Online") {
+            handleRazorpayPayment(shippingData);
+            return;
+        }
+
+        // COD or Card payment
         const res = await fetch("http://localhost:5000/place-order", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -237,6 +310,7 @@ const Checkout = () => {
     };
 
     return (
+        <>
         <div style={{ background: "#f5f6fa", minHeight: "100vh" }}>
             <div className="container py-5">
 
@@ -375,7 +449,18 @@ const Checkout = () => {
                                     checked={form.paymentMethod === "COD"}
                                     onChange={handleChange}
                                 />
-                                <label className="ms-2">Cash on Delivery</label>
+                                <label className="ms-2">💵 Cash on Delivery</label>
+                            </div>
+
+                            <div className="form-check mb-2">
+                                <input
+                                    type="radio"
+                                    name="paymentMethod"
+                                    value="Online"
+                                    checked={form.paymentMethod === "Online"}
+                                    onChange={handleChange}
+                                />
+                                <label className="ms-2">💳 Pay Online (Mock Gateway)</label>
                             </div>
 
                             <div className="form-check mb-3">
@@ -559,6 +644,19 @@ const Checkout = () => {
 
             </div>
         </div>
+
+        <MockPaymentModal
+            show={showPaymentModal}
+            onClose={() => setShowPaymentModal(false)}
+            amount={finalTotal}
+            customerDetails={{
+                name: form.name,
+                email: form.email,
+                mobile: form.mobile
+            }}
+            onSuccess={handlePaymentSuccess}
+        />
+        </>
     );
 };
 

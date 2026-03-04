@@ -43,23 +43,31 @@ const Dashboard = () => {
         }
     };
 
+    // Income = Only paid orders (Online payments completed)
+    const totalIncome = orders
+        .filter(o => o.paymentStatus === "Completed" && o.paymentMethod === "Online")
+        .reduce((acc, curr) => acc + curr.totalAmount, 0);
+
+    // Revenue = All delivered orders (including COD)
     const totalRevenue = orders
-        .filter(o => o.status === "Completed")
+        .filter(o => o.status === "Delivered")
         .reduce((acc, curr) => acc + curr.totalAmount, 0);
 
     const totalOrders = orders.length;
 
     const summary = {
-        income: totalRevenue,
+        income: totalIncome,
         orders: totalOrders,
         activity: totalOrders * 6,
         revenue: totalRevenue
     };
 
     const orderStatusData = [
-        { name: "Completed", value: orders.filter(o => o.status === "Completed" || o.status === "Delivered").length },
+        { name: "Delivered", value: orders.filter(o => o.status === "Delivered").length },
         { name: "Pending", value: orders.filter(o => o.status === "Pending").length },
-        { name: "Shipped", value: orders.filter(o => o.status === "Shipped" || o.status === "Confirmed" || o.status === "OutForDelivery").length },
+        { name: "Confirmed", value: orders.filter(o => o.status === "Confirmed").length },
+        { name: "Shipped", value: orders.filter(o => o.status === "Shipped").length },
+        { name: "Out for Delivery", value: orders.filter(o => o.status === "OutForDelivery").length },
         { name: "Cancelled", value: orders.filter(o => o.status === "Cancelled").length },
         { name: "Refunded", value: orders.filter(o => o.status === "Refunded").length }
     ].filter(item => item.value > 0);
@@ -71,7 +79,7 @@ const Dashboard = () => {
         "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
     ].map((month, index) => {
         const monthRevenue = orders
-            .filter(o => new Date(o.createdAt).getMonth() === index)
+            .filter(o => o.status === "Delivered" && new Date(o.createdAt).getMonth() === index)
             .reduce((acc, curr) => acc + curr.totalAmount, 0);
 
         return { month, revenue: monthRevenue };
@@ -117,8 +125,8 @@ const Dashboard = () => {
                 <div className="col-md-3">
                     <div className="card border-0 shadow-sm rounded-3 p-4" style={{ background: "#fff5f8" }}>
                         <h6 className="text-muted mb-2">💰 Income</h6>
-                        <h3 className="fw-bold" style={{ color: "#ff6b9d" }}>₹{summary.income}</h3>
-                        <small className="text-success">✓ Live Data</small>
+                        <h3 className="fw-bold" style={{ color: "#000" }}>₹{summary.income}</h3>
+                        <small className="text-success">✓ Paid Online</small>
                     </div>
                 </div>
 
@@ -142,7 +150,7 @@ const Dashboard = () => {
                     <div className="card border-0 shadow-sm rounded-3 p-4" style={{ background: "#fef3c7" }}>
                         <h6 className="text-muted mb-2">💎 Revenue</h6>
                         <h3 className="fw-bold" style={{ color: "#f59e0b" }}>₹{summary.revenue}</h3>
-                        <small className="text-muted">Completed Orders</small>
+                        <small className="text-muted">All Delivered Orders</small>
                     </div>
                 </div>
 
@@ -162,7 +170,7 @@ const Dashboard = () => {
                                 <Line
                                     type="monotone"
                                     dataKey="revenue"
-                                    stroke="#ff6b9d"
+                                    stroke="#000"
                                     strokeWidth={3}
                                 />
                             </LineChart>
@@ -199,7 +207,7 @@ const Dashboard = () => {
                                 <XAxis dataKey="month" />
                                 <YAxis />
                                 <Tooltip />
-                                <Bar dataKey="sales" fill="#ff6b9d" />
+                                <Bar dataKey="sales" fill="#000" />
                             </BarChart>
                         </ResponsiveContainer>
                     </div>
@@ -224,7 +232,7 @@ const Dashboard = () => {
                                         <tr key={order.id}>
                                             <td className="fw-semibold">#{order.id}</td>
                                             <td>{order.customer}</td>
-                                            <td className="fw-bold" style={{ color: "#ff6b9d" }}>₹{order.total}</td>
+                                            <td className="fw-bold" style={{ color: "#000" }}>₹{order.total}</td>
                                             <td>
                                                 <span className={getBadge(order.status)}>
                                                     {order.status}

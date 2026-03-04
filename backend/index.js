@@ -7,6 +7,7 @@ const path = require("path");
 const fs = require("fs");
 const Jwt = require("jsonwebtoken");
 const { sendOrderConfirmationEmail } = require("./emailService");
+const crypto = require("crypto");
 
 require("dotenv").config();
 
@@ -354,15 +355,55 @@ app.get("/shop-product/:id", async (req, res) => {
    🛒 ORDER ROUTES
 ===================================================== */
 
+// MOCK PAYMENT GATEWAY - CREATE ORDER
+app.post("/create-payment-order", async (req, res) => {
+    try {
+        const { amount } = req.body;
+        
+        // Generate mock order ID
+        const mockOrderId = "mock_order_" + Date.now();
+        
+        res.json({
+            id: mockOrderId,
+            amount: amount * 100,
+            currency: "INR",
+            status: "created"
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// MOCK PAYMENT GATEWAY - VERIFY PAYMENT
+app.post("/verify-payment", async (req, res) => {
+    try {
+        // Mock verification - always succeeds
+        res.json({ 
+            success: true, 
+            message: "Payment verified successfully (Mock)"
+        });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
 // CUSTOMER PLACE ORDER
 app.post("/place-order", async (req, res) => {
 
     const orderId = "ORD-" + Date.now().toString().slice(-6);
 
+    // Determine initial status based on payment
+    let initialStatus = "Pending";
+    if (req.body.paymentMethod === "Online" && req.body.razorpayPaymentId) {
+        initialStatus = "Confirmed"; // Auto-confirm if payment is completed
+    }
+
     const order = new Order({
         orderId,
         ...req.body,
-        status: "Pending"
+        status: initialStatus,
+        paymentStatus: req.body.paymentMethod === "Online" ? "Completed" : "Pending",
+        confirmedAt: initialStatus === "Confirmed" ? new Date() : null
     });
 
     const savedOrder = await order.save();

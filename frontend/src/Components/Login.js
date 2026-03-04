@@ -43,7 +43,7 @@ const Login = () => {
             <div className="login-card animate-fade">
 
                 <div className="text-center mb-4">
-                    <h3 className="fw-bold">Welcome Back 👋</h3>
+                    <h3 className="fw-bold">Welcome Back</h3>
                     <p className="text-muted">Login to continue</p>
                 </div>
 

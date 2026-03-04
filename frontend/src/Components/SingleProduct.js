@@ -58,8 +58,8 @@ const SingleProduct = () => {
             {/* Breadcrumb */}
             <nav aria-label="breadcrumb" className="mb-3">
                 <ol className="breadcrumb mb-0">
-                    <li className="breadcrumb-item"><a href="/" style={{ color: "#ff6b9d", textDecoration: "none" }}>Home</a></li>
-                    <li className="breadcrumb-item"><a href="/products" style={{ color: "#ff6b9d", textDecoration: "none" }}>{product.category}</a></li>
+                    <li className="breadcrumb-item"><a href="/" style={{ color: "#000", textDecoration: "none" }}>Home</a></li>
+                    <li className="breadcrumb-item"><a href="/products" style={{ color: "#000", textDecoration: "none" }}>{product.category}</a></li>
                     <li className="breadcrumb-item active">{product.name}</li>
                 </ol>
             </nav>
@@ -97,7 +97,7 @@ const SingleProduct = () => {
                                         height: "70px",
                                         objectFit: "cover",
                                         cursor: "pointer",
-                                        border: selectedImage === img ? "2px solid #ff6b9d" : "1px solid #ddd"
+                                        border: selectedImage === img ? "2px solid #000" : "1px solid #ddd"
                                     }}
                                 />
                             ))}
@@ -131,7 +131,7 @@ const SingleProduct = () => {
 
                     {/* Price */}
                     <div className="mb-4">
-                        <h3 className="fw-bold d-inline" style={{ color: "#ff6b9d" }}>
+                        <h3 className="fw-bold d-inline" style={{ color: "#000" }}>
                             ₹{discountedPrice}
                         </h3>
                         {product.discount > 0 && (
@@ -236,7 +236,7 @@ const SingleProduct = () => {
                         <button 
                             className="btn btn-lg fw-bold flex-grow-1"
                             style={{
-                                background: "#ff6b9d",
+                                background: "#000",
                                 color: "#fff",
                                 border: "none",
                                 borderRadius: "8px"

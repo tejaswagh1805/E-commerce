@@ -6,19 +6,25 @@ import logo from "../assets/e-commm.png";
 const Navbar = () => {
   const { cart } = useContext(CartContext);
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
+  const [scrolled, setScrolled] = useState(false);
 
   const navigate = useNavigate();
 
-  // 🔥 Listen for login changes
   useEffect(() => {
     const checkUser = () => {
       setUser(JSON.parse(localStorage.getItem("user")));
     };
 
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+
     window.addEventListener("storage", checkUser);
+    window.addEventListener("scroll", handleScroll);
 
     return () => {
       window.removeEventListener("storage", checkUser);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -32,7 +38,6 @@ const Navbar = () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");
 
-    // 🔥 Force CartContext to reload
     window.dispatchEvent(new Event("storage"));
 
     setUser(null);
@@ -47,107 +52,233 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm py-3 sticky-top" style={{ borderBottom: "3px solid #FF6B9D" }}>
+    <nav 
+      className="navbar navbar-expand-lg navbar-light sticky-top" 
+      style={{ 
+        background: scrolled ? "rgba(255, 255, 255, 0.98)" : "rgba(255, 255, 255, 0.95)",
+        backdropFilter: "blur(10px)",
+        borderBottom: scrolled ? "1px solid #e5e5e5" : "none",
+        boxShadow: scrolled ? "0 2px 10px rgba(0,0,0,0.05)" : "none",
+        transition: "all 0.3s ease",
+        padding: "20px 0"
+      }}
+    >
       <div className="container">
-        {/* Logo */}
-        <Link to="/" className="navbar-brand d-flex align-items-center py-0">
+        <Link to="/" className="navbar-brand d-flex align-items-center">
           <img
             src={logo}
-            alt="Logo"
-            className="img-fluid"
-            style={{ maxHeight: "40px" }}
+            alt="MyStore Logo"
+            style={{ 
+              maxHeight: "40px",
+              objectFit: "contain"
+            }}
           />
         </Link>
 
-        {/* Mobile Toggle Button */}
         <button
-          className="navbar-toggler"
+          className="navbar-toggler border-0"
           type="button"
           data-bs-toggle="collapse"
           data-bs-target="#navbarContent"
-          aria-controls="navbarContent"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
         >
           <span className="navbar-toggler-icon"></span>
         </button>
 
-        {/* Collapsible Content */}
         <div className="collapse navbar-collapse" id="navbarContent">
-          <ul className="navbar-nav ms-auto gap-lg-3 align-items-lg-center">
+          <ul className="navbar-nav mx-auto align-items-lg-center gap-lg-4">
             <li className="nav-item">
-              <Link className="nav-link" to="/shop">
+              <Link 
+                className="nav-link" 
+                to="/"
+                style={{
+                  color: "#000",
+                  fontWeight: "500",
+                  fontSize: "13px",
+                  textTransform: "uppercase",
+                  letterSpacing: "1.5px",
+                  transition: "0.3s"
+                }}
+                onMouseEnter={(e) => e.target.style.color = "#666"}
+                onMouseLeave={(e) => e.target.style.color = "#000"}
+              >
+                Home
+              </Link>
+            </li>
+
+            <li className="nav-item">
+              <Link 
+                className="nav-link" 
+                to="/shop"
+                style={{
+                  color: "#000",
+                  fontWeight: "500",
+                  fontSize: "13px",
+                  textTransform: "uppercase",
+                  letterSpacing: "1.5px",
+                  transition: "0.3s"
+                }}
+                onMouseEnter={(e) => e.target.style.color = "#666"}
+                onMouseLeave={(e) => e.target.style.color = "#000"}
+              >
                 Shop
               </Link>
             </li>
 
-            <li className="nav-item position-relative">
-              <Link className="nav-link" to="/cart" onClick={handleCartClick}>
-                Cart
+            {user && (
+              <>
+                <li className="nav-item">
+                  <Link 
+                    className="nav-link" 
+                    to="/orders"
+                    style={{
+                      color: "#000",
+                      fontWeight: "500",
+                      fontSize: "13px",
+                      textTransform: "uppercase",
+                      letterSpacing: "1.5px",
+                      transition: "0.3s"
+                    }}
+                    onMouseEnter={(e) => e.target.style.color = "#666"}
+                    onMouseLeave={(e) => e.target.style.color = "#000"}
+                  >
+                    Orders
+                  </Link>
+                </li>
+              </>
+            )}
+          </ul>
+
+          <ul className="navbar-nav ms-auto align-items-lg-center gap-lg-3">
+            {user && (
+              <li className="nav-item">
+                <Link 
+                  to="/wishlist"
+                  style={{
+                    color: "#000",
+                    fontSize: "20px",
+                    textDecoration: "none",
+                    transition: "0.3s"
+                  }}
+                  onMouseEnter={(e) => e.target.style.color = "#666"}
+                  onMouseLeave={(e) => e.target.style.color = "#000"}
+                  title="Wishlist"
+                >
+                  ♡
+                </Link>
+              </li>
+            )}
+
+            <li className="nav-item">
+              <Link 
+                to="/cart" 
+                onClick={handleCartClick}
+                style={{
+                  color: "#000",
+                  fontSize: "20px",
+                  textDecoration: "none",
+                  position: "relative",
+                  transition: "0.3s"
+                }}
+                onMouseEnter={(e) => e.target.style.color = "#666"}
+                onMouseLeave={(e) => e.target.style.color = "#000"}
+                title="Cart"
+              >
+                🛒
                 {cart.length > 0 && (
-                  <span className="badge bg-dark ms-1">{cart.length}</span>
+                  <span style={{
+                    position: "absolute",
+                    top: "-8px",
+                    right: "-10px",
+                    background: "#000",
+                    color: "#fff",
+                    borderRadius: "50%",
+                    width: "18px",
+                    height: "18px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontSize: "10px",
+                    fontWeight: "600"
+                  }}>
+                    {cart.length}
+                  </span>
                 )}
               </Link>
             </li>
 
-            {user && (
-              <li className="nav-item">
-                <Link className="nav-link" to="/wishlist">
-                  ❤️ Wishlist
-                </Link>
-              </li>
-            )}
-
-            {user && (
-              <li className="nav-item">
-                <Link className="nav-link" to="/orders">
-                  Orders
-                </Link>
-              </li>
-            )}
-
             {!user ? (
-              <>
-                <li className="nav-item">
-                  <Link className="nav-link" to="/login">
-                    Login
-                  </Link>
-                </li>
-
-                <li className="nav-item">
-                  <Link
-                    className="btn btn-outline-dark mt-2 mt-lg-0"
-                    to="/register"
-                  >
-                    Register
-                  </Link>
-                </li>
-              </>
+              <li className="nav-item">
+                <Link 
+                  to="/login"
+                  style={{
+                    color: "#000",
+                    fontSize: "20px",
+                    textDecoration: "none",
+                    transition: "0.3s"
+                  }}
+                  onMouseEnter={(e) => e.target.style.color = "#666"}
+                  onMouseLeave={(e) => e.target.style.color = "#000"}
+                  title="Login"
+                >
+                  👤
+                </Link>
+              </li>
             ) : (
-              <li className="nav-item dropdown mt-2 mt-lg-0">
+              <li className="nav-item dropdown">
                 <button
-                  className="btn btn-dark dropdown-toggle w-100 w-lg-auto"
+                  className="btn border-0 p-0 dropdown-toggle"
                   type="button"
                   data-bs-toggle="dropdown"
+                  style={{
+                    background: "transparent",
+                    color: "#000",
+                    fontSize: "20px"
+                  }}
+                  title="Account"
                 >
-                  Hi, {user.name}
+                  👤
                 </button>
 
-                <ul className="dropdown-menu dropdown-menu-end">
+                <ul className="dropdown-menu dropdown-menu-end" style={{
+                  border: "1px solid #e5e5e5",
+                  boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                  borderRadius: "0",
+                  minWidth: "180px"
+                }}>
+                  <li style={{ 
+                    padding: "10px 20px", 
+                    borderBottom: "1px solid #e5e5e5",
+                    fontSize: "13px",
+                    fontWeight: "600",
+                    color: "#000"
+                  }}>
+                    {user.name}
+                  </li>
                   <li>
-                    <Link className="dropdown-item" to="/profile">
+                    <Link 
+                      className="dropdown-item" 
+                      to="/profile" 
+                      style={{
+                        fontSize: "13px",
+                        padding: "10px 20px",
+                        color: "#666"
+                      }}
+                    >
                       Profile
                     </Link>
                   </li>
-
                   <li>
-                    <hr className="dropdown-divider" />
+                    <hr className="dropdown-divider" style={{ margin: "0" }} />
                   </li>
-
                   <li>
                     <button
-                      className="dropdown-item text-danger"
+                      className="dropdown-item"
                       onClick={handleLogout}
+                      style={{
+                        fontSize: "13px",
+                        padding: "10px 20px",
+                        color: "#666"
+                      }}
                     >
                       Logout
                     </button>

@@ -191,14 +191,14 @@ const ProductList = () => {
 
                             <div className="d-flex justify-content-between mt-2">
                                 <span className="text-muted">₹0</span>
-                                <span className="fw-bold" style={{ color: "#ff6b9d" }}>₹{priceRange}</span>
+                                <span className="fw-bold" style={{ color: "#000" }}>₹{priceRange}</span>
                             </div>
                         </div>
 
                         <button
                             className="btn w-100 rounded-pill fw-bold"
                             style={{
-                                background: "#ff6b9d",
+                                background: "#000",
                                 color: "#fff",
                                 border: "none"
                             }}
@@ -245,7 +245,7 @@ const ProductList = () => {
                         <div className="row g-4">
                             {filteredProducts.map((item) => (
                                 <div className="col-sm-6 col-md-4" key={item._id}>
-                                    <div className="card border-0 shadow-sm rounded-3 p-3 h-100">
+                                    <div className="card border-0 shadow-sm rounded-3 p-3 h-100 d-flex flex-column">
 
                                         <div
                                             className="text-center mb-3"
@@ -278,24 +278,36 @@ const ProductList = () => {
                                             {item.name}
                                         </h6>
 
-                                        <p className="fw-bold" style={{ color: "#ff6b9d" }}>
+                                        <p className="fw-bold mb-2" style={{ color: "#000" }}>
                                             ₹{item.price}
                                         </p>
 
                                         {item.stock && (
-                                            <small className="text-muted">Stock: {item.stock}</small>
+                                            <small className="text-muted mb-3 d-block">Stock: {item.stock}</small>
                                         )}
 
-                                        <div className="d-flex gap-2 mt-3">
+                                        <div className="d-flex gap-2 mt-auto pt-3">
                                             <Link
                                                 to={`/update-product/${item._id}`}
-                                                className="btn btn-light btn-sm w-100 shadow-sm fw-semibold"
+                                                className="btn btn-sm w-100"
+                                                style={{
+                                                    background: "#fff",
+                                                    color: "#000",
+                                                    border: "2px solid #000",
+                                                    fontWeight: "600"
+                                                }}
                                             >
                                                 ✏️ Edit
                                             </Link>
 
                                             <button
-                                                className="btn btn-danger btn-sm w-100"
+                                                className="btn btn-sm w-100"
+                                                style={{
+                                                    background: "#000",
+                                                    color: "#fff",
+                                                    border: "2px solid #000",
+                                                    fontWeight: "600"
+                                                }}
                                                 onClick={() => deleteProduct(item._id)}
                                             >
                                                 🗑️ Delete

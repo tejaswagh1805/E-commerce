@@ -56,7 +56,7 @@ const SignUp = () => {
 
                 <div className="text-center mb-4">
                     <h2 className="fw-bold gradient-text">Create Account</h2>
-                    <p className="text-muted">Join us and start your journey 🚀</p>
+                    <p className="text-muted">Join us and start your journey</p>
                 </div>
 
                 <form onSubmit={collectData}>

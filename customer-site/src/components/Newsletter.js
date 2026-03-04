@@ -26,13 +26,13 @@ const Newsletter = () => {
         <section 
             className="py-5" 
             style={{ 
-                background: "linear-gradient(135deg, #FFE5EC 0%, #FFF5F7 100%)",
-                borderTop: "3px solid #FFB6C1",
-                borderBottom: "3px solid #FFB6C1"
+                background: "#fafafa",
+                borderTop: "1px solid #e5e5e5",
+                borderBottom: "1px solid #e5e5e5"
             }}
         >
             <div className="container text-center">
-                <h3 className="fw-bold mb-2" style={{ color: "#FF6B9D" }}>👶 Join Our Baby Care Community!</h3>
+                <h3 className="fw-bold mb-2" style={{ color: "#000" }}>Join Our Baby Care Community!</h3>
                 <p className="mb-4" style={{ color: "#666" }}>Get parenting tips, exclusive deals & new arrivals!</p>
 
                 <form onSubmit={handleSubscribe} className="d-flex justify-content-center gap-2">
@@ -42,8 +42,8 @@ const Newsletter = () => {
                         placeholder="Enter your email"
                         style={{ 
                             maxWidth: "350px",
-                            border: "2px solid #FF6B9D",
-                            borderRadius: "25px",
+                            border: "1px solid #ddd",
+                            borderRadius: "0",
                             padding: "12px 20px"
                         }}
                         value={email}
@@ -54,10 +54,10 @@ const Newsletter = () => {
                         type="submit" 
                         className="btn px-4"
                         style={{
-                            background: "#FF6B9D",
+                            background: "#000",
                             color: "#fff",
                             border: "none",
-                            borderRadius: "25px",
+                            borderRadius: "0",
                             fontWeight: "600"
                         }}
                         disabled={loading}
@@ -70,10 +70,9 @@ const Newsletter = () => {
                     <div className="mt-3">
                         <small style={{ 
                             background: "#fff",
-                            color: "#FF6B9D",
+                            color: "#000",
                             padding: "8px 16px",
-                            borderRadius: "20px",
-                            border: "2px solid #FFB6C1",
+                            border: "1px solid #e5e5e5",
                             fontWeight: "600"
                         }}>
                             {message}

@@ -149,8 +149,8 @@ const SingleProduct = () => {
                     {/* Breadcrumb */}
                     <nav aria-label="breadcrumb" className="mb-3">
                         <ol className="breadcrumb">
-                            <li className="breadcrumb-item"><a href="/" style={{ color: "#ff6b9d", textDecoration: "none" }}>Home</a></li>
-                            <li className="breadcrumb-item"><a href="/shop" style={{ color: "#ff6b9d", textDecoration: "none" }}>Shop</a></li>
+                            <li className="breadcrumb-item"><a href="/" style={{ color: "#000", textDecoration: "none" }}>Home</a></li>
+                            <li className="breadcrumb-item"><a href="/shop" style={{ color: "#000", textDecoration: "none" }}>Shop</a></li>
                             <li className="breadcrumb-item active">{product.name}</li>
                         </ol>
                     </nav>
@@ -189,7 +189,7 @@ const SingleProduct = () => {
                                                     objectFit: "contain",
                                                     borderRadius: "8px",
                                                     cursor: "pointer",
-                                                    border: activeImage === index ? "2px solid #ff6b9d" : "1px solid #e0e0e0",
+                                                    border: activeImage === index ? "2px solid #000" : "1px solid #e0e0e0",
                                                     padding: "5px",
                                                     background: "#fafafa"
                                                 }}
@@ -207,7 +207,7 @@ const SingleProduct = () => {
 
                                 {product.brand && (
                                     <div className="mb-2">
-                                        <span style={{ color: "#ff6b9d", fontWeight: "600", fontSize: "14px" }}>{product.brand}</span>
+                                        <span style={{ color: "#000", fontWeight: "600", fontSize: "14px" }}>{product.brand}</span>
                                     </div>
                                 )}
 
@@ -270,10 +270,10 @@ const SingleProduct = () => {
                                                     style={{
                                                         minWidth: "50px",
                                                         padding: "8px 16px",
-                                                        border: selectedSize === size ? "2px solid #ff6b9d" : "1px solid #d4d5d9",
-                                                        borderRadius: "50px",
-                                                        background: selectedSize === size ? "#fff5f8" : "#fff",
-                                                        color: selectedSize === size ? "#ff6b9d" : "#282c3f",
+                                                        border: selectedSize === size ? "2px solid #000" : "1px solid #d4d5d9",
+                                                        borderRadius: "0",
+                                                        background: selectedSize === size ? "#f5f5f5" : "#fff",
+                                                        color: selectedSize === size ? "#000" : "#282c3f",
                                                         fontWeight: "600",
                                                         fontSize: "14px"
                                                     }}
@@ -297,10 +297,10 @@ const SingleProduct = () => {
                                                     className="btn"
                                                     style={{
                                                         padding: "8px 16px",
-                                                        border: selectedColor === color ? "2px solid #ff6b9d" : "1px solid #d4d5d9",
-                                                        borderRadius: "50px",
-                                                        background: selectedColor === color ? "#fff5f8" : "#fff",
-                                                        color: selectedColor === color ? "#ff6b9d" : "#282c3f",
+                                                        border: selectedColor === color ? "2px solid #000" : "1px solid #d4d5d9",
+                                                        borderRadius: "0",
+                                                        background: selectedColor === color ? "#f5f5f5" : "#fff",
+                                                        color: selectedColor === color ? "#000" : "#282c3f",
                                                         fontWeight: "600",
                                                         fontSize: "14px",
                                                         minWidth: "80px"
@@ -395,11 +395,11 @@ const SingleProduct = () => {
                                         <button
                                             className="btn flex-grow-1"
                                             style={{
-                                                background: "#ff6b9d",
+                                                background: "#000",
                                                 color: "#fff",
                                                 border: "none",
                                                 padding: "14px 24px",
-                                                borderRadius: "4px",
+                                                borderRadius: "0",
                                                 fontWeight: "700",
                                                 fontSize: "14px",
                                                 textTransform: "uppercase",
@@ -416,10 +416,10 @@ const SingleProduct = () => {
                                             onClick={toggleWishlist}
                                             style={{
                                                 width: "50px",
-                                                background: inWishlist ? "#ff6b9d" : "#fff",
+                                                background: inWishlist ? "#000" : "#fff",
                                                 color: inWishlist ? "#fff" : "#282c3f",
                                                 border: "1px solid #d4d5d9",
-                                                borderRadius: "4px",
+                                                borderRadius: "0",
                                                 fontSize: "20px",
                                                 padding: "0"
                                             }}
@@ -432,10 +432,10 @@ const SingleProduct = () => {
                                         className="btn w-100"
                                         style={{
                                             background: "#fff",
-                                            color: "#ff6b9d",
-                                            border: "2px solid #ff6b9d",
+                                            color: "#000",
+                                            border: "2px solid #000",
                                             padding: "14px 24px",
-                                            borderRadius: "4px",
+                                            borderRadius: "0",
                                             fontWeight: "700",
                                             fontSize: "14px",
                                             textTransform: "uppercase",
@@ -462,8 +462,8 @@ const SingleProduct = () => {
                                     className={`nav-link ${activeTab === "description" ? "" : ""}`}
                                     style={{
                                         border: "none",
-                                        borderBottom: activeTab === "description" ? "3px solid #ff6b9d" : "3px solid transparent",
-                                        color: activeTab === "description" ? "#ff6b9d" : "#878787",
+                                        borderBottom: activeTab === "description" ? "2px solid #000" : "2px solid transparent",
+                                        color: activeTab === "description" ? "#000" : "#878787",
                                         fontWeight: "600",
                                         fontSize: "14px",
                                         padding: "12px 24px",
@@ -479,8 +479,8 @@ const SingleProduct = () => {
                                     className={`nav-link ${activeTab === "reviews" ? "" : ""}`}
                                     style={{
                                         border: "none",
-                                        borderBottom: activeTab === "reviews" ? "3px solid #ff6b9d" : "3px solid transparent",
-                                        color: activeTab === "reviews" ? "#ff6b9d" : "#878787",
+                                        borderBottom: activeTab === "reviews" ? "2px solid #000" : "2px solid transparent",
+                                        color: activeTab === "reviews" ? "#000" : "#878787",
                                         fontWeight: "600",
                                         fontSize: "14px",
                                         padding: "12px 24px",

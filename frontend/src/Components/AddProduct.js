@@ -15,6 +15,8 @@ const AddProduct = () => {
     const [description, setDescription] = React.useState("");
     const [brand, setBrand] = React.useState("");
     const [sku, setSku] = React.useState("");
+    const [customSize, setCustomSize] = React.useState("");
+    const [customColor, setCustomColor] = React.useState("");
     
     const navigate = useNavigate();
 
@@ -66,8 +68,36 @@ const AddProduct = () => {
         );
     };
 
-    const availableSizes = ["XS", "S", "M", "L", "XL", "XXL"];
-    const availableColors = ["Red", "Blue", "Green", "Black", "White", "Yellow", "Pink", "Purple"];
+    const addCustomSize = () => {
+        if (customSize.trim() && !sizes.includes(customSize.trim())) {
+            setSizes([...sizes, customSize.trim()]);
+            setCustomSize("");
+        }
+    };
+
+    const addCustomColor = () => {
+        if (customColor.trim() && !colors.includes(customColor.trim())) {
+            setColors([...colors, customColor.trim()]);
+            setCustomColor("");
+        }
+    };
+
+    const removeSize = (size) => {
+        setSizes(sizes.filter(s => s !== size));
+    };
+
+    const removeColor = (color) => {
+        setColors(colors.filter(c => c !== color));
+    };
+
+    const categories = [
+        "Electronics", "Fashion", "Footwear", "Home & Kitchen", 
+        "Beauty & Personal Care", "Sports & Fitness", "Books", 
+        "Toys & Games", "Mobile & Accessories", "Computers & Laptops"
+    ];
+
+    const availableSizes = ["XS", "S", "M", "L", "XL", "XXL", "6", "7", "8", "9", "10", "11", "12"];
+    const availableColors = ["Red", "Blue", "Green", "Black", "White", "Yellow", "Pink", "Purple", "Orange", "Brown", "Gray", "Navy"];
 
     return (
         <div className="product-wrapper">
@@ -120,13 +150,16 @@ const AddProduct = () => {
                     <div className="row g-3 mb-3">
                         <div className="col-md-6">
                             <div className="floating-group">
-                                <input
-                                    type="text"
+                                <select
                                     required
                                     value={category}
                                     onChange={(e) => setCategory(e.target.value)}
-                                    placeholder=" "
-                                />
+                                >
+                                    <option value=""></option>
+                                    {categories.map(cat => (
+                                        <option key={cat} value={cat}>{cat}</option>
+                                    ))}
+                                </select>
                                 <label>Category</label>
                             </div>
                         </div>
@@ -169,52 +202,131 @@ const AddProduct = () => {
                     </div>
 
                     <div className="mb-3">
-                        <label className="form-label fw-semibold">Description</label>
+                        <label className="form-label fw-semibold" style={{ fontSize: "14px", marginBottom: "8px" }}>Description</label>
                         <textarea
                             className="form-control"
                             rows="3"
                             value={description}
                             onChange={(e) => setDescription(e.target.value)}
-                            style={{ borderRadius: "8px", border: "1px solid #e0e0e0" }}
+                            style={{ borderRadius: "0", border: "1px solid #000", fontSize: "14px" }}
                         />
                     </div>
 
-                    <div className="mb-3">
-                        <label className="form-label fw-semibold">Available Sizes</label>
-                        <div className="d-flex gap-2 flex-wrap">
+                    <div className="mb-4">
+                        <label className="form-label fw-semibold" style={{ fontSize: "14px", marginBottom: "8px" }}>Available Sizes</label>
+                        <div className="d-flex gap-2 flex-wrap mb-2">
                             {availableSizes.map(size => (
                                 <button
                                     key={size}
                                     type="button"
-                                    className={`btn btn-sm ${sizes.includes(size) ? 'btn-primary' : 'btn-outline-secondary'}`}
+                                    className={`btn btn-sm ${sizes.includes(size) ? 'btn-dark' : 'btn-outline-dark'}`}
                                     onClick={() => handleSizeToggle(size)}
-                                    style={{ borderRadius: "8px", minWidth: "50px" }}
+                                    style={{ 
+                                        borderRadius: "0", 
+                                        minWidth: "50px",
+                                        fontSize: "13px",
+                                        padding: "6px 12px"
+                                    }}
                                 >
                                     {size}
                                 </button>
                             ))}
                         </div>
+                        <div className="d-flex gap-2 mt-2">
+                            <input
+                                type="text"
+                                className="form-control form-control-sm"
+                                placeholder="Add custom size (e.g., 64GB, 42)"
+                                value={customSize}
+                                onChange={(e) => setCustomSize(e.target.value)}
+                                onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addCustomSize())}
+                                style={{ borderRadius: "0", maxWidth: "250px", fontSize: "13px", border: "1px solid #000" }}
+                            />
+                            <button
+                                type="button"
+                                className="btn btn-sm btn-dark"
+                                onClick={addCustomSize}
+                                style={{ borderRadius: "0", fontSize: "13px" }}
+                            >
+                                Add
+                            </button>
+                        </div>
+                        {sizes.length > 0 && (
+                            <div className="mt-2">
+                                <small className="text-muted" style={{ fontSize: "12px" }}>Selected: </small>
+                                {sizes.map(size => (
+                                    <span key={size} className="badge bg-dark me-1" style={{ borderRadius: "0", fontSize: "12px" }}>
+                                        {size}
+                                        <button
+                                            type="button"
+                                            className="btn-close btn-close-white ms-1"
+                                            style={{ fontSize: "8px" }}
+                                            onClick={() => removeSize(size)}
+                                        />
+                                    </span>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
-                    <div className="mb-3">
-                        <label className="form-label fw-semibold">Available Colors</label>
-                        <div className="d-flex gap-2 flex-wrap">
+                    <div className="mb-4">
+                        <label className="form-label fw-semibold" style={{ fontSize: "14px", marginBottom: "8px" }}>Available Colors</label>
+                        <div className="d-flex gap-2 flex-wrap mb-2">
                             {availableColors.map(color => (
                                 <button
                                     key={color}
                                     type="button"
-                                    className={`btn btn-sm ${colors.includes(color) ? 'btn-primary' : 'btn-outline-secondary'}`}
+                                    className={`btn btn-sm ${colors.includes(color) ? 'btn-dark' : 'btn-outline-dark'}`}
                                     onClick={() => handleColorToggle(color)}
-                                    style={{ borderRadius: "8px" }}
+                                    style={{ 
+                                        borderRadius: "0",
+                                        fontSize: "13px",
+                                        padding: "6px 12px"
+                                    }}
                                 >
                                     {color}
                                 </button>
                             ))}
                         </div>
+                        <div className="d-flex gap-2 mt-2">
+                            <input
+                                type="text"
+                                className="form-control form-control-sm"
+                                placeholder="Add custom color (e.g., Rose Gold)"
+                                value={customColor}
+                                onChange={(e) => setCustomColor(e.target.value)}
+                                onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), addCustomColor())}
+                                style={{ borderRadius: "0", maxWidth: "250px", fontSize: "13px", border: "1px solid #000" }}
+                            />
+                            <button
+                                type="button"
+                                className="btn btn-sm btn-dark"
+                                onClick={addCustomColor}
+                                style={{ borderRadius: "0", fontSize: "13px" }}
+                            >
+                                Add
+                            </button>
+                        </div>
+                        {colors.length > 0 && (
+                            <div className="mt-2">
+                                <small className="text-muted" style={{ fontSize: "12px" }}>Selected: </small>
+                                {colors.map(color => (
+                                    <span key={color} className="badge bg-dark me-1" style={{ borderRadius: "0", fontSize: "12px" }}>
+                                        {color}
+                                        <button
+                                            type="button"
+                                            className="btn-close btn-close-white ms-1"
+                                            style={{ fontSize: "8px" }}
+                                            onClick={() => removeColor(color)}
+                                        />
+                                    </span>
+                                ))}
+                            </div>
+                        )}
                     </div>
 
                     <div className="mb-4">
-                        <label className="form-label fw-semibold">
+                        <label className="form-label fw-semibold" style={{ fontSize: "14px", marginBottom: "8px" }}>
                             Product Images
                         </label>
 
@@ -225,7 +337,7 @@ const AddProduct = () => {
                             onChange={(e) =>
                                 setImages(Array.from(e.target.files))
                             }
-                            style={{ borderRadius: "8px", border: "1px solid #e0e0e0" }}
+                            style={{ borderRadius: "0", border: "1px solid #000", fontSize: "14px" }}
                         />
 
                         {images.length > 0 && (

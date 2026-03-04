@@ -88,14 +88,17 @@ const Orders = () => {
             </div>
 
             <div className="row mb-4 g-3">
-                {["Pending", "Completed", "Cancelled", "Refunded"].map((status, idx) => {
-                    const colors = ["#fef3c7", "#d1fae5", "#fee2e2", "#f3f4f6"];
-                    const textColors = ["#f59e0b", "#10b981", "#ef4444", "#6b7280"];
+                {[
+                    { status: "Pending", color: "#fef3c7", textColor: "#f59e0b" },
+                    { status: "Confirmed", color: "#dbeafe", textColor: "#3b82f6" },
+                    { status: "Delivered", color: "#d1fae5", textColor: "#10b981" },
+                    { status: "Cancelled", color: "#fee2e2", textColor: "#ef4444" }
+                ].map((item, idx) => {
                     return (
-                        <div className="col-md-3" key={status}>
-                            <div className="card border-0 shadow-sm rounded-3 p-4" style={{ background: colors[idx] }}>
-                                <h6 className="mb-2" style={{ color: textColors[idx] }}>{status} Orders</h6>
-                                <h3 className="fw-bold" style={{ color: textColors[idx] }}>{countByStatus(status)}</h3>
+                        <div className="col-md-3" key={item.status}>
+                            <div className="card border-0 shadow-sm rounded-3 p-4" style={{ background: item.color }}>
+                                <h6 className="mb-2" style={{ color: item.textColor }}>{item.status} Orders</h6>
+                                <h3 className="fw-bold" style={{ color: item.textColor }}>{countByStatus(item.status)}</h3>
                             </div>
                         </div>
                     );
@@ -103,18 +106,18 @@ const Orders = () => {
             </div>
 
             <div className="d-flex gap-3 flex-wrap mb-4">
-                {["All", "Pending", "Completed", "Cancelled", "Refunded"].map(
+                {["All", "Pending", "Confirmed", "Shipped", "OutForDelivery", "Delivered", "Cancelled"].map(
                     (status) => (
                         <button
                             key={status}
                             className={`btn rounded-pill px-4 fw-semibold ${activeTab === status ? 'btn-primary' : 'btn-outline-secondary'}`}
-                            style={activeTab === status ? { background: "#ff6b9d", border: "none" } : {}}
+                            style={activeTab === status ? { background: "#000", border: "none" } : {}}
                             onClick={() => {
                                 setActiveTab(status);
                                 setCurrentPage(1);
                             }}
                         >
-                            {status}
+                            {status === "OutForDelivery" ? "Out for Delivery" : status}
                         </button>
                     )
                 )}
@@ -127,6 +130,7 @@ const Orders = () => {
                             <tr>
                                 <th>Order ID</th>
                                 <th>Customer</th>
+                                <th>Payment</th>
                                 <th>Total</th>
                                 <th>Status</th>
                                 <th>Date</th>
@@ -141,7 +145,16 @@ const Orders = () => {
                                     <tr>
                                         <td className="fw-semibold">#{order.orderId}</td>
                                         <td>{order.customerName}</td>
-                                        <td className="fw-bold" style={{ color: "#ff6b9d" }}>₹{order.totalAmount}</td>
+                                        <td>
+                                            {order.paymentMethod === "Online" ? (
+                                                <span className={`badge ${order.paymentStatus === "Completed" ? "bg-success" : "bg-warning"}`}>
+                                                    {order.paymentStatus === "Completed" ? "✅ Paid" : "⏳ Pending"}
+                                                </span>
+                                            ) : (
+                                                <span className="badge bg-secondary">COD</span>
+                                            )}
+                                        </td>
+                                        <td className="fw-bold" style={{ color: "#000" }}>₹{order.totalAmount}</td>
 
                                         <td>
                                             <select
@@ -226,6 +239,114 @@ const Orders = () => {
                                                             </div>
                                                         </div>
 
+                                                    </div>
+
+                                                    {/* Payment Status Section */}
+                                                    {order.paymentMethod === "Online" && (
+                                                        <div className="mb-4">
+                                                            <div className="p-4 rounded-3" style={{
+                                                                background: order.paymentStatus === "Completed" ? "#d1fae5" : "#fef3c7",
+                                                                border: `2px solid ${order.paymentStatus === "Completed" ? "#10b981" : "#f59e0b"}`
+                                                            }}>
+                                                                <div className="d-flex align-items-center justify-content-between">
+                                                                    <div>
+                                                                        <h6 className="fw-bold mb-2" style={{
+                                                                            color: order.paymentStatus === "Completed" ? "#10b981" : "#f59e0b"
+                                                                        }}>
+                                                                            💳 Payment Status
+                                                                        </h6>
+                                                                        <div className="fw-bold fs-5" style={{
+                                                                            color: order.paymentStatus === "Completed" ? "#10b981" : "#f59e0b"
+                                                                        }}>
+                                                                            {order.paymentStatus === "Completed" ? "✅ Payment Received" : "⏳ Payment Pending"}
+                                                                        </div>
+                                                                        {order.razorpayPaymentId && (
+                                                                            <small className="text-muted d-block mt-2">
+                                                                                Payment ID: {order.razorpayPaymentId}
+                                                                            </small>
+                                                                        )}
+                                                                    </div>
+                                                                    {order.paymentStatus === "Completed" && (
+                                                                        <div className="text-end">
+                                                                            <div className="badge bg-success px-3 py-2 fs-6">
+                                                                                PAID
+                                                                            </div>
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    )}
+
+                                                    {/* Order Tracking Timeline */}
+                                                    <div className="mb-4">
+                                                        <h6 className="fw-bold mb-4">📦 Order Tracking</h6>
+                                                        <div className="position-relative">
+                                                            {[
+                                                                { status: "Pending", icon: "🕐", label: "Order Placed" },
+                                                                { status: "Confirmed", icon: "✅", label: "Order Confirmed" },
+                                                                { status: "Shipped", icon: "📦", label: "Shipped" },
+                                                                { status: "OutForDelivery", icon: "🚚", label: "Out for Delivery" },
+                                                                { status: "Delivered", icon: "🎉", label: "Delivered" }
+                                                            ].map((step, idx) => {
+                                                                const statusOrder = ["Pending", "Confirmed", "Shipped", "OutForDelivery", "Delivered"];
+                                                                const currentIndex = statusOrder.indexOf(order.status);
+                                                                const stepIndex = statusOrder.indexOf(step.status);
+                                                                const isCompleted = stepIndex <= currentIndex;
+                                                                const isCurrent = step.status === order.status;
+
+                                                                return (
+                                                                    <div key={step.status} className="d-flex align-items-start mb-4 position-relative">
+                                                                        {/* Vertical Line */}
+                                                                        {idx !== 4 && (
+                                                                            <div style={{
+                                                                                position: "absolute",
+                                                                                left: "19px",
+                                                                                top: "40px",
+                                                                                width: "2px",
+                                                                                height: "50px",
+                                                                                background: isCompleted ? "#10b981" : "#e5e7eb"
+                                                                            }} />
+                                                                        )}
+                                                                        
+                                                                        {/* Icon Circle */}
+                                                                        <div style={{
+                                                                            width: "40px",
+                                                                            height: "40px",
+                                                                            borderRadius: "50%",
+                                                                            background: isCompleted ? "#10b981" : "#f3f4f6",
+                                                                            border: isCurrent ? "3px solid #000" : "none",
+                                                                            display: "flex",
+                                                                            alignItems: "center",
+                                                                            justifyContent: "center",
+                                                                            fontSize: "18px",
+                                                                            flexShrink: 0,
+                                                                            boxShadow: isCurrent ? "0 0 0 4px rgba(0,0,0,0.1)" : "none"
+                                                                        }}>
+                                                                            {isCompleted ? "✓" : step.icon}
+                                                                        </div>
+                                                                        
+                                                                        {/* Text */}
+                                                                        <div className="ms-3">
+                                                                            <div className="fw-bold" style={{
+                                                                                color: isCompleted ? "#000" : "#9ca3af",
+                                                                                fontSize: "15px"
+                                                                            }}>
+                                                                                {step.label}
+                                                                            </div>
+                                                                            {isCurrent && (
+                                                                                <div className="badge bg-success mt-1" style={{ fontSize: "11px" }}>
+                                                                                    Current Status
+                                                                                </div>
+                                                                            )}
+                                                                            {isCompleted && !isCurrent && (
+                                                                                <small className="text-muted">Completed</small>
+                                                                            )}
+                                                                        </div>
+                                                                    </div>
+                                                                );
+                                                            })}
+                                                        </div>
                                                     </div>
 
                                                     <div className="row g-4 mb-4">

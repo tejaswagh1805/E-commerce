@@ -67,7 +67,7 @@ const Login = () => {
         <div
             style={{
                 minHeight: "100vh",
-                background: "#f8f9fa",
+                background: "#fafafa",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -75,18 +75,18 @@ const Login = () => {
             }}
         >
             <div
-                className="shadow-lg"
+                className="shadow"
                 style={{
                     width: "100%",
                     maxWidth: "420px",
                     background: "#ffffff",
-                    borderRadius: "20px",
-                    padding: "40px",
-                    border: "1px solid #eee",
+                    borderRadius: "0",
+                    padding: "50px",
+                    border: "1px solid #e5e5e5",
                     animation: "fadeIn 0.5s ease"
                 }}
             >
-                <h2 className="text-center fw-bold mb-4">
+                <h2 className="text-center fw-bold mb-4" style={{ color: "#000", letterSpacing: "-0.5px" }}>
                     Welcome Back
                 </h2>
 
@@ -97,8 +97,12 @@ const Login = () => {
                         <input
                             type="email"
                             placeholder="Email Address"
-                            className="form-control rounded-pill px-4"
-                            style={{ height: "48px" }}
+                            className="form-control px-4"
+                            style={{ 
+                                height: "48px",
+                                borderRadius: "0",
+                                border: "1px solid #ddd"
+                            }}
                             value={email}
                             onChange={(e) => {
                                 setEmail(e.target.value);
@@ -115,10 +119,12 @@ const Login = () => {
                         <input
                             type={showPassword ? "text" : "password"}
                             placeholder="Password"
-                            className="form-control rounded-pill px-4"
+                            className="form-control px-4"
                             style={{
                                 height: "48px",
-                                paddingRight: "60px"
+                                paddingRight: "60px",
+                                borderRadius: "0",
+                                border: "1px solid #ddd"
                             }}
                             value={password}
                             onChange={(e) => {
@@ -151,13 +157,17 @@ const Login = () => {
                     {/* BUTTON */}
                     <button
                         type="submit"
-                        className="btn w-100 rounded-pill"
+                        className="btn w-100"
                         style={{
                             height: "48px",
                             background: "#000",
                             color: "#fff",
                             fontWeight: "600",
-                            boxShadow: "0 4px 14px rgba(0,0,0,0.15)",
+                            borderRadius: "0",
+                            border: "none",
+                            textTransform: "uppercase",
+                            letterSpacing: "1px",
+                            fontSize: "14px",
                             transition: "0.3s"
                         }}
                         disabled={loading}
@@ -171,12 +181,13 @@ const Login = () => {
 
                 </form>
 
-                <p className="text-center mt-4 mb-0">
+                <p className="text-center mt-4 mb-0" style={{ color: "#666" }}>
                     Don't have an account?{" "}
                     <span
                         style={{
                             fontWeight: "600",
-                            cursor: "pointer"
+                            cursor: "pointer",
+                            color: "#000"
                         }}
                         onClick={() => navigate("/register")}
                     >
@@ -200,12 +211,14 @@ const Login = () => {
                 }
 
                 .form-control:focus {
-                    box-shadow: 0 0 0 3px rgba(0,0,0,0.08);
-                    border-color: #000;
+                    box-shadow: none;
+                    border-color: #000 !important;
+                    outline: none;
                 }
 
                 .btn:hover {
-                    transform: translateY(-2px);
+                    background: #333 !important;
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
                 }
                 `}
             </style>

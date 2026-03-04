@@ -87,7 +87,7 @@ const Register = () => {
     <div
       style={{
         minHeight: "100vh",
-        background: "#f8f9fa",
+        background: "#fafafa",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
@@ -95,18 +95,18 @@ const Register = () => {
       }}
     >
       <div
-        className="shadow-lg"
+        className="shadow"
         style={{
           width: "100%",
           maxWidth: "480px",
           background: "#ffffff",
-          borderRadius: "20px",
-          padding: "40px",
-          border: "1px solid #eee",
+          borderRadius: "0",
+          padding: "50px",
+          border: "1px solid #e5e5e5",
           animation: "fadeIn 0.5s ease",
         }}
       >
-        <h2 className="text-center fw-bold mb-4">Create Your Account</h2>
+        <h2 className="text-center fw-bold mb-4" style={{ color: "#000", letterSpacing: "-0.5px" }}>Create Your Account</h2>
 
         <form onSubmit={handleRegister}>
           {/* NAME */}
@@ -114,8 +114,12 @@ const Register = () => {
             <input
               type="text"
               placeholder="Full Name"
-              className="form-control rounded-pill px-4"
-              style={{ height: "48px" }}
+              className="form-control px-4"
+              style={{ 
+                height: "48px",
+                borderRadius: "0",
+                border: "1px solid #ddd"
+              }}
               value={name}
               onChange={(e) => {
                 setName(e.target.value);
@@ -130,8 +134,12 @@ const Register = () => {
             <input
               type="email"
               placeholder="Email Address"
-              className="form-control rounded-pill px-4"
-              style={{ height: "48px" }}
+              className="form-control px-4"
+              style={{ 
+                height: "48px",
+                borderRadius: "0",
+                border: "1px solid #ddd"
+              }}
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
@@ -146,8 +154,12 @@ const Register = () => {
             <input
               type="password"
               placeholder="Password"
-              className="form-control rounded-pill px-4"
-              style={{ height: "48px" }}
+              className="form-control px-4"
+              style={{ 
+                height: "48px",
+                borderRadius: "0",
+                border: "1px solid #ddd"
+              }}
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
@@ -163,8 +175,12 @@ const Register = () => {
               type="text"
               placeholder="Mobile Number"
               maxLength="10"
-              className="form-control rounded-pill px-4"
-              style={{ height: "48px" }}
+              className="form-control px-4"
+              style={{ 
+                height: "48px",
+                borderRadius: "0",
+                border: "1px solid #ddd"
+              }}
               value={mobile}
               onChange={(e) => {
                 const onlyNumbers = e.target.value.replace(/\D/g, "");
@@ -180,7 +196,11 @@ const Register = () => {
             <input
               type="file"
               accept="image/*"
-              className="form-control rounded-3"
+              className="form-control"
+              style={{
+                borderRadius: "0",
+                border: "1px solid #ddd"
+              }}
               onChange={(e) => {
                 setImage(e.target.files[0]);
                 setErrors({ ...errors, image: "" });
@@ -191,19 +211,37 @@ const Register = () => {
 
           <button
             type="submit"
-            className="btn w-100 rounded-pill"
+            className="btn w-100"
             style={{
               height: "48px",
               background: "#000",
               color: "#fff",
               fontWeight: "600",
-              boxShadow: "0 4px 14px rgba(0,0,0,0.15)",
+              borderRadius: "0",
+              border: "none",
+              textTransform: "uppercase",
+              letterSpacing: "1px",
+              fontSize: "14px",
               transition: "0.3s",
             }}
           >
             Register
           </button>
         </form>
+
+        <p className="text-center mt-4 mb-0" style={{ color: "#666" }}>
+          Already have an account?{" "}
+          <span
+            style={{
+              fontWeight: "600",
+              cursor: "pointer",
+              color: "#000"
+            }}
+            onClick={() => navigate("/login")}
+          >
+            Login
+          </span>
+        </p>
       </div>
 
       <style>
@@ -220,12 +258,14 @@ const Register = () => {
                 }
 
                 .form-control:focus {
-                    box-shadow: 0 0 0 3px rgba(0,0,0,0.08);
-                    border-color: #000;
+                    box-shadow: none;
+                    border-color: #000 !important;
+                    outline: none;
                 }
 
                 .btn:hover {
-                    transform: translateY(-2px);
+                    background: #333 !important;
+                    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
                 }
                 `}
       </style>

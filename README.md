@@ -38,6 +38,14 @@ A full-featured e-commerce platform built with **MERN Stack** (MongoDB, Express.
 - ✅ Coupon Code Application
 - ✅ Newsletter Subscription
 
+### 💳 Payment Gateway
+- ✅ Mock Payment Gateway Integration
+- ✅ Multiple Payment Options (COD, Online)
+- ✅ Secure Payment Processing
+- ✅ Payment Verification
+- ✅ No External Dependencies
+- ✅ Card, UPI, Netbanking UI
+
 ### 📧 Email Notifications
 - ✅ Order Confirmation Emails
 - ✅ Professional HTML Email Templates
@@ -199,18 +207,22 @@ Customer Site runs on: `http://localhost:3000`
 
 ---
 
-## 📧 Email Setup (Optional)
+## 📚 Documentation
 
-For real email notifications:
+For detailed setup and feature guides, see:
 
-1. Enable 2-Step Verification on Gmail
-2. Generate App Password: https://myaccount.google.com/apppasswords
-3. Add credentials to `backend/.env`
-4. Restart backend
+**[📖 COMPLETE_GUIDE.md](./COMPLETE_GUIDE.md)** - Comprehensive documentation covering:
+- Email Notifications Setup
+- Inventory Management
+- Coupon & Discount System
+- Payment Gateway (Razorpay)
+- Additional Features
+- Troubleshooting
 
-**Note:** Without setup, test emails work via Ethereal (preview links in console)
-
-See `SEND_REAL_EMAILS_GUIDE.md` for detailed instructions.
+**Quick Start:**
+- Email notifications work out-of-the-box (test mode)
+- For production emails, see the Complete Guide
+- All features are pre-configured and ready to use
 
 ---
 
@@ -394,7 +406,11 @@ For support, email tejaswaghmode18@gmail.com or create an issue in the repositor
 
 ## 🎉 Features Roadmap
 
-- [ ] Payment Gateway Integration (Razorpay/Stripe)
+- [x] Mock Payment Gateway Integration ✅
+- [x] Real Payment Gateway (Razorpay) ✅
+- [x] Email Notifications ✅
+- [x] Coupon System ✅
+- [x] Inventory Management ✅
 - [ ] SMS Notifications
 - [ ] Social Media Login
 - [ ] Product Comparison

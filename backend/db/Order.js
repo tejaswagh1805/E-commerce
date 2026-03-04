@@ -49,8 +49,29 @@ const orderSchema = new mongoose.Schema({
 
     paymentMethod: {
         type: String,
-        enum: ["COD", "Card"],
+        enum: ["COD", "Card", "Online"],
         default: "COD"
+    },
+
+    paymentStatus: {
+        type: String,
+        enum: ["Pending", "Completed", "Failed"],
+        default: "Pending"
+    },
+
+    razorpayOrderId: {
+        type: String,
+        default: ""
+    },
+
+    razorpayPaymentId: {
+        type: String,
+        default: ""
+    },
+
+    razorpaySignature: {
+        type: String,
+        default: ""
     },
 
     products: [

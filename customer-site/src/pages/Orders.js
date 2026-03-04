@@ -204,17 +204,34 @@ const Orders = () => {
                                     </small>
                                 </div>
 
-                                <div
-                                    style={{
-                                        background: getStatusColor(order.status),
-                                        color: "#fff",
-                                        padding: "6px 18px",
-                                        borderRadius: "50px",
-                                        fontSize: "0.85rem",
-                                        fontWeight: "600"
-                                    }}
-                                >
-                                    {order.status}
+                                <div className="d-flex gap-2 align-items-center">
+                                    {order.paymentMethod === "Online" && (
+                                        <div
+                                            style={{
+                                                background: order.paymentStatus === "Completed" ? "#d1fae5" : "#fef3c7",
+                                                color: order.paymentStatus === "Completed" ? "#10b981" : "#f59e0b",
+                                                padding: "6px 14px",
+                                                borderRadius: "50px",
+                                                fontSize: "0.8rem",
+                                                fontWeight: "600",
+                                                border: `2px solid ${order.paymentStatus === "Completed" ? "#10b981" : "#f59e0b"}`
+                                            }}
+                                        >
+                                            {order.paymentStatus === "Completed" ? "✅ Paid" : "⏳ Payment Pending"}
+                                        </div>
+                                    )}
+                                    <div
+                                        style={{
+                                            background: getStatusColor(order.status),
+                                            color: "#fff",
+                                            padding: "6px 18px",
+                                            borderRadius: "50px",
+                                            fontSize: "0.85rem",
+                                            fontWeight: "600"
+                                        }}
+                                    >
+                                        {order.status}
+                                    </div>
                                 </div>
                             </div>
 
