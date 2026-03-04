@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from '../config';
 
 const SignUp = () => {
     const [name, setName] = useState("");
@@ -32,7 +33,7 @@ const SignUp = () => {
             formData.append("image", image);
         }
 
-        const response = await fetch("http://localhost:5000/admin-register", {
+        const response = await fetch(`${API_URL}/admin-register`, {
             method: "POST",
             body: formData
         });

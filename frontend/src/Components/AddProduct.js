@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from '../config';
 
 const AddProduct = () => {
 
@@ -45,7 +46,7 @@ const AddProduct = () => {
             formData.append("images", file);
         });
 
-        const result = await fetch("http://localhost:5000/add-product", {
+        const result = await fetch(`${API_URL}/add-product`, {
             method: "POST",
             headers: {
                 Authorization: `Bearer ${storedData.auth}`
