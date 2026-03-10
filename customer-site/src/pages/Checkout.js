@@ -278,36 +278,46 @@ const Checkout = () => {
             return;
         }
 
-        // COD or Card payment
-        const res = await fetch(`${API_URL}/place-order`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                userId: user._id,
-                customerName: form.name,
-                email: form.email,
-                mobile: form.mobile,
+        try {
+            // COD or Card payment
+            const res = await fetch(`${API_URL}/place-order`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    userId: user._id,
+                    customerName: form.name,
+                    email: form.email,
+                    mobile: form.mobile,
 
-                billingAddress: {
-                    address: form.billingAddress,
-                    city: form.billingCity,
-                    state: form.billingState,
-                    pincode: form.billingPincode,
-                    country: form.billingCountry
-                },
+                    billingAddress: {
+                        address: form.billingAddress,
+                        city: form.billingCity,
+                        state: form.billingState,
+                        pincode: form.billingPincode,
+                        country: form.billingCountry
+                    },
 
-                shippingAddress: shippingData,  // 🔥 THIS IS CORRECT FOR YOUR CODE
+                    shippingAddress: shippingData,
 
-                paymentMethod: form.paymentMethod,
-                products: cart,
-                totalAmount: finalTotal,
-                couponApplied: couponData ? couponData.coupon.code : null
-            })
-        });
+                    paymentMethod: form.paymentMethod,
+                    products: cart,
+                    totalAmount: finalTotal,
+                    couponApplied: couponData ? couponData.coupon.code : null
+                })
+            });
 
-        const data = await res.json();
-        clearCart();
-        navigate("/thank-you", { state: data });
+            const data = await res.json();
+            
+            if (res.ok) {
+                clearCart();
+                navigate("/thank-you", { state: data });
+            } else {
+                alert(data.error || "Order placement failed!");
+            }
+        } catch (error) {
+            console.error("Order error:", error);
+            alert("Failed to place order. Please try again.");
+        }
     };
 
     return (
