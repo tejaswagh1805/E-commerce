@@ -279,6 +279,7 @@ const Checkout = () => {
         }
 
         try {
+            console.log('Placing order...');
             // COD or Card payment
             const res = await fetch(`${API_URL}/place-order`, {
                 method: "POST",
@@ -306,12 +307,15 @@ const Checkout = () => {
                 })
             });
 
+            console.log('Response status:', res.status);
             const data = await res.json();
+            console.log('Response data:', data);
             
-            if (res.ok) {
+            if (res.ok || res.status === 201) {
                 clearCart();
                 navigate("/thank-you", { state: data });
             } else {
+                console.error('Order failed:', data);
                 alert(data.error || "Order placement failed!");
             }
         } catch (error) {
