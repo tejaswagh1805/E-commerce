@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { API_URL } from '../config';
 
 const Orders = () => {
 
@@ -17,11 +18,22 @@ const Orders = () => {
     }, []);
 
     const fetchOrders = async () => {
-        const res = await fetch(
-            `http://localhost:5000/customer-orders/${user._id}`
-        );
-        const data = await res.json();
-        if (Array.isArray(data)) setOrders(data);
+        try {
+            const res = await fetch(
+                `${API_URL}/customer-orders/${user._id}`
+            );
+            const data = await res.json();
+            console.log("Orders fetched:", data);
+            if (Array.isArray(data)) {
+                setOrders(data);
+            } else {
+                console.error("Invalid data format:", data);
+                setOrders([]);
+            }
+        } catch (error) {
+            console.error("Fetch orders error:", error);
+            setOrders([]);
+        }
     };
 
     const getStatusColor = (status) => {
@@ -69,7 +81,7 @@ const Orders = () => {
             const token = localStorage.getItem("token");
 
             const res = await fetch(
-                `http://localhost:5000/cancel-order/${id}`,
+                `${API_URL}/cancel-order/${id}`,
                 {
                     method: "PUT",
                     headers: {
@@ -97,7 +109,7 @@ const Orders = () => {
             const token = localStorage.getItem("token");
 
             const res = await fetch(
-                `http://localhost:5000/update-order-address/${selectedOrder._id}`,
+                `${API_URL}/update-order-address/${selectedOrder._id}`,
                 {
                     method: "PUT",
                     headers: {
@@ -132,7 +144,7 @@ const Orders = () => {
             const token = localStorage.getItem("token");
 
             const response = await fetch(
-                `http://localhost:5000/invoice/${order._id}`,
+                `${API_URL}/invoice/${order._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -307,7 +319,7 @@ const Orders = () => {
                                             }}
                                         >
                                             <img
-                                                src={`http://localhost:5000/uploads/${item.images?.[0]}`}
+                                                src={`${API_URL}/uploads/${item.images?.[0]}`}
                                                 alt={item.name}
                                                 style={{
                                                     width: "70px",
