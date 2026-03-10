@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { API_URL } from '../config';
 
 const CouponManagement = () => {
     const [coupons, setCoupons] = useState([]);
@@ -21,7 +22,7 @@ const CouponManagement = () => {
     const fetchCoupons = async () => {
         const user = JSON.parse(localStorage.getItem("user"));
         try {
-            const res = await axios.get("http://localhost:5000/admin/coupons", {
+            const res = await axios.get(`${API_URL}/admin/coupons`, {
                 headers: { Authorization: `Bearer ${user.auth}` }
             });
             setCoupons(res.data);
@@ -35,7 +36,7 @@ const CouponManagement = () => {
         const user = JSON.parse(localStorage.getItem("user"));
 
         try {
-            await axios.post("http://localhost:5000/admin/coupon", form, {
+            await axios.post(`${API_URL}/admin/coupon`, form, {
                 headers: { Authorization: `Bearer ${user.auth}` }
             });
             alert("Coupon created successfully!");

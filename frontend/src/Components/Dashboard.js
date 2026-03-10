@@ -13,6 +13,7 @@ import {
     Pie,
     Cell
 } from "recharts";
+import { API_URL } from '../config';
 
 const Dashboard = () => {
 
@@ -26,7 +27,7 @@ const Dashboard = () => {
         try {
             const auth = JSON.parse(localStorage.getItem("user"));
 
-            const response = await fetch("http://localhost:5000/orders", {
+            const response = await fetch(`${API_URL}/orders`, {
                 headers: {
                     Authorization: `Bearer ${auth.auth}`
                 }

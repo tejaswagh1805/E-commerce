@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { API_URL } from '../config';
 
 const Orders = () => {
 
@@ -17,20 +18,35 @@ const Orders = () => {
         try {
             const auth = JSON.parse(localStorage.getItem("user"));
 
-            const response = await fetch("http://localhost:5000/orders", {
+            if (!auth || !auth.auth) {
+                console.error("No auth token found");
+                alert("Please login again");
+                return;
+            }
+
+            console.log("Fetching orders...");
+            const response = await fetch(`${API_URL}/orders`, {
                 headers: {
                     Authorization: `Bearer ${auth.auth}`
                 }
             });
 
-            const data = await response.json();
+            console.log("Response status:", response.status);
 
-            if (response.ok) {
-                setOrders(data);
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("API Error:", errorData);
+                alert(`Error: ${errorData.error || 'Failed to fetch orders'}`);
+                return;
             }
+
+            const data = await response.json();
+            console.log("Orders received:", data.length);
+            setOrders(data);
 
         } catch (error) {
             console.error("Error fetching orders:", error);
+            alert("Failed to connect to server. Please check if backend is running.");
         }
     };
 
@@ -38,7 +54,7 @@ const Orders = () => {
         try {
             const auth = JSON.parse(localStorage.getItem("user"));
 
-            await fetch(`http://localhost:5000/order/${id}`, {
+            await fetch(`${API_URL}/order/${id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",

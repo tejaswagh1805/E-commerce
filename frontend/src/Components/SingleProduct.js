@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { API_URL } from '../config';
 
 const SingleProduct = () => {
 
@@ -20,7 +21,7 @@ const SingleProduct = () => {
         if (!storedData) return;
 
         const result = await fetch(
-            `http://localhost:5000/product/${id}`,
+            `${API_URL}/product/${id}`,
             {
                 headers: {
                     Authorization: `Bearer ${storedData.auth}`
@@ -71,7 +72,7 @@ const SingleProduct = () => {
 
                     <div className="card border-0 shadow-sm rounded-3 p-3 mb-3">
                         <img
-                            src={`http://localhost:5000/uploads/${selectedImage}`}
+                            src={`${API_URL}/uploads/${selectedImage}`}
                             alt="product"
                             className="img-fluid"
                             style={{
@@ -88,7 +89,7 @@ const SingleProduct = () => {
                             {product.images.map((img, index) => (
                                 <img
                                     key={index}
-                                    src={`http://localhost:5000/uploads/${img}`}
+                                    src={`${API_URL}/uploads/${img}`}
                                     alt="thumb"
                                     onClick={() => setSelectedImage(img)}
                                     className="img-thumbnail"

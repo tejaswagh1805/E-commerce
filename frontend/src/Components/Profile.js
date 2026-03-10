@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { API_URL } from '../config';
 
 const Profile = () => {
 
@@ -23,7 +24,7 @@ const Profile = () => {
         try {
 
             const response = await fetch(
-                `http://localhost:5000/profile/${user._id}`,
+                `${API_URL}/profile/${user._id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -60,7 +61,7 @@ const Profile = () => {
             }
 
             const response = await fetch(
-                `http://localhost:5000/profile/${user._id}`,
+                `${API_URL}/profile/${user._id}`,
                 {
                     method: "PUT",
                     headers: {
@@ -103,7 +104,7 @@ const Profile = () => {
                                     newImage
                                         ? URL.createObjectURL(newImage)
                                         : image
-                                            ? `http://localhost:5000/uploads/${image}`
+                                            ? `${API_URL}/uploads/${image}`
                                             : "https://via.placeholder.com/150"
                                 }
                                 alt="Profile"

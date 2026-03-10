@@ -59,13 +59,20 @@ function verifyToken(req, res, next) {
     const authHeader = req.headers.authorization;
 
     if (!authHeader) {
+        console.log("❌ No authorization header");
         return res.status(403).json({ error: "Token required" });
     }
 
     const token = authHeader.split(" ")[1];
 
+    if (!token) {
+        console.log("❌ No token found");
+        return res.status(403).json({ error: "Token required" });
+    }
+
     Jwt.verify(token, jwtKey, (err, decoded) => {
         if (err) {
+            console.log("❌ Token verification failed:", err.message);
             return res.status(401).json({ error: "Invalid token" });
         }
 
@@ -247,8 +254,30 @@ app.post("/add-product",
 
 // GET ALL PRODUCTS (ADMIN)
 app.get("/products", verifyToken, verifyAdmin, async (req, res) => {
-    const products = await Product.find().sort({ createdAt: -1 });
-    res.json(products);
+    try {
+        const products = await Product.find().sort({ createdAt: -1 });
+        res.json(products);
+    } catch (error) {
+        console.error("Error fetching products:", error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// SEARCH PRODUCTS (ADMIN)
+app.get("/search/:key", verifyToken, verifyAdmin, async (req, res) => {
+    try {
+        const products = await Product.find({
+            $or: [
+                { name: { $regex: req.params.key, $options: "i" } },
+                { category: { $regex: req.params.key, $options: "i" } },
+                { company: { $regex: req.params.key, $options: "i" } }
+            ]
+        });
+        res.json(products);
+    } catch (error) {
+        console.error("Search error:", error);
+        res.status(500).json({ error: error.message });
+    }
 });
 
 // UPDATE PRODUCT (ADMIN)
@@ -704,8 +733,13 @@ app.put("/confirm-order/:id", async (req, res) => {
 
 // ADMIN VIEW ALL ORDERS
 app.get("/orders", verifyToken, verifyAdmin, async (req, res) => {
-    const orders = await Order.find().sort({ createdAt: -1 });
-    res.json(orders);
+    try {
+        const orders = await Order.find().sort({ createdAt: -1 });
+        res.json(orders);
+    } catch (error) {
+        console.error("Error fetching orders:", error);
+        res.status(500).json({ error: error.message });
+    }
 });
 
 app.put("/order/:id", verifyToken, verifyAdmin, async (req, res) => {

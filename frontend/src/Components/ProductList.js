@@ -23,15 +23,31 @@ const ProductList = () => {
     const getProducts = async () => {
         try {
             const auth = JSON.parse(localStorage.getItem("user"));
-            if (!auth) return;
+            if (!auth || !auth.auth) {
+                console.error("No auth token found");
+                alert("Please login again");
+                return;
+            }
 
-            let response = await fetch("http://localhost:5000/products", {
+            console.log("Fetching products...");
+            const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+            let response = await fetch(`${API_URL}/products`, {
                 headers: {
                     Authorization: `Bearer ${auth.auth}`
                 }
             });
 
+            console.log("Response status:", response.status);
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("API Error:", errorData);
+                alert(`Error: ${errorData.error || 'Failed to fetch products'}`);
+                return;
+            }
+
             let result = await response.json();
+            console.log("Products received:", result.length);
 
             if (!Array.isArray(result)) {
                 console.error("API did not return array:", result);
@@ -52,7 +68,8 @@ const ProductList = () => {
             setPriceRange(highestPrice);
 
         } catch (error) {
-            console.log("Fetch Error:", error);
+            console.error("Fetch Error:", error);
+            alert("Failed to connect to server. Please check if backend is running.");
             setProducts([]);
             setFilteredProducts([]);
         }
@@ -63,8 +80,9 @@ const ProductList = () => {
             const auth = JSON.parse(localStorage.getItem("user"));
             if (!auth) return;
 
+            const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
             await fetch(
-                `http://localhost:5000/product/${id}`,
+                `${API_URL}/product/${id}`,
                 {
                     method: "DELETE",
                     headers: {
@@ -115,8 +133,9 @@ const ProductList = () => {
             if (!auth) return;
 
             if (key) {
+                const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
                 let response = await fetch(
-                    `http://localhost:5000/search/${key}`,
+                    `${API_URL}/search/${key}`,
                     {
                         headers: {
                             Authorization: `Bearer ${auth.auth}`
@@ -258,7 +277,7 @@ const ProductList = () => {
                                                 src={
                                                     item.images &&
                                                         item.images.length > 0
-                                                        ? `http://localhost:5000/uploads/${item.images[0]}`
+                                                        ? `${process.env.REACT_APP_API_URL || "http://localhost:5000"}/uploads/${item.images[0]}`
                                                         : ""
                                                 }
                                                 alt={item.name}

@@ -35,7 +35,8 @@ const Shop = () => {
   // ================= FETCH PRODUCTS =================
   const fetchProducts = async () => {
     try {
-      const res = await fetch("http://localhost:5000/shop-products");
+      const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+      const res = await fetch(`${API_URL}/shop-products`);
       const data = await res.json();
       setProducts(data);
       setFilteredProducts(data);
@@ -258,7 +259,7 @@ const Shop = () => {
                           }
                         >
                           <img
-                            src={`http://localhost:5000/uploads/${item.images?.[0]}`}
+                            src={`${process.env.REACT_APP_API_URL || "http://localhost:5000"}/uploads/${item.images?.[0]}`}
                             alt={item.name}
                             style={{
                               maxHeight: "100%",

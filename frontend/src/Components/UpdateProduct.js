@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import { API_URL } from '../config';
 
 const UpdateProduct = () => {
 
@@ -35,7 +36,7 @@ const UpdateProduct = () => {
         try {
 
             let result = await fetch(
-                `http://localhost:5000/product/${params.id}`,
+                `${API_URL}/product/${params.id}`,
                 {
                     headers: {
                         Authorization: `Bearer ${token}`
@@ -92,7 +93,7 @@ const UpdateProduct = () => {
             });
 
             const result = await fetch(
-                `http://localhost:5000/product/${params.id}`,
+                `${API_URL}/product/${params.id}`,
                 {
                     method: "PUT",
                     headers: {
@@ -274,7 +275,7 @@ const UpdateProduct = () => {
                                 {existingImages.map((img, index) => (
                                     <img
                                         key={index}
-                                        src={`http://localhost:5000/uploads/${img}`}
+                                        src={`${API_URL}/uploads/${img}`}
                                         alt="existing"
                                         className="update-preview"
                                         style={{ width: "120px", marginRight: "10px" }}
