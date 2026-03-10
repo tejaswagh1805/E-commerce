@@ -24,6 +24,7 @@ const PDFDocument = require("pdfkit");
 const QRCode = require("qrcode");
 
 app.use(express.json());
+// Allow all origins for CORS
 app.use(cors({
     origin: '*',
     credentials: true
