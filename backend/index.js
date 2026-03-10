@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const cors = require("cors");
 const mongoose = require("mongoose");
 const multer = require("multer");
 const path = require("path");
@@ -23,15 +24,11 @@ const PDFDocument = require("pdfkit");
 const QRCode = require("qrcode");
 
 app.use(express.json());
-
-// CORS Configuration - Manual headers first
+app.use(cors());
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-    if (req.method === 'OPTIONS') {
-        return res.status(200).end();
-    }
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     next();
 });
 
