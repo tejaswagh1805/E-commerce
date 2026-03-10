@@ -25,12 +25,7 @@ const QRCode = require("qrcode");
 
 app.use(express.json());
 app.use(cors({
-    origin: [
-        'https://ecommerce-admin-lxhw.onrender.com',
-        'https://ecommerce-shop-1osw.onrender.com',
-        'http://localhost:3000',
-        'http://localhost:3001'
-    ],
+    origin: '*',
     credentials: true
 }));
 
