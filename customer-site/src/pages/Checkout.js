@@ -3,6 +3,7 @@ import { CartContext } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import MockPaymentModal from "../components/MockPaymentModal";
+import { API_URL } from '../config';
 
 const Checkout = () => {
 
@@ -76,7 +77,7 @@ const Checkout = () => {
         setCouponMessage("");
 
         try {
-            const res = await axios.post("http://localhost:5000/coupon/validate", {
+            const res = await axios.post(`${API_URL}/coupon/validate`, {
                 code: couponCode,
                 totalAmount: total
             });
@@ -124,11 +125,11 @@ const Checkout = () => {
                 };
 
             // Verify payment
-            const verifyRes = await axios.post("http://localhost:5000/verify-payment", paymentData);
+            const verifyRes = await axios.post(`${API_URL}/verify-payment`, paymentData);
 
             if (verifyRes.data.success) {
                 // Save order
-                const res = await fetch("http://localhost:5000/place-order", {
+                const res = await fetch(`${API_URL}/place-order`, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({
@@ -278,7 +279,7 @@ const Checkout = () => {
         }
 
         // COD or Card payment
-        const res = await fetch("http://localhost:5000/place-order", {
+        const res = await fetch(`${API_URL}/place-order`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
