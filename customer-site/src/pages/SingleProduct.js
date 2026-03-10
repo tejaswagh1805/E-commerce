@@ -6,6 +6,7 @@ import ProductReviews from "../components/ProductReviews";
 import Recommendations from "../components/Recommendations";
 import RecentlyViewed from "../components/RecentlyViewed";
 import axios from "axios";
+import { API_URL } from '../config';
 
 const SingleProduct = () => {
     const { slug } = useParams();
@@ -36,7 +37,7 @@ const SingleProduct = () => {
     }, [slug]);
 
     const fetchProduct = async () => {
-        const res = await fetch(`http://localhost:5000/shop-products`);
+        const res = await fetch(`${API_URL}/shop-products`);
         const allProducts = await res.json();
         
         // Find product by matching slug
@@ -65,7 +66,7 @@ const SingleProduct = () => {
     };
 
     const saveToRecentlyViewed = async () => {
-        const res = await fetch(`http://localhost:5000/shop-products`);
+        const res = await fetch(`${API_URL}/shop-products`);
         const allProducts = await res.json();
         const data = allProducts.find(p => createSlug(p.name) === slug);
         
@@ -90,14 +91,14 @@ const SingleProduct = () => {
 
         try {
             if (inWishlist) {
-                await axios.delete(`http://localhost:5000/wishlist/remove/${product._id}`, {
+                await axios.delete(`${API_URL}/wishlist/remove/${product._id}`, {
                     headers: { Authorization: `Bearer ${token}` }
                 });
                 setInWishlist(false);
                 alert("Removed from wishlist");
             } else {
                 await axios.post(
-                    "http://localhost:5000/wishlist/add",
+                    `${API_URL}/wishlist/add`,
                     { productId: product._id },
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
@@ -164,7 +165,7 @@ const SingleProduct = () => {
 
                                 <div style={{ background: "#fafafa", borderRadius: "12px", padding: "20px", textAlign: "center" }}>
                                     <img
-                                        src={`http://localhost:5000/uploads/${product.images?.[activeImage]}`}
+                                        src={`${API_URL}/uploads/${product.images?.[activeImage]}`}
                                         alt={product.name}
                                         className="img-fluid"
                                         style={{
@@ -180,7 +181,7 @@ const SingleProduct = () => {
                                         {product.images.map((img, index) => (
                                             <img
                                                 key={index}
-                                                src={`http://localhost:5000/uploads/${img}`}
+                                                src={`${API_URL}/uploads/${img}`}
                                                 alt="thumb"
                                                 onClick={() => setActiveImage(index)}
                                                 style={{
