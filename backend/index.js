@@ -26,8 +26,10 @@ const QRCode = require("qrcode");
 app.use(express.json());
 // Allow all origins for CORS
 app.use(cors({
-    origin: '*',
-    credentials: true
+    origin: true,
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 /* =====================================================
