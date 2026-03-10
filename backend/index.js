@@ -445,8 +445,9 @@ app.post("/place-order", async (req, res) => {
     const savedOrder = await order.save();
     
     // Send order confirmation email
+    console.log('📧 Attempting to send order confirmation email to:', req.body.email);
     try {
-        await sendOrderConfirmationEmail({
+        const emailResult = await sendOrderConfirmationEmail({
             email: req.body.email,
             customerName: req.body.customerName,
             orderId: orderId,
@@ -457,8 +458,9 @@ app.post("/place-order", async (req, res) => {
             discount: req.body.discount || 0,
             subtotal: req.body.subtotal || req.body.totalAmount
         });
+        console.log('✅ Email sent successfully:', emailResult);
     } catch (emailError) {
-        console.error('Failed to send email:', emailError);
+        console.error('❌ Failed to send email:', emailError.message);
         // Don't fail the order if email fails
     }
     
