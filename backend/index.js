@@ -37,6 +37,15 @@ app.get('/health', (req, res) => {
     res.json({ status: 'OK', timestamp: new Date() });
 });
 
+// EMAIL CONFIG TEST
+app.get('/test-email-config', (req, res) => {
+    res.json({
+        emailConfigured: !!(process.env.EMAIL_USER && process.env.EMAIL_PASS),
+        emailUser: process.env.EMAIL_USER ? process.env.EMAIL_USER.substring(0, 3) + '***' : 'NOT SET',
+        emailPass: process.env.EMAIL_PASS ? '***SET***' : 'NOT SET'
+    });
+});
+
 app.get('/', (req, res) => {
     res.json({ message: 'E-Commerce API Running', status: 'Active' });
 });

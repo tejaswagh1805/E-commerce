@@ -4,8 +4,13 @@ const nodemailer = require('nodemailer');
 let transporter;
 
 const createTransporter = async () => {
+    console.log('🔧 Creating email transporter...');
+    console.log('📧 EMAIL_USER:', process.env.EMAIL_USER ? 'SET' : 'NOT SET');
+    console.log('📧 EMAIL_PASS:', process.env.EMAIL_PASS ? 'SET' : 'NOT SET');
+    
     if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
         // Use real email if configured
+        console.log('✅ Using Gmail SMTP with:', process.env.EMAIL_USER);
         transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -15,6 +20,7 @@ const createTransporter = async () => {
         });
     } else {
         // Use Ethereal for testing (no setup required)
+        console.log('⚠️ Email credentials not found, using Ethereal test service');
         const testAccount = await nodemailer.createTestAccount();
         transporter = nodemailer.createTransport({
             host: 'smtp.ethereal.email',
@@ -34,8 +40,13 @@ const createTransporter = async () => {
 // Send order confirmation email
 const sendOrderConfirmationEmail = async (orderData) => {
     try {
+        console.log('📧 === EMAIL SENDING STARTED ===');
+        console.log('📧 Recipient:', orderData.email);
+        console.log('📧 Order ID:', orderData.orderId);
+        
         // Ensure transporter is created
         if (!transporter) {
+            console.log('🔧 Transporter not initialized, creating now...');
             await createTransporter();
         }
 
@@ -180,15 +191,25 @@ const sendOrderConfirmationEmail = async (orderData) => {
 
         const info = await transporter.sendMail(mailOptions);
         
+        console.log('✅ Email sent successfully!');
+        console.log('📧 Message ID:', info.messageId);
+        console.log('📧 Response:', info.response);
+        
         // If using Ethereal, log preview URL
         if (!process.env.EMAIL_USER) {
-            console.log('📧 Preview email: ' + nodemailer.getTestMessageUrl(info));
+            const previewUrl = nodemailer.getTestMessageUrl(info);
+            console.log('📧 Preview email: ' + previewUrl);
         }
         
         console.log(`✅ Order confirmation email sent to ${email}`);
+        console.log('📧 === EMAIL SENDING COMPLETED ===');
         return { success: true, messageId: info.messageId };
     } catch (error) {
-        console.error('❌ Email sending error:', error.message);
+        console.error('❌ === EMAIL SENDING FAILED ===');
+        console.error('❌ Error name:', error.name);
+        console.error('❌ Error message:', error.message);
+        console.error('❌ Error code:', error.code);
+        console.error('❌ Full error:', error);
         return { success: false, error: error.message };
     }
 };
