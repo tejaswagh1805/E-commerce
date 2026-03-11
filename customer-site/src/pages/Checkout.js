@@ -19,6 +19,7 @@ const Checkout = () => {
     const [couponMessage, setCouponMessage] = useState("");
     const [applied, setApplied] = useState(false);
     const [showPaymentModal, setShowPaymentModal] = useState(false);
+    const [orderLoading, setOrderLoading] = useState(false);
 
     const [form, setForm] = useState({
         name: "",
@@ -256,6 +257,8 @@ const Checkout = () => {
     const placeOrder = async () => {
         if (!validate()) return;
 
+        setOrderLoading(true);
+
         const shippingData = sameAsBilling
             ? {
                 address: form.billingAddress,
@@ -274,13 +277,13 @@ const Checkout = () => {
 
         // If Online payment, initiate Razorpay
         if (form.paymentMethod === "Online") {
+            setOrderLoading(false);
             handleRazorpayPayment(shippingData);
             return;
         }
 
         try {
-            console.log('Placing order...');
-            // COD or Card payment
+            console.log('⏳ Placing order... (Backend may take 30-50 sec if sleeping)');
             const res = await fetch(`${API_URL}/place-order`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -307,20 +310,21 @@ const Checkout = () => {
                 })
             });
 
-            console.log('Response status:', res.status);
+            console.log('✅ Response received - Status:', res.status);
             const data = await res.json();
-            console.log('Response data:', data);
             
             if (res.ok || res.status === 201) {
                 clearCart();
                 navigate("/thank-you", { state: data });
             } else {
-                console.error('Order failed:', data);
+                console.error('❌ Order failed:', data);
                 alert(data.error || "Order placement failed!");
             }
         } catch (error) {
-            console.error("Order error:", error);
-            alert("Failed to place order. Please try again.");
+            console.error("❌ Order error:", error);
+            alert("Failed to place order. Backend may be sleeping. Please try again.");
+        } finally {
+            setOrderLoading(false);
         }
     };
 
@@ -642,13 +646,21 @@ const Checkout = () => {
                             <button
                                 className="btn w-100 mt-3 text-white"
                                 style={{
-                                    background: "linear-gradient(135deg,#000,#434343)",
+                                    background: orderLoading ? "#666" : "linear-gradient(135deg,#000,#434343)",
                                     borderRadius: "30px",
                                     padding: "12px"
                                 }}
                                 onClick={placeOrder}
+                                disabled={orderLoading}
                             >
-                                🔒 Confirm Order
+                                {orderLoading ? (
+                                    <>
+                                        <span className="spinner-border spinner-border-sm me-2"></span>
+                                        Processing... (May take 30-50 sec)
+                                    </>
+                                ) : (
+                                    "🔒 Confirm Order"
+                                )}
                             </button>
 
                         </div>

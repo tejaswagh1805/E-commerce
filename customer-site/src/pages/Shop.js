@@ -2,6 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
 import CartDrawer from "../components/CartDrawer";
+import { API_URL } from '../config';
 
 const Shop = () => {
   const { addToCart } = useContext(CartContext);
@@ -35,7 +36,6 @@ const Shop = () => {
   // ================= FETCH PRODUCTS =================
   const fetchProducts = async () => {
     try {
-      const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
       const res = await fetch(`${API_URL}/shop-products`);
       const data = await res.json();
       setProducts(data);
@@ -259,7 +259,7 @@ const Shop = () => {
                           }
                         >
                           <img
-                            src={`${process.env.REACT_APP_API_URL || "http://localhost:5000"}/uploads/${item.images?.[0]}`}
+                            src={`${API_URL}/uploads/${item.images?.[0]}`}
                             alt={item.name}
                             style={{
                               maxHeight: "100%",

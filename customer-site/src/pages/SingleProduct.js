@@ -543,7 +543,7 @@ const SingleProduct = () => {
                                         >
                                             <div style={{ background: "#fafafa", borderRadius: "8px", padding: "12px", textAlign: "center" }}>
                                                 <img
-                                                    src={`http://localhost:5000/uploads/${item.images?.[0]}`}
+                                                    src={`${API_URL}/uploads/${item.images?.[0]}`}
                                                     alt={item.name}
                                                     className="img-fluid"
                                                     style={{ height: "140px", objectFit: "contain" }}
