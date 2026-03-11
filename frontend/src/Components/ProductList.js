@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { API_URL } from '../config';
 
 const ProductList = () => {
 
@@ -30,7 +31,6 @@ const ProductList = () => {
             }
 
             console.log("Fetching products...");
-            const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
             let response = await fetch(`${API_URL}/products`, {
                 headers: {
                     Authorization: `Bearer ${auth.auth}`
@@ -80,7 +80,6 @@ const ProductList = () => {
             const auth = JSON.parse(localStorage.getItem("user"));
             if (!auth) return;
 
-            const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
             await fetch(
                 `${API_URL}/product/${id}`,
                 {
@@ -133,7 +132,6 @@ const ProductList = () => {
             if (!auth) return;
 
             if (key) {
-                const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
                 let response = await fetch(
                     `${API_URL}/search/${key}`,
                     {
@@ -277,7 +275,7 @@ const ProductList = () => {
                                                 src={
                                                     item.images &&
                                                         item.images.length > 0
-                                                        ? `${process.env.REACT_APP_API_URL || "http://localhost:5000"}/uploads/${item.images[0]}`
+                                                        ? `${API_URL}/uploads/${item.images[0]}`
                                                         : ""
                                                 }
                                                 alt={item.name}

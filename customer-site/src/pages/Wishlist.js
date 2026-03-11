@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { API_URL } from '../config';
 
 const Wishlist = () => {
     const [wishlist, setWishlist] = useState([]);
@@ -21,7 +22,7 @@ const Wishlist = () => {
         }
 
         try {
-            const res = await axios.get("http://localhost:5000/wishlist", {
+            const res = await axios.get(`${API_URL}/wishlist`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -38,7 +39,7 @@ const Wishlist = () => {
         const token = localStorage.getItem("token");
 
         try {
-            await axios.delete(`http://localhost:5000/wishlist/remove/${productId}`, {
+            await axios.delete(`${API_URL}/wishlist/remove/${productId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -114,7 +115,7 @@ const Wishlist = () => {
                                         onClick={() => navigate(`/product/${product._id}`)}
                                     >
                                         <img
-                                            src={`http://localhost:5000/uploads/${product.images?.[0] || ''}`}
+                                            src={`${API_URL}/uploads/${product.images?.[0] || ''}`}
                                             alt={product.name}
                                             style={{
                                                 maxHeight: "100%",

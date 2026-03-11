@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { API_URL } from '../config';
 
 const Newsletter = () => {
     const [email, setEmail] = useState("");
@@ -12,7 +13,7 @@ const Newsletter = () => {
         setMessage("");
 
         try {
-            const res = await axios.post("http://localhost:5000/newsletter/subscribe", { email });
+            const res = await axios.post(`${API_URL}/newsletter/subscribe`, { email });
             setMessage(res.data.message);
             setEmail("");
         } catch (error) {
