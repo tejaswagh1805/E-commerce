@@ -1,16 +1,27 @@
 const nodemailer = require('nodemailer');
 const dns = require('dns');
+const sgMail = require('@sendgrid/mail');
 
 // Force IPv4 for Gmail SMTP (Render IPv6 issue fix)
 dns.setDefaultResultOrder('ipv4first');
 
 // Create transporter with fallback to Ethereal (test email service)
 let transporter;
+let useSendGrid = false;
 
 const createTransporter = async () => {
     console.log('🔧 Creating email transporter...');
     console.log('📧 EMAIL_USER:', process.env.EMAIL_USER ? 'SET' : 'NOT SET');
     console.log('📧 EMAIL_PASS:', process.env.EMAIL_PASS ? 'SET' : 'NOT SET');
+    console.log('📧 SENDGRID_API_KEY:', process.env.SENDGRID_API_KEY ? 'SET' : 'NOT SET');
+    
+    // Prefer SendGrid if available (works on Render)
+    if (process.env.SENDGRID_API_KEY) {
+        console.log('✅ Using SendGrid for email delivery');
+        sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+        useSendGrid = true;
+        return null; // SendGrid doesn't use transporter
+    }
     
     if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
         // Use real email if configured
@@ -200,14 +211,30 @@ const sendOrderConfirmationEmail = async (orderData) => {
             `
         };
 
-        const info = await transporter.sendMail(mailOptions);
+        let info;
+        
+        if (useSendGrid) {
+            // Use SendGrid API
+            const msg = {
+                to: email,
+                from: process.env.SENDGRID_FROM_EMAIL || process.env.EMAIL_USER || 'noreply@yourstore.com',
+                subject: mailOptions.subject,
+                html: mailOptions.html
+            };
+            
+            info = await sgMail.send(msg);
+            console.log('✅ Email sent via SendGrid!');
+        } else {
+            // Use SMTP (Gmail/Ethereal)
+            info = await transporter.sendMail(mailOptions);
+        }
         
         console.log('✅ Email sent successfully!');
         console.log('📧 Message ID:', info.messageId);
         console.log('📧 Response:', info.response);
         
         // If using Ethereal, log preview URL
-        if (!process.env.EMAIL_USER) {
+        if (!process.env.EMAIL_USER && !useSendGrid) {
             const previewUrl = nodemailer.getTestMessageUrl(info);
             console.log('📧 Preview email: ' + previewUrl);
         }
