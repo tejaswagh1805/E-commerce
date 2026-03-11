@@ -1,4 +1,8 @@
 const nodemailer = require('nodemailer');
+const dns = require('dns');
+
+// Force IPv4 for Gmail SMTP (Render IPv6 issue fix)
+dns.setDefaultResultOrder('ipv4first');
 
 // Create transporter with fallback to Ethereal (test email service)
 let transporter;
@@ -14,14 +18,16 @@ const createTransporter = async () => {
         transporter = nodemailer.createTransport({
             host: 'smtp.gmail.com',
             port: 587,
-            secure: false, // Use TLS
+            secure: false,
             auth: {
                 user: process.env.EMAIL_USER,
                 pass: process.env.EMAIL_PASS
             },
             tls: {
                 rejectUnauthorized: false
-            }
+            },
+            // Force IPv4
+            family: 4
         });
     } else {
         // Use Ethereal for testing (no setup required)
