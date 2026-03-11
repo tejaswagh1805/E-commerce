@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { API_URL } from '../config';
 
 const Profile = () => {
     const navigate = useNavigate();
@@ -31,7 +32,7 @@ const Profile = () => {
         }
 
         try {
-            const res = await axios.get(`http://localhost:5000/profile/${userData._id}`, {
+            const res = await axios.get(`${API_URL}/profile/${userData._id}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setUser(res.data);
@@ -89,7 +90,7 @@ const Profile = () => {
 
         try {
             const res = await axios.put(
-                `http://localhost:5000/profile/${user._id}`,
+                `${API_URL}/profile/${user._id}`,
                 updateData,
                 {
                     headers: {
@@ -140,7 +141,7 @@ const Profile = () => {
                                             <img
                                                 src={
                                                     user?.image
-                                                        ? `http://localhost:5000/uploads/${user.image}`
+                                                        ? `${API_URL}/uploads/${user.image}`
                                                         : "https://via.placeholder.com/80"
                                                 }
                                                 alt="Profile"

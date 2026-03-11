@@ -32,6 +32,15 @@ app.use((req, res, next) => {
     next();
 });
 
+// HEALTH CHECK - KEEP SERVER AWAKE
+app.get('/health', (req, res) => {
+    res.json({ status: 'OK', timestamp: new Date() });
+});
+
+app.get('/', (req, res) => {
+    res.json({ message: 'E-Commerce API Running', status: 'Active' });
+});
+
 /* =====================================================
    📂 UPLOAD FOLDER SETUP
 ===================================================== */
