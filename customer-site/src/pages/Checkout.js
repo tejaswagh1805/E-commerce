@@ -375,8 +375,8 @@ const Checkout = () => {
                             />
                             <small className="text-danger">{errors.billingAddress}</small>
 
-                            <div className="row">
-                                <div className="col">
+                            <div className="row g-2">
+                                <div className="col-12 col-sm">
                                     <input className="form-control mb-3"
                                         name="billingCity"
                                         placeholder="City"
@@ -384,7 +384,7 @@ const Checkout = () => {
                                     />
                                     <small className="text-danger">{errors.billingCity}</small>
                                 </div>
-                                <div className="col">
+                                <div className="col-12 col-sm">
                                     <input className="form-control mb-3"
                                         name="billingState"
                                         placeholder="State"
@@ -392,7 +392,7 @@ const Checkout = () => {
                                     />
                                     <small className="text-danger">{errors.billingState}</small>
                                 </div>
-                                <div className="col">
+                                <div className="col-12 col-sm">
                                     <input className="form-control mb-3"
                                         name="billingPincode"
                                         placeholder="Pincode"
@@ -426,8 +426,8 @@ const Checkout = () => {
                                     />
                                     <small className="text-danger">{errors.shippingAddress}</small>
 
-                                    <div className="row">
-                                        <div className="col">
+                                    <div className="row g-2">
+                                        <div className="col-12 col-sm">
                                             <input className="form-control mb-3"
                                                 name="shippingCity"
                                                 placeholder="City"
@@ -435,7 +435,7 @@ const Checkout = () => {
                                             />
                                             <small className="text-danger">{errors.shippingCity}</small>
                                         </div>
-                                        <div className="col">
+                                        <div className="col-12 col-sm">
                                             <input className="form-control mb-3"
                                                 name="shippingState"
                                                 placeholder="State"
@@ -443,7 +443,7 @@ const Checkout = () => {
                                             />
                                             <small className="text-danger">{errors.shippingState}</small>
                                         </div>
-                                        <div className="col">
+                                        <div className="col-12 col-sm">
                                             <input className="form-control mb-3"
                                                 name="shippingPincode"
                                                 placeholder="Pincode"
