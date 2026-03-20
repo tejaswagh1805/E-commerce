@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { API_URL } from '../config';
+import { API_URL, getImageUrl } from '../config';
 
 const Profile = () => {
     const navigate = useNavigate();
@@ -31,8 +31,16 @@ const Profile = () => {
             return;
         }
 
+        // handle both {_id} and {user: {_id}} storage shapes
+        const userId = userData._id || userData.user?._id;
+
+        if (!userId) {
+            navigate("/login");
+            return;
+        }
+
         try {
-            const res = await axios.get(`${API_URL}/profile/${userData._id}`, {
+            const res = await axios.get(`${API_URL}/profile/${userId}`, {
                 headers: { Authorization: `Bearer ${token}` }
             });
             setUser(res.data);
@@ -90,7 +98,7 @@ const Profile = () => {
 
         try {
             const res = await axios.put(
-                `${API_URL}/profile/${user._id}`,
+                `${API_URL}/profile/${user._id || user.user?._id}`,
                 updateData,
                 {
                     headers: {
@@ -139,11 +147,7 @@ const Profile = () => {
                                             }}
                                         >
                                             <img
-                                                src={
-                                                    user?.image
-                                                        ? `${API_URL}/uploads/${user.image}`
-                                                        : "https://via.placeholder.com/80"
-                                                }
+                                                src={getImageUrl(user?.image)}
                                                 alt="Profile"
                                                 style={{
                                                     width: "100%",

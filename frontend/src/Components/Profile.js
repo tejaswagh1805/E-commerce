@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { API_URL } from '../config';
+import { API_URL, getImageUrl } from '../config';
 
 const Profile = () => {
 
@@ -103,9 +103,7 @@ const Profile = () => {
                                 src={
                                     newImage
                                         ? URL.createObjectURL(newImage)
-                                        : image
-                                            ? `${API_URL}/uploads/${image}`
-                                            : "https://via.placeholder.com/150"
+                                        : getImageUrl(image)
                                 }
                                 alt="Profile"
                             />

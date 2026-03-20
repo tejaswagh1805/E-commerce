@@ -1,7 +1,7 @@
 import React from "react";
 import { NavLink, useNavigate, Link } from "react-router-dom";
 import logo from "../assets/e-commm.png";
-import { API_URL } from '../config';
+import { API_URL, getImageUrl } from '../config';
 
 const Nav = () => {
 
@@ -70,11 +70,7 @@ const Nav = () => {
                                     data-bs-toggle="dropdown"
                                 >
                                     <img
-                                        src={
-                                            user.image
-                                                ? `${API_URL}/uploads/${user.image}`
-                                                : "https://via.placeholder.com/40"
-                                        }
+                                        src={getImageUrl(user.image)}
                                         alt="Profile"
                                         className="rounded-circle me-2"
                                         width="38"
