@@ -52,6 +52,13 @@ const Profile = () => {
             });
         } catch (error) {
             console.error("Error fetching profile:", error);
+            // Token expired or invalid - force re-login
+            if (error.response?.status === 401) {
+                localStorage.removeItem("user");
+                localStorage.removeItem("token");
+                navigate("/login");
+                return;
+            }
         } finally {
             setLoading(false);
         }
