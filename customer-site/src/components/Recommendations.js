@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { API_URL, getImageUrl } from '../config';
 
 const Recommendations = ({ category, currentProductId }) => {
     const [products, setProducts] = useState([]);
@@ -21,7 +22,7 @@ const Recommendations = ({ category, currentProductId }) => {
 
     const fetchRecommendations = async () => {
         try {
-            const res = await axios.get(`http://localhost:5000/products/recommended/${category}`);
+            const res = await axios.get(`${API_URL}/products/recommended/${category}`);
             const filtered = res.data.filter(p => p._id !== currentProductId);
             setProducts(filtered);
         } catch (error) {
@@ -53,7 +54,7 @@ const Recommendations = ({ category, currentProductId }) => {
                                 }}
                             >
                                 <img
-                                    src={`http://localhost:5000/uploads/${product.images?.[0]}`}
+                                    src={getImageUrl(product.images?.[0])}
                                     alt={product.name}
                                     style={{
                                         maxHeight: "100%",

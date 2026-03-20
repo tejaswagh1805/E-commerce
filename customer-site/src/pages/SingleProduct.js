@@ -6,7 +6,7 @@ import ProductReviews from "../components/ProductReviews";
 import Recommendations from "../components/Recommendations";
 import RecentlyViewed from "../components/RecentlyViewed";
 import axios from "axios";
-import { API_URL } from '../config';
+import { API_URL, getImageUrl } from '../config';
 
 const SingleProduct = () => {
     const { slug } = useParams();
@@ -165,7 +165,7 @@ const SingleProduct = () => {
 
                                 <div style={{ background: "#fafafa", borderRadius: "12px", padding: "20px", textAlign: "center" }}>
                                     <img
-                                        src={`${API_URL}/uploads/${product.images?.[activeImage]}`}
+                                        src={getImageUrl(product.images?.[activeImage])}
                                         alt={product.name}
                                         className="img-fluid"
                                         style={{
@@ -181,7 +181,7 @@ const SingleProduct = () => {
                                         {product.images.map((img, index) => (
                                             <img
                                                 key={index}
-                                                src={`${API_URL}/uploads/${img}`}
+                                                src={getImageUrl(img)}
                                                 alt="thumb"
                                                 onClick={() => setActiveImage(index)}
                                                 style={{
@@ -543,7 +543,7 @@ const SingleProduct = () => {
                                         >
                                             <div style={{ background: "#fafafa", borderRadius: "8px", padding: "12px", textAlign: "center" }}>
                                                 <img
-                                                    src={`${API_URL}/uploads/${item.images?.[0]}`}
+                                                    src={getImageUrl(item.images?.[0])}
                                                     alt={item.name}
                                                     className="img-fluid"
                                                     style={{ height: "140px", objectFit: "contain" }}

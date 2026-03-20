@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { API_URL } from '../config';
+import { API_URL, getImageUrl } from '../config';
 
 const ProductList = () => {
 
@@ -273,10 +273,9 @@ const ProductList = () => {
                                         >
                                             <img
                                                 src={
-                                                    item.images &&
-                                                        item.images.length > 0
-                                                        ? `${API_URL}/uploads/${item.images[0]}`
-                                                        : ""
+                                                    item.images && item.images.length > 0
+                                                        ? getImageUrl(item.images[0])
+                                                        : 'https://via.placeholder.com/300x300?text=No+Image'
                                                 }
                                                 alt={item.name}
                                                 className="img-fluid"

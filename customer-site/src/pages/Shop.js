@@ -2,7 +2,7 @@ import { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
 import CartDrawer from "../components/CartDrawer";
-import { API_URL } from '../config';
+import { API_URL, getImageUrl } from '../config';
 
 const Shop = () => {
   const { addToCart } = useContext(CartContext);
@@ -259,7 +259,7 @@ const Shop = () => {
                           }
                         >
                           <img
-                            src={`${API_URL}/uploads/${item.images?.[0]}`}
+                            src={getImageUrl(item.images?.[0])}
                             alt={item.name}
                             style={{
                               maxHeight: "100%",

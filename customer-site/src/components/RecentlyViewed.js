@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { API_URL, getImageUrl } from '../config';
 
 const RecentlyViewed = ({ currentProductId }) => {
     const [recentProducts, setRecentProducts] = useState([]);
@@ -25,7 +26,7 @@ const RecentlyViewed = ({ currentProductId }) => {
         const validProducts = [];
         for (const product of filtered) {
             try {
-                const response = await axios.get(`http://localhost:5000/products/${product._id}`);
+                const response = await axios.get(`${API_URL}/shop-product/${product._id}`);
                 if (response.data) {
                     validProducts.push(response.data);
                 }
@@ -65,7 +66,7 @@ const RecentlyViewed = ({ currentProductId }) => {
                                 }}
                             >
                                 <img
-                                    src={`http://localhost:5000/uploads/${product.images?.[0]}`}
+                                    src={getImageUrl(product.images?.[0])}
                                     alt={product.name}
                                     style={{
                                         maxHeight: "100%",

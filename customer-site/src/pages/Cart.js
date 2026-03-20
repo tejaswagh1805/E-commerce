@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { CartContext } from "../context/CartContext";
-import { API_URL } from '../config';
+import { API_URL, getImageUrl } from '../config';
 
 const Cart = () => {
 
@@ -56,7 +56,7 @@ const Cart = () => {
                                         <div className="d-flex align-items-center gap-4">
 
                                             <img
-                                                src={`${API_URL}/uploads/${item.images?.[0]}`}
+                                                src={getImageUrl(item.images?.[0])}
                                                 alt={item.name}
                                                 style={{
                                                     width: "90px",

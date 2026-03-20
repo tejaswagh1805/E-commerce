@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Newsletter from "../components/Newsletter";
-import { API_URL } from '../config';
+import { API_URL, getImageUrl } from '../config';
 
 const Home = () => {
     const [products, setProducts] = useState([]);
@@ -112,7 +112,7 @@ const Home = () => {
                         <div className="col-lg-6 text-center">
                             {products[0] && (
                                 <img
-                                    src={`${API_URL}/uploads/${products[0].images?.[0]}`}
+                                    src={getImageUrl(products[0].images?.[0])}
                                     alt="Hero Product"
                                     style={{
                                         maxHeight: "500px",
@@ -211,7 +211,7 @@ const Home = () => {
                                             onClick={() => navigate(`/product/${createSlug(item.name)}`)}
                                         >
                                             <img
-                                                src={`${API_URL}/uploads/${item.images?.[0]}`}
+                                                src={getImageUrl(item.images?.[0])}
                                                 alt={item.name}
                                                 style={{
                                                     maxHeight: "100%",

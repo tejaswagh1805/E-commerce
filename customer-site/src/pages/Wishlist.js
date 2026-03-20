@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { API_URL } from '../config';
+import { API_URL, getImageUrl } from '../config';
 
 const Wishlist = () => {
     const [wishlist, setWishlist] = useState([]);
@@ -115,7 +115,7 @@ const Wishlist = () => {
                                         onClick={() => navigate(`/product/${product._id}`)}
                                     >
                                         <img
-                                            src={`${API_URL}/uploads/${product.images?.[0] || ''}`}
+                                            src={getImageUrl(product.images?.[0])}
                                             alt={product.name}
                                             style={{
                                                 maxHeight: "100%",

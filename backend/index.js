@@ -8,6 +8,8 @@ const fs = require("fs");
 const Jwt = require("jsonwebtoken");
 const { sendOrderConfirmationEmail } = require("./emailService");
 const crypto = require("crypto");
+const cloudinary = require("cloudinary").v2;
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
 require("dotenv").config();
 
@@ -51,29 +53,39 @@ app.get('/', (req, res) => {
 });
 
 /* =====================================================
-   📂 UPLOAD FOLDER SETUP
+   📂 UPLOAD SETUP - Cloudinary (persistent) or Local
 ===================================================== */
 
 const uploadPath = path.join(__dirname, "uploads");
-
-if (!fs.existsSync(uploadPath)) {
-    fs.mkdirSync(uploadPath, { recursive: true });
-}
-
+if (!fs.existsSync(uploadPath)) fs.mkdirSync(uploadPath, { recursive: true });
 app.use("/uploads", express.static(uploadPath));
 
-const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-        cb(null, uploadPath);
-    },
-    filename: function (req, file, cb) {
-        const uniqueName =
-            Date.now() + "-" + Math.round(Math.random() * 1e9);
-        cb(null, uniqueName + path.extname(file.originalname));
-    }
-});
+let upload;
 
-const upload = multer({ storage });
+if (process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET) {
+    // Use Cloudinary for persistent storage on Render
+    cloudinary.config({
+        cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+        api_key: process.env.CLOUDINARY_API_KEY,
+        api_secret: process.env.CLOUDINARY_API_SECRET
+    });
+
+    const cloudStorage = new CloudinaryStorage({
+        cloudinary,
+        params: { folder: "ecommerce-products", allowed_formats: ["jpg", "jpeg", "png", "webp"] }
+    });
+
+    upload = multer({ storage: cloudStorage });
+    console.log("✅ Using Cloudinary for image storage");
+} else {
+    // Fallback to local storage
+    const diskStorage = multer.diskStorage({
+        destination: (req, file, cb) => cb(null, uploadPath),
+        filename: (req, file, cb) => cb(null, Date.now() + "-" + Math.round(Math.random() * 1e9) + path.extname(file.originalname))
+    });
+    upload = multer({ storage: diskStorage });
+    console.log("⚠️ Using local storage for images (not persistent on Render)");
+}
 
 /* =====================================================
    🔐 TOKEN + ROLE MIDDLEWARE
@@ -259,7 +271,7 @@ app.post("/add-product",
     async (req, res) => {
 
         const imagePaths = req.files
-            ? req.files.map(file => file.filename)
+            ? req.files.map(file => file.path || file.filename)
             : [];
 
         const product = new Product({
@@ -343,7 +355,7 @@ app.put("/product/:id",
         }
 
         if (req.files && req.files.length > 0) {
-            updateData.images = req.files.map(file => file.filename);
+            updateData.images = req.files.map(file => file.path || file.filename);
         }
 
         const result = await Product.findByIdAndUpdate(
