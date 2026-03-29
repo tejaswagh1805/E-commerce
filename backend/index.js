@@ -271,7 +271,7 @@ app.post("/add-product",
     async (req, res) => {
 
         const imagePaths = req.files
-            ? req.files.map(file => file.path || file.filename)
+            ? req.files.map(file => file.filename)
             : [];
 
         const product = new Product({
@@ -355,7 +355,7 @@ app.put("/product/:id",
         }
 
         if (req.files && req.files.length > 0) {
-            updateData.images = req.files.map(file => file.path || file.filename);
+            updateData.images = req.files.map(file => file.filename);
         }
 
         const result = await Product.findByIdAndUpdate(
